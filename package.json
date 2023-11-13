@@ -11,6 +11,8 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@ionic/vue": "^7.5.4",
+        "@ionic/vue-router": "^7.5.4",
         "@vitejs/plugin-vue": "^4.4.1",
         "mitt": "^3.0.1",
         "npm": "^10.2.3",
