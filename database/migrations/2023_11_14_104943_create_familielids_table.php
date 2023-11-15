@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('straats', function (Blueprint $table) {
+        Schema::create('familie_leden', function (Blueprint $table) {
             $table->id();
+            $table->string("naam");
+            $table->date("geboortedatum");
+            $table->foreignid("soort_lid_id")->constrained("soorten_leden");
+            $table->foreignid("familie_id")->constrained("families");
             $table->timestamps();
         });
     }
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('straats');
+        Schema::dropIfExists('familie_leden');
     }
 };

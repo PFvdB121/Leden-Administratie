@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('adres', function (Blueprint $table) {
+        Schema::create('adressen', function (Blueprint $table) {
             $table->id();
+            $table->integer("huisnummer");
+            $table->char("bijvoeging", 3);
+            $table->foreignId("straat_id")->constrained("straten");
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('adres');
+        Schema::dropIfExists('adressen');
     }
 };

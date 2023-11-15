@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('contributies', function (Blueprint $table) {
             $table->id();
+            $table->integer("leeftijd");
+            $table->foreignId("soort_lid_id")->constrained("soorten_leden");
+            $table->decimal("bedrag", 5, 2);
+            $table->foreignId("boekjaar_id")->constrained("boekenjaren");
+            $table->foreignId("familie_lid_id")->constrained("familie_leden");
             $table->timestamps();
         });
     }
