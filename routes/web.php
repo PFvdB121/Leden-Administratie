@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('{app}', function () {
-    return view('app');
+Route::get('/{login}', function () {
+    return view('login');
+})->where("login", "/|login|");
+Route::get('/{app}', function () {
+    return redirect('/');
 })->where("app", ".*");

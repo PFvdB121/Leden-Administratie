@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('landen', function (Blueprint $table) {
             $table->id();
-            $table->string("naam");
+            $table->string("naam")->unique();
             $table->timestamps();
         });
     }
