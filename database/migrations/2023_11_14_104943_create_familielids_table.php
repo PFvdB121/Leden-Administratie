@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('familie_leden', function (Blueprint $table) {
             $table->id();
             $table->string("naam");
+            $table->string("email")->unique();
             $table->date("geboortedatum");
             $table->foreignid("soort_lid_id")->constrained("soorten_leden");
             $table->foreignid("familie_id")->constrained("families");

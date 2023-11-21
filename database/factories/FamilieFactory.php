@@ -17,7 +17,7 @@ class FamilieFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "naam" => fake()->lastName(),
         ];
     }
 }

@@ -18,5 +18,15 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        UserSeeder::run();
+        BoekjaarSeeder::run();
+        SoortlidSeeder::run();
+        LandSeeder::run();
+        StadSeeder::run();
+        StraatSeeder::run();
+        AdresSeeder::run();
+        FamilieSeeder::run();
+        FamilielidSeeder::run();
     }
 }

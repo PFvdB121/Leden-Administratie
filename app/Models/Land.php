@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Land extends Model
 {
     use HasFactory;
-    protected $tale = "landen";
+    protected $table = "landen";
 
     public function steden(): HasMany
     {

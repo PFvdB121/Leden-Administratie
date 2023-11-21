@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('adressen', function (Blueprint $table) {
             $table->id();
             $table->integer("huisnummer");
-            $table->char("bijvoeging", 3);
+            $table->char("bijvoeging", 3)->nullable();
             $table->foreignId("straat_id")->constrained("straten");
             $table->timestamps();
         });
