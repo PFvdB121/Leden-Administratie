@@ -21,11 +21,11 @@
                     <h1>Inloggen</h1>
                 </div>
                 <div class="card-body">
-                    <form action="">
+                    <form action="/" method="post">
                         @csrf
                         <div>
-                            <label for="username">Gebruikersnaam</label>
-                            <input id="username" class="d-block" type="text" placeholder="Gebruikersnaam" name="username">
+                            <label for="name">Gebruikersnaam</label>
+                            <input id="name" class="d-block" type="text" placeholder="Gebruikersnaam" name="name">
                         </div>
                         <div>
                             <label for="password">Wachtwoord</label>

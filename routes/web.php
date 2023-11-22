@@ -12,10 +12,20 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::group(["middleware" => "guest:web"], function(){
+    Route::get('/', function () {
+        return view('login');
+    });
 
-Route::get('/{login}', function () {
-    return view('login');
-})->where("login", "/|login|");
-Route::get('/{app}', function () {
-    return redirect('/');
-})->where("app", ".*");
+    Route::post("/", "App\Http\Controllers\LoginController@login");
+});
+
+
+
+Route::group(["middleware" => "auth:web"], function(){
+    Route::prefix("app")->group(function(){
+        Route::get("/{app?}", function() {
+            return view("app");
+        });
+    });
+});
