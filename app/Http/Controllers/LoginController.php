@@ -24,8 +24,15 @@ class LoginController extends Controller
         } else {
             $errors = array("Error" => "Incorrecte gebruikersnaam of wachtwoord");
 
-            redirect("/")->withErrors($errors);
+            return redirect("/")->withErrors($errors);
         }
         
+    }
+    
+    public function logout(){
+        if (Auth::guard("web")->check()) {
+            Auth::guard("web")->logout();
+            return redirect("/");
+        }
     }
 }

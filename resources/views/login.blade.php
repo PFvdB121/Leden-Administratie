@@ -35,6 +35,9 @@
                             <input type="submit">
                         </div>
                     </form>
+                    @error('Error')
+                        <p class="text-danger">{{$message}}</p>
+                    @enderror
                 </div>
             </div>
         </div>

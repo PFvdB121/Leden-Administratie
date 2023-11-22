@@ -24,7 +24,7 @@ Route::group(["middleware" => "guest:web"], function(){
 
 Route::group(["middleware" => "auth:web"], function(){
     Route::prefix("app")->group(function(){
-        Route::get("/{app?}", function() {
+        Route::get("{app?}", function() {
             return view("app");
         });
     });
