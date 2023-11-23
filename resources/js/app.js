@@ -3,7 +3,7 @@ import * as Vue from 'vue';
 import * as VueRouter from 'vue-router';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import { IonicVue } from '@ionic/vue';
+import { IonicVue, IonApp } from '@ionic/vue';
 import mitt from 'mitt';
 import routes from "./routes.js";
 import "@ionic/vue/css/core.css";
@@ -46,5 +46,8 @@ window.axios.interceptors.response.use(
         return Promise.reject(error);
     },
 );
+
+app.component("ion-app", IonApp);
+app.component("ionic-menu", require("./components/menu.vue").default);
 
 app.mount("#app");

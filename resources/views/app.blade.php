@@ -14,7 +14,11 @@
 </head>
 <body>
     <div id="app">
-        <router-view></router-view>
+        <ion-app>
+            <ionic-menu :user="{{ Auth::user()->first() }}">
+                <router-view></router-view>
+            </ionic-menu>
+        </ion-app>
     </div>
 </body>
 </html>

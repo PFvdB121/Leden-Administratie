@@ -4,6 +4,9 @@ const routes = [
     {
         path: "/:catchAll(.*)",
         component: notFound
+    },
+    {
+        path: "/app"
     }
 ]
 

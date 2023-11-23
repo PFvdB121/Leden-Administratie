@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,19 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::group(["middleware" => "guest:web"], function(){
-    Route::get('/', function () {
+    Route::get('/', ["as" => "login", "uses" => function () {
         return view('login');
-    });
+    }]);
 
     Route::post("/", "App\Http\Controllers\LoginController@login");
 });
-
-
 
 Route::group(["middleware" => "auth:web"], function(){
     Route::prefix("app")->group(function(){
         Route::get("{app?}", function() {
             return view("app");
         });
+
+        Route::post("logout", "App\Http\Controllers\LoginController@logout");
     });
 });
