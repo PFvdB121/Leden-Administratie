@@ -84,7 +84,7 @@
                     "stad": stad,
                     "land": land,
                 })
-                .then(function(response){
+                .then((response) => {
                     console.log(response.data.data);
                     this.items = response.data.data;
                 })
@@ -111,7 +111,6 @@
                 this.get.stad, 
                 this.get.land
             );
-            console.log(this.items)
         },
 
         components: {

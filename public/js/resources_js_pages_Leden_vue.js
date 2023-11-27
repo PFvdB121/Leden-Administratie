@@ -30,6 +30,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     leden: function leden(naam, email, familie, adres, straat, stad, land) {
+      var _this = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].post("/app/leden", {
         "naam": naam,
         "email": email,
@@ -40,7 +41,7 @@ __webpack_require__.r(__webpack_exports__);
         "land": land
       }).then(function (response) {
         console.log(response.data.data);
-        this.items = response.data.data;
+        _this.items = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -55,7 +56,6 @@ __webpack_require__.r(__webpack_exports__);
     this.stad = this.get.stad;
     this.land = this.get.land;
     this.leden(this.get.naam, this.get.email, this.get.familie, this.get.adres, this.get.straat, this.get.stad, this.get.land);
-    console.log(this.items);
   },
   components: {
     IonGrid: _ionic_vue__WEBPACK_IMPORTED_MODULE_1__.IonGrid,
