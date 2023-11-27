@@ -16,13 +16,13 @@ class FamilielidResource extends JsonResource
     {
         return [
             "naam" => $this->naam,
-            "soort lid" => $this->soort_lid()->first()->omschrijving,
+            "soort_lid" => $this->soort_lid->omschrijving,
             "geboortedatum" => $this->geboortedatum,
             "email" => $this->email,
-            "familie" => $this->familie->first()->naam,
-            "adres" => $this->familie->adres->first()->huisnummer . $this->familie->adres->first()->bijvoeging,
-            "straat" => $this->familie->adres->straat->first()->naam,
-            "stad" => $this->familie->adres->straat->stad->first()->naam,
+            "familie" => $this->familie->naam,
+            "adres" => $this->familie->adres->huisnummer . $this->familie->adres->bijvoeging,
+            "straat" => $this->familie->adres->straat->naam,
+            "stad" => $this->familie->adres->straat->stad->naam,
             "naam" => $this->naam,
         ];
     }

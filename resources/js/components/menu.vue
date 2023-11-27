@@ -68,7 +68,7 @@
         },
         methods: {
             logout: function(){
-                axios.post("app/logout")
+                axios.post("logout")
                 .then(function(){
                     window.location.replace("/");
                 })

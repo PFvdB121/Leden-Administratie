@@ -58299,7 +58299,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     logout: function logout() {
-      axios__WEBPACK_IMPORTED_MODULE_0__["default"].post("app/logout").then(function () {
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].post("logout").then(function () {
         window.location.replace("/");
       })["catch"](function (error) {
         console.log(error);

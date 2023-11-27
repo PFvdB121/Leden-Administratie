@@ -17,13 +17,15 @@ class FamilielidController extends Controller
     {
         $validate = $request->validate([
             "naam" => "string",
+            "email" => "string",
             "familie" => "string",
             "adres" => "string",
             "straat" => "string",
             "stad" => "string",
             "land" => "string",
         ]);
-        $familieLeden = Familielid::where("naam", "like", "%" . $request["naam"] . "%")->whereHas("familie", function($query) use($request){
+        $familieLeden = Familielid::where("naam", "like", "%" . $request["naam"] . "%")
+        ->where("email", "like", "%" . $request["email"] . "%")->whereHas("familie", function($query) use($request){
             return $query->where("naam", "like", "%" . $request["familie"] . "%")
             ->whereHas("adres", function(Builder $query) use($request){
                 return $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", "%" . $request["adres"] . "%")
