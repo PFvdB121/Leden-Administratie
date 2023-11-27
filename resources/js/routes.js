@@ -1,12 +1,31 @@
 const notFound = import("./pages/NotFound.vue");
+const contributies = import("./pages/Contributies.vue");
+const leden = import("./pages/Leden.vue");
 
 const routes = [
     {
         path: "/:catchAll(.*)",
-        component: notFound
+        component: notFound,
+        props: {
+            get: true,
+        }
     },
     {
-        path: "/app"
+        path: "/app/contributies",
+        component: contributies,
+        props: {
+            get: true,
+        }
+    },
+    {
+        path: "/app/leden",
+        component: leden,
+        props: {
+            get: true,
+        }
+    },
+    {
+        path: "/app/"
     }
 ]
 

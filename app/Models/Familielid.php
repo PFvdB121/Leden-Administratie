@@ -14,16 +14,16 @@ class Familielid extends Model
 
     public function familie(): BelongsTo
     {
-        return $this->belongsTo(Familie::class);
+        return $this->belongsTo(Familie::class, "familie_id", "id");
     }
 
     public function soort_lid(): BelongsTo
     {
-        return $this->belongsTo(SoortLid::class);
+        return $this->belongsTo(SoortLid::class, "soort_lid_id", "id");
     }
 
     public function contributies(): HasMany
     {
-        return $this->belongsTo(Contributie::class);
+        return $this->hasMany(Contributie::class, "familie_lid_id", "id");
     }
 }

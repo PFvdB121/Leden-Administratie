@@ -14,11 +14,11 @@ class Stad extends Model
 
     public function land(): BelongsTo
     {
-        return $this->belongsTo(Land::class);
+        return $this->belongsTo(Land::class, "land_id", "id");
     }
 
     public function straten(): HasMany
     {
-        return $this->hasMany(Straat::class);
+        return $this->hasMany(Straat::class, "stad_id", "id");
     }
 }

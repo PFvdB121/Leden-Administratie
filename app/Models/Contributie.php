@@ -13,16 +13,16 @@ class Contributie extends Model
 
     public function familie_lid(): BelongsTo
     {
-        return $this->belongsTo(Familielid::class);
+        return $this->belongsTo(Familielid::class, "familie_lid_id", "id");
     }
 
     public function boekjaar(): BelongsTo
     {
-        return $this->belongsTo(Boekjaar::class);
+        return $this->belongsTo(Boekjaar::class, "boekjaar_id", "id");
     }
 
     public function soort_lid(): BelongsTo
     {
-        return $this->belongsTo(SoortLid::class);
+        return $this->belongsTo(SoortLid::class, "soort_lid_id", "id");
     }
 }

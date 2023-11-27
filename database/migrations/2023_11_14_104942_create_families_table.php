@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("naam");
             $table->foreignId("adres_id")->constrained('adressen')->nullable();
+            $table->unique(["naam", "adres_id"]);
             $table->timestamps();
         });
     }

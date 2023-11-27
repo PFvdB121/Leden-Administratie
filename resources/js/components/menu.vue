@@ -14,7 +14,10 @@
                 </div>
                 <ion-list>
                     <ion-item>
-                        <router-link to="/app/">Dummy link</router-link>
+                        <router-link to="/app/leden">leden</router-link>
+                    </ion-item>
+                    <ion-item>
+                        <router-link to="/app/contributies">contributies</router-link>
                     </ion-item>
                 </ion-list>
             </ion-content>

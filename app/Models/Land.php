@@ -13,6 +13,6 @@ class Land extends Model
 
     public function steden(): HasMany
     {
-        return $this->hasMany(Land::class);
+        return $this->hasMany(Land::class, "land_id", "id");
     }
 }

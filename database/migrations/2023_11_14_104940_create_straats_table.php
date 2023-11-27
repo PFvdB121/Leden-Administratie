@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("naam");
             $table->foreignId("stad_id")->constrained("steden");
+            $table->unique(["naam", "stad_id"]);
             $table->timestamps();
         });
     }

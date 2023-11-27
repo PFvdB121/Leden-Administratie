@@ -13,6 +13,6 @@ class Boekjaar extends Model
 
     public function contributies(): HasMany
     {
-        return $this->hasMany(Contributie::class);
+        return $this->hasMany(Contributie::class, "boekjaar_id", "id");
     }
 }

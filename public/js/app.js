@@ -58339,9 +58339,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Uitloggen");
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Dummy link");
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Leden-Administratie ");
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" © Patrique Fernando van den Boom 2023 ");
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("leden");
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("contributies");
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Leden-Administratie ");
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" © Patrique Fernando van den Boom 2023 ");
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _this = this;
   var _component_ion_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-title");
@@ -58399,10 +58400,23 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                   return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, null, {
                     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
-                        to: "/app/"
+                        to: "/app/leden"
                       }, {
                         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                           return [_hoisted_2];
+                        }),
+                        _: 1 /* STABLE */
+                      })];
+                    }),
+
+                    _: 1 /* STABLE */
+                  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, null, {
+                    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
+                        to: "/app/contributies"
+                      }, {
+                        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                          return [_hoisted_3];
                         }),
                         _: 1 /* STABLE */
                       })];
@@ -58431,7 +58445,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_title, null, {
                     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                      return [_hoisted_3];
+                      return [_hoisted_4];
                     }),
                     _: 1 /* STABLE */
                   })];
@@ -58453,7 +58467,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_title, null, {
                     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                      return [_hoisted_4];
+                      return [_hoisted_5];
                     }),
                     _: 1 /* STABLE */
                   })];
@@ -58606,11 +58620,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var notFound = __webpack_require__.e(/*! import() */ "resources_js_pages_NotFound_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/NotFound.vue */ "./resources/js/pages/NotFound.vue"));
+var contributies = __webpack_require__.e(/*! import() */ "resources_js_pages_Contributies_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/Contributies.vue */ "./resources/js/pages/Contributies.vue"));
+var leden = __webpack_require__.e(/*! import() */ "resources_js_pages_Leden_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./pages/Leden.vue */ "./resources/js/pages/Leden.vue"));
 var routes = [{
   path: "/:catchAll(.*)",
-  component: notFound
+  component: notFound,
+  props: {
+    get: true
+  }
 }, {
-  path: "/app"
+  path: "/app/contributies",
+  component: contributies,
+  props: {
+    get: true
+  }
+}, {
+  path: "/app/leden",
+  component: leden,
+  props: {
+    get: true
+  }
+}, {
+  path: "/app/"
 }];
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (routes);
 
@@ -73685,7 +73716,7 @@ function useRoute() {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_pages_NotFound_vue":1,"node_modules_stencil_core_internal_client_shadow-css_js":1,"node_modules_ionic_core_components_swipe-back_js":1,"node_modules_ionic_core_components_index9_js":1,"node_modules_ionic_core_components_status-tap_js":1,"node_modules_ionic_core_components_input-shims_js":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_pages_NotFound_vue":1,"resources_js_pages_Contributies_vue":1,"resources_js_pages_Leden_vue":1,"node_modules_stencil_core_internal_client_shadow-css_js":1,"node_modules_ionic_core_components_swipe-back_js":1,"node_modules_ionic_core_components_index9_js":1,"node_modules_ionic_core_components_status-tap_js":1,"node_modules_ionic_core_components_input-shims_js":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

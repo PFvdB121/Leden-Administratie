@@ -13,11 +13,11 @@ class SoortLid extends Model
 
     public function familie_leden(): HasMany
     {
-        return $this->hasMany(Familielid::class);
+        return $this->hasMany(Familielid::class, "familie_lid_id", "id");
     }
 
     public function contributies(): HasMany
     {
-        return $this->hasMany(Contributie::class);
+        return $this->hasMany(Contributie::class, "soort_lid_id", "id");
     }
 }

@@ -16,7 +16,7 @@
     <div id="app">
         <ion-app>
             <ionic-menu :user="{{ Auth::user()->first() }}">
-                <router-view></router-view>
+                <router-view :get="{{ json_encode($_GET) }}"></router-view>
             </ionic-menu>
         </ion-app>
     </div>

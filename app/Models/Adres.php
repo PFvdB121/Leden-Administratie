@@ -14,11 +14,11 @@ class Adres extends Model
 
     public function straat(): BelongsTo
     {
-        return $this->belongsTo(Straat::class);
+        return $this->belongsTo(Straat::class, "straat_id", "id");
     }
 
     public function families(): HasMany
     {
-        return $this->hasMany(Familie::class);
+        return $this->hasMany(Familie::class, "adres_id", "id");
     }
 }

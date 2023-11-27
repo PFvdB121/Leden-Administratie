@@ -17,6 +17,7 @@ return new class extends Migration
             $table->char("bijvoeging", 3)->nullable();
             $table->foreignId("straat_id")->constrained("straten");
             $table->timestamps();
+            $table->unique(["huisnummer", "bijvoeging", "straat_id"]);
         });
     }
 

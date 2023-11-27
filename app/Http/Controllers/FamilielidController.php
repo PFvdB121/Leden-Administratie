@@ -4,15 +4,43 @@ namespace App\Http\Controllers;
 
 use App\Models\Familielid;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
+use App\Http\Resources\FamilielidResource;
 
 class FamilielidController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "naam" => "string",
+            "familie" => "string",
+            "adres" => "string",
+            "straat" => "string",
+            "stad" => "string",
+            "land" => "string",
+        ]);
+        $familieLeden = Familielid::where("naam", "like", "%" . $request["naam"] . "%")->whereHas("familie", function($query) use($request){
+            return $query->where("naam", "like", "%" . $request["familie"] . "%")
+            ->whereHas("adres", function(Builder $query) use($request){
+                return $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", "%" . $request["adres"] . "%")
+                ->whereHas("straat", function(Builder $query) use($request){
+                    return $query->where("naam", "like", "%" . $request["straat"] . "%")
+                    ->whereHas("stad", function(Builder $query) use($request){
+                        return $query->where("naam", "like", "%" . $request["stad"] . "%")
+                        ->whereHas("land", function(Builder $query) use($request){
+                            return $query->where("naam", "like", "%" . $request["land"] . "%");
+                        });
+                    });
+                });
+            })->orDoesntHave("adres");
+        })
+        ->paginate(20);
+
+        return FamilielidResource::collection($familieLeden);
     }
 
     /**
