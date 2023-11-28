@@ -40,8 +40,8 @@
         </div>
     </div>
     <div class="w-100">
-        <div class="sticky-top">
-            <ion-grid class="grid-gap">
+        <div ref="scroll1" class="sticky-top overflow-x-scroll">
+            <ion-grid class="grid-gap leden-grid">
                 <ion-row class="bg-secondary">
                     <ion-col :size="this.grid.naam">
                         naam
@@ -70,8 +70,8 @@
                 </ion-row>
             </ion-grid>
         </div>
-        <div>
-            <ion-grid class="grid-gap">
+        <div ref="scroll2" class="overflow-x-hidden">
+            <ion-grid class="grid-gap leden-grid">
                 <ion-row v-for="item in items" class="bg-muted">
                     <ion-col :size="this.grid.naam">
                         {{ item.naam }}
@@ -116,13 +116,17 @@
     import axios from "axios";
 
     export default{
+        beforeMount(){
+            this.gridTotaal = this.gridColTellen(this.grid);
+            this.gridBreedte = this.gridBreedteTellen(this.gridTotaal, this.colomnBreedte);
+        },
         data(){
             return{
                 items: [],
                 grid: {
                     "naam": 2,
                     "email": 3,
-                    "geboortedatum": 1,
+                    "geboortedatum": 2,
                     "soort_lid": 1,
                     "familie": 1,
                     "adres": 2,
@@ -131,6 +135,8 @@
                 },
                 colomnBreedte: 100,
                 gridTotaal: 0,
+                gridBreedte: "",
+                pagina: 1,
                 naam: "",
                 email: "",
                 geboortedatum: "",
@@ -144,9 +150,9 @@
         },
 
         methods: {
-            leden: function(naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
+            leden: function(pagina, naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
                 axios.post("/app/leden", {
-                    "page": 1,
+                    "page": pagina,
                     "naam": naam,
                     "email": email,
                     "geboortedatum": geboortedatum,
@@ -158,6 +164,7 @@
                     "land": land,
                 })
                 .then((response) => {
+                    console.log(response);
                     this.items = response.data.data;
                 })
                 .catch((error) => {
@@ -167,18 +174,28 @@
 
             gridColTellen: function (grid) {
                 var col = 0;
-                grid.forEach((val, index) => {
-                    col += val;
-                });
+                for(const g in grid) {
+                    col += grid[g];
+                };
                 return col;
             },
 
-            gridBreedte: function(){
+            gridBreedteTellen: function(gridTotaal, colomnBreedte){
+                var gridBreedte = gridTotaal * colomnBreedte + "px";
+                return gridBreedte;
+            },
 
+            syncScroll: function(){
+                this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
             }
         },
 
         mounted(){
+            this.$refs.scroll1.addEventListener("scroll", this.syncScroll);
+            
+            if (typeof this.get.pagina !== undefined && !isNaN(this.get.pagina) && (this.get.pagina % 1 === 0)) {
+                this.pagina = this.get.pagina;
+            }
             this.naam = this.get.naam;
             this.email = this.get.email;
             this.geboortedatum = this.get.geboortedatum;
@@ -189,6 +206,7 @@
             this.stad = this.get.stad;
             this.land = this.get.land;
             this.leden(
+                this.pagina,
                 this.get.naam, 
                 this.get.email,
                 this.get.geboortedatum,
@@ -216,3 +234,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .leden-grid{
+        min-width: v-bind(gridBreedte);
+        --ion-grid-columns: v-bind(gridTotaal);
+    }
+</style>
