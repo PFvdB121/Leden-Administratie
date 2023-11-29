@@ -23,6 +23,7 @@ class FamilielidResource extends JsonResource
             "adres" => $this->familie->adres->huisnummer . $this->familie->adres->bijvoeging,
             "straat" => $this->familie->adres->straat->naam,
             "stad" => $this->familie->adres->straat->stad->naam,
+            "land" => $this->familie->adres->straat->stad->land->naam,
             "naam" => $this->naam,
         ];
     }

@@ -27,6 +27,7 @@ const app = Vue.createApp();
 app.use(router);
 app.use(VueAxios, axios);
 app.use(IonicVue);
+require("./functions").functions(app);
 
 window.axios = require("axios");
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";

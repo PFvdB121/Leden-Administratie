@@ -58547,6 +58547,7 @@ var app = vue__WEBPACK_IMPORTED_MODULE_1__.createApp();
 app.use(router);
 app.use(vue_axios__WEBPACK_IMPORTED_MODULE_2__["default"], axios__WEBPACK_IMPORTED_MODULE_16__["default"]);
 app.use(_ionic_vue__WEBPACK_IMPORTED_MODULE_17__.IonicVue);
+(__webpack_require__(/*! ./functions */ "./resources/js/functions.js").functions)(app);
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/dist/browser/axios.cjs");
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 window.axios.interceptors.request.use(function (config) {
@@ -58605,6 +58606,40 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
 //     enabledTransports: ['ws', 'wss'],
 // });
+
+/***/ }),
+
+/***/ "./resources/js/functions.js":
+/*!***********************************!*\
+  !*** ./resources/js/functions.js ***!
+  \***********************************/
+/***/ ((module) => {
+
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+module.exports.functions = function (app) {
+  app.mixin({
+    methods: {
+      redirectWithParams: function redirectWithParams(url, params) {
+        if (Array.isArray(params) || _typeof(params) === "object") {
+          var redirecting = url + "?";
+          var iteration = 0;
+          for (var p in params) {
+            if (params[p] !== undefined && params[p] !== "" && params[p] !== null) {
+              iteration++;
+              if (iteration > 1) {
+                redirecting += "&";
+              }
+              redirecting += p + "=" + params[p];
+            }
+          }
+          window.location.replace(redirecting);
+        } else {
+          console.error("Second parameter must be an array");
+        }
+      }
+    }
+  });
+};
 
 /***/ }),
 

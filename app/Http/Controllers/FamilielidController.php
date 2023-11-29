@@ -28,7 +28,10 @@ class FamilielidController extends Controller
         ->where("email", "like", "%" . $request["email"] . "%")->whereHas("familie", function($query) use($request){
             return $query->where("naam", "like", "%" . $request["familie"] . "%")
             ->whereHas("adres", function(Builder $query) use($request){
-                return $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", "%" . $request["adres"] . "%")
+                return $query->where(function(Builder $query) use($request){
+                    $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", "%" . $request["adres"] . "%")
+                    ->orWhere("huisnummer", "like", "%" . $request["adres"] . "%");
+                })
                 ->whereHas("straat", function(Builder $query) use($request){
                     return $query->where("naam", "like", "%" . $request["straat"] . "%")
                     ->whereHas("stad", function(Builder $query) use($request){

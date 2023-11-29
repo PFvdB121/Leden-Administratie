@@ -6,36 +6,36 @@
         </h2>
         <div>
             <ion-item class="d-inline-block">
-                <ion-input class="d-inline-block" label="naam" label-placement="floating"></ion-input>
+                <ion-input v-model="this.naam" class="d-inline-block" label="naam" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
+                <ion-input v-model="this.email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input class="d-inline-block" label="geboortedatum" label-placement="floating"></ion-input>
+                <ion-input v-model="this.geboortedatum" class="d-inline-block" label="geboortedatum" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input class="d-inline-block" label="soort lid" label-placement="floating"></ion-input>
+                <ion-input v-model="this.soort_lid" class="d-inline-block" label="soort lid" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input class="d-inline-block" label="familie" label-placement="floating"></ion-input>
+                <ion-input v-model="this.familie" class="d-inline-block" label="familie" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input class="d-inline-block" label="adres" label-placement="floating"></ion-input>
+                <ion-input v-model="this.adres" class="d-inline-block" label="adres" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input class="d-inline-block" label="straat" label-placement="floating"></ion-input>
+                <ion-input v-model="this.straat" class="d-inline-block" label="straat" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input class="d-inline-block" label="stad" label-placement="floating"></ion-input>
+                <ion-input v-model="this.stad" class="d-inline-block" label="stad" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input class="d-inline-block" label="land" label-placement="floating"></ion-input>
+                <ion-input v-model="this.land" class="d-inline-block" label="land" label-placement="floating"></ion-input>
             </ion-item>
         </div>
         <div>
-            <ion-button>
-
+            <ion-button @click="search()">
+                Zoeken
             </ion-button>
         </div>
     </div>
@@ -101,6 +101,9 @@
             </ion-grid>
         </div>
     </div>
+    <div>
+
+    </div>
 </template>
 
 <script>
@@ -119,6 +122,32 @@
         beforeMount(){
             this.gridTotaal = this.gridColTellen(this.grid);
             this.gridBreedte = this.gridBreedteTellen(this.gridTotaal, this.colomnBreedte);
+            
+            if (typeof this.get.pagina !== undefined) {
+                this.pagina = this.get.pagina;
+            }
+            this.naam = this.get.naam;
+            this.email = this.get.email;
+            this.geboortedatum = this.get.geboortedatum;
+            this.soort_lid = this.get.soort_lid;
+            this.familie = this.get.familie;
+            this.adres = this.get.adres;
+            this.straat = this.get.straat;
+            this.stad = this.get.stad;
+            this.land = this.get.land;
+
+            this.leden(
+                this.pagina,
+                this.get.naam, 
+                this.get.email,
+                this.get.geboortedatum,
+                this.get.soort_lid,
+                this.get.familie, 
+                this.get.adres, 
+                this.get.straat, 
+                this.get.stad, 
+                this.get.land
+            );
         },
         data(){
             return{
@@ -137,6 +166,8 @@
                 gridTotaal: 0,
                 gridBreedte: "",
                 pagina: 1,
+                eerste_pagina: 1,
+                laatste_pagina: 1,
                 naam: "",
                 email: "",
                 geboortedatum: "",
@@ -150,6 +181,36 @@
         },
 
         methods: {
+            changePage: function(pagina){
+                this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
+                    "pagina": pagina,
+                    "naam": this.get.naam,
+                    "email": this.get.email,
+                    "geboortedatum": this.get.geboortedatum,
+                    "soort_lid": this.get.soort_lid,
+                    "familie": this.get.familie,
+                    "adres": this.get.adres,
+                    "straat": this.get.straat,
+                    "stad": this.get.stad,
+                    "land": this.get.land,
+                });
+            },
+
+            search: function(){
+                this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
+                    "pagina": this.pagina,
+                    "naam": this.naam,
+                    "email": this.email,
+                    "geboortedatum": this.geboortedatum,
+                    "soort_lid": this.soort_lid,
+                    "familie": this.familie,
+                    "adres": this.adres,
+                    "straat": this.straat,
+                    "stad": this.stad,
+                    "land": this.land,
+                });
+            },
+
             leden: function(pagina, naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
                 axios.post("/app/leden", {
                     "page": pagina,
@@ -192,31 +253,6 @@
 
         mounted(){
             this.$refs.scroll1.addEventListener("scroll", this.syncScroll);
-            
-            if (typeof this.get.pagina !== undefined && !isNaN(this.get.pagina) && (this.get.pagina % 1 === 0)) {
-                this.pagina = this.get.pagina;
-            }
-            this.naam = this.get.naam;
-            this.email = this.get.email;
-            this.geboortedatum = this.get.geboortedatum;
-            this.soort_lid = this.get.soort_lid;
-            this.familie = this.get.familie;
-            this.adres = this.get.adres;
-            this.straat = this.get.straat;
-            this.stad = this.get.stad;
-            this.land = this.get.land;
-            this.leden(
-                this.pagina,
-                this.get.naam, 
-                this.get.email,
-                this.get.geboortedatum,
-                this.get.soort_lid,
-                this.get.familie, 
-                this.get.adres, 
-                this.get.straat, 
-                this.get.stad, 
-                this.get.land
-            );
         },
 
         components: {
@@ -230,7 +266,7 @@
         },
 
         props: {
-            "get": Array
+            "get": Object
         }
     }
 </script>
