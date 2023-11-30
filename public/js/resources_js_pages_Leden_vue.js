@@ -70,7 +70,6 @@ var __default__ = {
   methods: {
     zoeken: function zoeken() {
       this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
-        "pagina": this.pagina,
         "naam": this.naam,
         "email": this.email,
         "geboortedatum": this.geboortedatum,
@@ -82,10 +81,9 @@ var __default__ = {
         "land": this.land
       });
     },
-    leden: function leden(pagina, naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land) {
+    leden: function leden(naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land) {
       var _this = this;
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].post("/app/leden", {
-        "page": pagina,
         "naam": naam,
         "email": email,
         "geboortedatum": geboortedatum,

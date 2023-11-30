@@ -181,7 +181,6 @@
         methods: {
             zoeken: function(){
                 this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
-                    "pagina": this.pagina,
                     "naam": this.naam,
                     "email": this.email,
                     "geboortedatum": this.geboortedatum,
@@ -194,9 +193,8 @@
                 });
             },
 
-            leden: function(pagina, naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
+            leden: function(naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
                 axios.post("/app/leden", {
-                    "page": pagina,
                     "naam": naam,
                     "email": email,
                     "geboortedatum": geboortedatum,
