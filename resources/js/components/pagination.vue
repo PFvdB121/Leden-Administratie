@@ -9,7 +9,7 @@
                 {{ n }}
             </ion-select-option>
         </ion-select>
-        <ion-button v-if="(this.get.pagina < this.laatstePagina || !this.get.pagina) && this.laatstePagina > 1" @click="veranderPagina((this.get.pagina ? this.get.pagina + 1 : 2))">
+        <ion-button v-if="(this.get.pagina < this.laatstePagina || !this.get.pagina) && this.laatstePagina > 1" @click="veranderPagina((this.get.pagina ? Number(this.get.pagina) + 1 : 2))">
             Volgende
             <ion-icon :icon="chevronForwardOutline"></ion-icon>
         </ion-button>
@@ -30,6 +30,12 @@
     } from "ionicons/icons"
 
     export default({
+        updated(){
+            if (this.get.pagina > this.laatstePagina) {
+                this.veranderPagina(this.laatstePagina);
+            }
+        },
+
         components: {
             IonSelect,
             IonSelectOption,
@@ -44,14 +50,8 @@
             }
         },
 
-        mounted(){
-            console.log(this.get.pagina);
-        },
-
         props:{
-            "get": {
-                "pagina": ""
-            },
+            "get": Object,
             "laatstePagina": Number,
         },
 

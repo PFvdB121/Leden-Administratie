@@ -15,6 +15,7 @@ class FamilielidResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "id" => $this->id,
             "naam" => $this->naam,
             "soort_lid" => $this->soort_lid->omschrijving,
             "geboortedatum" => $this->geboortedatum,

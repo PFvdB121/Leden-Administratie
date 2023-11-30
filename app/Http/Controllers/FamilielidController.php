@@ -91,8 +91,12 @@ class FamilielidController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Familielid $familielid)
+    public function delete(Request $request)
     {
-        //
+        $validated = $request->validate([
+            "email" => "required|email",
+        ]);
+        
+        Familielid::where("email", $request["email"])->delete();
     }
 }

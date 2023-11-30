@@ -28,6 +28,10 @@ Route::group(["middleware" => "auth:web"], function(){
         });
 
         Route::post("logout", "App\Http\Controllers\LoginController@logout");
-        Route::post("leden", "App\Http\Controllers\FamilielidController@index");
+
+        Route::prefix("leden")->group(function(){
+            Route::post("/", "App\Http\Controllers\FamilielidController@index");
+            Route::post("/delete", "App\Http\Controllers\FamilielidController@delete");
+        });
     });
 });

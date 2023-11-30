@@ -94,8 +94,8 @@
                     <ion-col :size="this.grid.aanpassen">
                         aanpassen
                     </ion-col>
-                    <ion-col :size="this.grid.deleten">
-                        deleten
+                    <ion-col :size="this.grid.deleten" class="d-flex justify-content-center">
+                        <ion-button @click="deleteAlert(item.email, item.naam)" color="danger">deleten</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -113,11 +113,12 @@
         IonItem,
         IonContent,
         IonButton,
+        alertController,
      } from "@ionic/vue";
     import axios from "axios";
 
     export default{
-        beforeMount(){
+        created(){
             this.gridTotaal = this.gridColTellen(this.grid);
             this.gridBreedte = this.gridBreedteTellen(this.gridTotaal, this.colomnBreedte);
             
@@ -157,8 +158,8 @@
                     "soort_lid": 1,
                     "familie": 1,
                     "adres": 2,
-                    "aanpassen": 1,
-                    "deleten": 1,
+                    "aanpassen": 2,
+                    "deleten": 2,
                 },
                 colomnBreedte: 100,
                 gridTotaal: 0,
@@ -230,7 +231,7 @@
 
             syncScroll: function(){
                 this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
-            }
+            },
         },
 
         mounted(){
@@ -249,6 +250,43 @@
 
         props: {
             "get": Object
+        },
+
+        setup() {
+            function deleteLid(email){
+                axios.post("/app/leden/delete", {
+                    "email": email,
+                })
+                .then(() => {
+                    location.reload();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            }
+            const deleteAlert = async(email, naam) =>{
+                const alert = await alertController.create({
+                    header: "Let op!",
+                    message: "Weet u zeker dat u " + naam + " wilt deleten?",
+                    buttons: [
+                        {
+                            text: "Ja",
+                            role: "confirm",
+                            handler: () => {
+                                deleteLid(email);
+                            }
+                        },
+                        {
+                            text: "Nee",
+                            role: "cancel"
+                        }
+                    ]
+                });
+
+                await alert.present();
+            }
+
+            return {deleteAlert};
         }
     }
 </script>
