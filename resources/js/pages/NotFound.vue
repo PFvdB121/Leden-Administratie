@@ -5,7 +5,7 @@
 <script>
     export default{
         props: {
-            "get": Array
+            "get": Object
         }
     }
 </script>

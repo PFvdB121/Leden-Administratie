@@ -50,5 +50,6 @@ window.axios.interceptors.response.use(
 
 app.component("ion-app", IonApp);
 app.component("ionic-menu", require("./components/menu.vue").default);
+app.component("pagination", require("./components/pagination.vue").default);
 
 app.mount("#app");

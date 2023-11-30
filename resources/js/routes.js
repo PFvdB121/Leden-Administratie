@@ -1,6 +1,6 @@
-const notFound = import("./pages/NotFound.vue");
-const contributies = import("./pages/Contributies.vue");
-const leden = import("./pages/Leden.vue");
+const notFound = () => import("./pages/NotFound.vue");
+const contributies = () => import("./pages/Contributies.vue");
+const leden = () => import("./pages/Leden.vue");
 
 const routes = [
     {

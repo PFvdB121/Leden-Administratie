@@ -34,7 +34,7 @@
             </ion-item>
         </div>
         <div>
-            <ion-button @click="search()">
+            <ion-button @click="zoeken()">
                 Zoeken
             </ion-button>
         </div>
@@ -101,9 +101,7 @@
             </ion-grid>
         </div>
     </div>
-    <div>
-
-    </div>
+    <pagination :get="this.get" :laatstePagina="this.laatstePagina"/>
 </template>
 
 <script>
@@ -166,8 +164,7 @@
                 gridTotaal: 0,
                 gridBreedte: "",
                 pagina: 1,
-                eerste_pagina: 1,
-                laatste_pagina: 1,
+                laatstePagina: 1,
                 naam: "",
                 email: "",
                 geboortedatum: "",
@@ -181,22 +178,7 @@
         },
 
         methods: {
-            changePage: function(pagina){
-                this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
-                    "pagina": pagina,
-                    "naam": this.get.naam,
-                    "email": this.get.email,
-                    "geboortedatum": this.get.geboortedatum,
-                    "soort_lid": this.get.soort_lid,
-                    "familie": this.get.familie,
-                    "adres": this.get.adres,
-                    "straat": this.get.straat,
-                    "stad": this.get.stad,
-                    "land": this.get.land,
-                });
-            },
-
-            search: function(){
+            zoeken: function(){
                 this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
                     "pagina": this.pagina,
                     "naam": this.naam,
@@ -225,7 +207,7 @@
                     "land": land,
                 })
                 .then((response) => {
-                    console.log(response);
+                    this.laatstePagina = response.data.meta.last_page;
                     this.items = response.data.data;
                 })
                 .catch((error) => {

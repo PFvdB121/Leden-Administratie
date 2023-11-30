@@ -52,8 +52,7 @@ var __default__ = {
       gridTotaal: 0,
       gridBreedte: "",
       pagina: 1,
-      eerste_pagina: 1,
-      laatste_pagina: 1,
+      laatstePagina: 1,
       naam: "",
       email: "",
       geboortedatum: "",
@@ -66,21 +65,7 @@ var __default__ = {
     };
   },
   methods: {
-    changePage: function changePage(pagina) {
-      this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
-        "pagina": pagina,
-        "naam": this.get.naam,
-        "email": this.get.email,
-        "geboortedatum": this.get.geboortedatum,
-        "soort_lid": this.get.soort_lid,
-        "familie": this.get.familie,
-        "adres": this.get.adres,
-        "straat": this.get.straat,
-        "stad": this.get.stad,
-        "land": this.get.land
-      });
-    },
-    search: function search() {
+    zoeken: function zoeken() {
       this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
         "pagina": this.pagina,
         "naam": this.naam,
@@ -108,7 +93,7 @@ var __default__ = {
         "stad": stad,
         "land": land
       }).then(function (response) {
-        console.log(response);
+        _this.laatstePagina = response.data.meta.last_page;
         _this.items = response.data.data;
       })["catch"](function (error) {
         console.log(error);
@@ -212,10 +197,6 @@ var _hoisted_15 = {
 };
 var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" aanpassen ");
 var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" deleten ");
-var _hoisted_18 = /*#__PURE__*/_withScopeId(function () {
-  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, null, -1 /* HOISTED */);
-});
-
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _this = this;
   var _component_ion_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-input");
@@ -224,6 +205,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_ion_col = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-col");
   var _component_ion_row = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-row");
   var _component_ion_grid = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-grid");
+  var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
     "class": "d-inline-block"
   }, {
@@ -362,7 +344,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1 /* STABLE */
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
     onClick: _cache[9] || (_cache[9] = function ($event) {
-      return $options.search();
+      return $options.zoeken();
     })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -519,7 +501,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
 
     _: 1 /* STABLE */
-  })], 512 /* NEED_PATCH */)]), _hoisted_18], 64 /* STABLE_FRAGMENT */);
+  })], 512 /* NEED_PATCH */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
+    get: this.get,
+    laatstePagina: this.laatstePagina
+  }, null, 8 /* PROPS */, ["get", "laatstePagina"])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
