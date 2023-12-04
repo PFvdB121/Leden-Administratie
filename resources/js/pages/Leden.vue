@@ -6,31 +6,31 @@
         </h2>
         <div>
             <ion-item class="d-inline-block">
-                <ion-input v-model="this.naam" class="d-inline-block" label="naam" label-placement="floating"></ion-input>
+                <ion-input v-model="naam" class="d-inline-block" label="naam" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="this.email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
+                <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="this.geboortedatum" class="d-inline-block" label="geboortedatum" label-placement="floating"></ion-input>
+                <ion-input v-model="geboortedatum" class="d-inline-block" label="geboortedatum" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="this.soort_lid" class="d-inline-block" label="soort lid" label-placement="floating"></ion-input>
+                <ion-input v-model="soort_lid" class="d-inline-block" label="soort lid" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="this.familie" class="d-inline-block" label="familie" label-placement="floating"></ion-input>
+                <ion-input v-model="familie" class="d-inline-block" label="familie" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="this.adres" class="d-inline-block" label="adres" label-placement="floating"></ion-input>
+                <ion-input v-model="adres" class="d-inline-block" label="adres" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="this.straat" class="d-inline-block" label="straat" label-placement="floating"></ion-input>
+                <ion-input v-model="straat" class="d-inline-block" label="straat" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="this.stad" class="d-inline-block" label="stad" label-placement="floating"></ion-input>
+                <ion-input v-model="stad" class="d-inline-block" label="stad" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="this.land" class="d-inline-block" label="land" label-placement="floating"></ion-input>
+                <ion-input v-model="land" class="d-inline-block" label="land" label-placement="floating"></ion-input>
             </ion-item>
         </div>
         <div>
@@ -125,8 +125,8 @@
             this.gridTotaal = this.gridColTellen(this.grid);
             this.gridBreedte = this.gridBreedteTellen(this.gridTotaal, this.colomnBreedte);
             
-            if (typeof this.get.pagina !== undefined) {
-                this.pagina = this.get.pagina;
+            if (typeof this.get.page !== undefined) {
+                this.pagina = this.get.page;
             }
             this.naam = this.get.naam;
             this.email = this.get.email;
@@ -196,8 +196,9 @@
                 });
             },
 
-            leden: function(naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
+            leden: function(page, naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
                 axios.post("/app/leden", {
+                    "page": page,
                     "naam": naam,
                     "email": email,
                     "geboortedatum": geboortedatum,

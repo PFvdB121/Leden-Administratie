@@ -16,6 +16,7 @@ class FamilielidController extends Controller
     public function index(Request $request)
     {
         $validate = $request->validate([
+            "page" => "numeric",
             "naam" => "string",
             "email" => "string",
             "familie" => "string",
@@ -41,7 +42,7 @@ class FamilielidController extends Controller
                         });
                     });
                 });
-            })->orDoesntHave("adres");
+            });
         })
         ->paginate(20);
 
