@@ -10,9 +10,15 @@ class LandController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "naam" => "string",
+        ]);
+
+        $landen = Land::select("naam")->where("naam", "like", $request["naam"] . "%")->offset(0)->limit(10)->get();
+
+        return $landen;
     }
 
     /**

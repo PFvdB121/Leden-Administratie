@@ -10,9 +10,20 @@ class StadController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "naam" => "string",
+            "land" => "required|string",
+        ]);
+
+        $steden = Stad::select("naam")
+        ->where("naam", "like", $request["naam"] . "%")
+        ->whereHas("land", function($query) use($request){
+            return $request->where("naam", $request["land"]);
+        })->offset(0)->limit(10)->get();
+
+        return $steden;
     }
 
     /**

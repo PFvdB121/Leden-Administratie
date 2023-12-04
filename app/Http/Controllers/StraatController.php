@@ -10,9 +10,24 @@ class StraatController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "naam" => "string",
+            "stad" => "required|string",
+            "land" => "required|string",
+        ]);
+
+        $straten = Straat::select("naam")
+        ->where("naam", "like", $request["naam"] . "%")
+        ->whereHas("stad", function($query) use ($request){
+            return $query->where("naam", $request["stad"])
+            ->whereHas("landen", function($query) use ($request){
+                return $query->where("naam", $request["land"]);
+            });
+        })->offset(0)->limit(10)->get();
+
+        return $straten;
     }
 
     /**
