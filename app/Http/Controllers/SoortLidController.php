@@ -12,7 +12,9 @@ class SoortLidController extends Controller
      */
     public function index()
     {
-        //
+        $soortenLeden = SoortLid::get();
+
+        return $soortenLeden;
     }
 
     /**

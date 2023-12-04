@@ -32,6 +32,9 @@ Route::group(["middleware" => "auth:web"], function(){
         Route::prefix("leden")->group(function(){
             Route::post("/", "App\Http\Controllers\FamilielidController@index");
             Route::post("/delete", "App\Http\Controllers\FamilielidController@delete");
+            Route::post("/create", "App\Http\Controllers\FamilielidController@create");
         });
+
+        Route::post("/soorten_leden", "App\Http\Controllers\SoortLidController@index");
     });
 });

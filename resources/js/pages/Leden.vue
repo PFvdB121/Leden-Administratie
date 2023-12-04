@@ -114,8 +114,11 @@
         IonContent,
         IonButton,
         alertController,
+        modalController,
      } from "@ionic/vue";
     import axios from "axios";
+
+    import LedenModal from "../components/modals/LedenModal.vue";
 
     export default{
         created(){
@@ -156,7 +159,7 @@
                     "email": 3,
                     "geboortedatum": 2,
                     "soort_lid": 1,
-                    "familie": 1,
+                    "familie": 2,
                     "adres": 2,
                     "aanpassen": 2,
                     "deleten": 2,
@@ -230,6 +233,53 @@
             syncScroll: function(){
                 this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
             },
+
+            ledenToevoegen: function(naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
+                axios.post("app/leden/toevoegen", {
+                    "naam": naam,
+                    "email": email,
+                    "geboortedatum": geboortedatum,
+                    "soort_lid": soort_lid,
+                    "familie": familie,
+                    "adres": adres,
+                    "straat": straat,
+                    "stad": stad,
+                    "land": land,
+                })
+                .then(() => {
+                    location.reload();
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+            },
+
+            async LedenToevoegenModal(titel){
+                const modal = await modalController.create({
+                    component: LedenModal,
+                    componentProps: {
+                        titel: titel,
+                    }
+                });
+
+                modal.present();
+
+                const {data, role} = await modal.onWillDismiss();
+
+                if (role == "confirm"){
+                    this.ledenToevoegen(
+                        data.naam, 
+                        data.email, 
+                        data.geboortedatum, 
+                        data.soort_lid, 
+                        data.familie, 
+                        data.adres, 
+                        data.straat, 
+                        data.stad, 
+                        data.land
+                    );
+                }
+            }
         },
 
         mounted(){
