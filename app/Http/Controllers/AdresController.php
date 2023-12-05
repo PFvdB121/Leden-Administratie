@@ -21,19 +21,17 @@ class AdresController extends Controller
         ]);
 
         $adressen = Adres::select("huisnummer", "bijvoeging")
-        ->where("huisnummer", "like", $request["huisnummer"] . "%")
         ->where(function($query) use ($request){
-            $query = $query->where("bijvoeging", "like", $request["bijvoeging"] . "%");
-            if (is_null($request["bijvoeging"]) || empty($request["bijvoeging"])) {
-                $query = $query->orWhereNull("bijvoeging");
-            }
-            return $query;
+            return $query->where(function(Builder $query) use($request){
+                $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", $request["huisnummer"] . $request["bijvoeging"] . "%")
+                ->orWhere("huisnummer", "like", $request["huisnummer"] . $request["bijvoeging"] . "%");
+            });
         })
         ->whereHas("straat", function($query) use($request){
             return $query->where("naam", $request["straat"])
-            ->whereHas("steden", function($query) use($request){
+            ->whereHas("stad", function($query) use($request){
                 return $query->where("naam", $request["stad"])
-                ->whereHas("landen", function($query) use($request){
+                ->whereHas("land", function($query) use($request){
                     return $query->where("naam", $request["land"]);
                 });
             });
