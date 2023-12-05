@@ -13,9 +13,9 @@ class FamilieController extends Controller
     public function index(Request $request)
     {
         $validate = $request->validate([
-            "naam" => "string",
+            "naam" => "nullable|string",
             "huisnummer" => "required|number",
-            "bijvoeging" => "string",
+            "bijvoeging" => "nullable|string",
             "straat" => "required|string",
             "stad" => "required|string",
             "land" => "required|string"

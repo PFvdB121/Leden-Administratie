@@ -13,8 +13,8 @@ class AdresController extends Controller
     public function index(Request $request)
     {
         $validate = $request->validate([
-            "huisnummer" => "number",
-            "bijvoeging" => "string",
+            "huisnummer" => "nullable|number",
+            "bijvoeging" => "nullable|string",
             "straat" => "required|string",
             "stad" => "required|string",
             "land" => "required|string"

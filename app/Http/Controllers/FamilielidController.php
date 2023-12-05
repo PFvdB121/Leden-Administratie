@@ -16,14 +16,14 @@ class FamilielidController extends Controller
     public function index(Request $request)
     {
         $validate = $request->validate([
-            "page" => "numeric",
-            "naam" => "string",
-            "email" => "string",
-            "familie" => "string",
-            "adres" => "string",
-            "straat" => "string",
-            "stad" => "string",
-            "land" => "string",
+            "page" => "nullable|numeric",
+            "naam" => "nullable|string",
+            "email" => "nullable|string",
+            "familie" => "nullable|string",
+            "adres" => "nullable|string",
+            "straat" => "nullable|string",
+            "stad" => "nullable|string",
+            "land" => "nullable|string",
         ]);
         $familieLeden = Familielid::where("naam", "like", "%" . $request["naam"] . "%")
         ->where("email", "like", "%" . $request["email"] . "%")->whereHas("familie", function($query) use($request){

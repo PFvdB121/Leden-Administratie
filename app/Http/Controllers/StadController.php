@@ -13,7 +13,7 @@ class StadController extends Controller
     public function index(Request $request)
     {
         $validate = $request->validate([
-            "naam" => "string",
+            "naam" => "nullable|string",
             "land" => "required|string",
         ]);
 

@@ -13,7 +13,7 @@ class LandController extends Controller
     public function index(Request $request)
     {
         $validate = $request->validate([
-            "naam" => "string",
+            "naam" => "nullable|string",
         ]);
 
         $landen = Land::select("naam")->where("naam", "like", $request["naam"] . "%")->offset(0)->limit(10)->get();
