@@ -2,7 +2,7 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button>
+                <ion-button @click="annuleren()">
                     Annuleren
                 </ion-button>
             </ion-buttons>
@@ -10,7 +10,7 @@
                 {{ titel }}
             </ion-title>
             <ion-buttons slot="end">
-                <ion-button :disabled="!(naam && validateEmail(email) && geboortedatum && soortLid && familie)">
+                <ion-button :disabled="!(naam && validateEmail(email) && geboortedatum && soortLid && familie)" @click="bevestigen()">
                     Bevestigen
                 </ion-button>
             </ion-buttons>

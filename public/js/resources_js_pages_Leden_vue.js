@@ -1123,7 +1123,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             slot: "start"
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, null, {
+              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
+                onClick: _cache[0] || (_cache[0] = function ($event) {
+                  return _ctx.annuleren();
+                })
+              }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [_hoisted_1];
                 }),
@@ -1143,7 +1147,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
               return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-                disabled: !(_ctx.naam && _ctx.validateEmail(_ctx.email) && _ctx.geboortedatum && _ctx.soortLid && _ctx.familie)
+                disabled: !(_ctx.naam && _ctx.validateEmail(_ctx.email) && _ctx.geboortedatum && _ctx.soortLid && _ctx.familie),
+                onClick: _cache[1] || (_cache[1] = function ($event) {
+                  return _ctx.bevestigen();
+                })
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [_hoisted_2];
@@ -1172,7 +1179,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "label-placement": "floating",
                 label: "naam",
                 modelValue: _ctx.naam,
-                "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+                "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
                   return _ctx.naam = $event;
                 })
               }, null, 8 /* PROPS */, ["modelValue"])];
@@ -1188,7 +1195,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                   _ctx.isEmail = _ctx.validateEmail();
                 },
                 modelValue: _ctx.email,
-                "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+                "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
                   return _ctx.email = $event;
                 })
               }, null, 8 /* PROPS */, ["on-ion-change", "modelValue"])];
@@ -1201,7 +1208,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 type: "date",
                 label: "geboortedatum",
                 modelValue: _ctx.geboortedatum,
-                "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+                "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
                   return _ctx.geboortedatum = $event;
                 })
               }, null, 8 /* PROPS */, ["modelValue"])];
@@ -1212,7 +1219,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_select, {
                 placeholder: "Selecteer wat voor soort lid",
                 modelValue: _ctx.soortLid,
-                "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+                "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
                   return _ctx.soortLid = $event;
                 })
               }, {
@@ -1243,7 +1250,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 label: "familie",
                 readonly: true,
                 modelValue: _ctx.familie,
-                "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+                "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
                   return _ctx.familie = $event;
                 })
               }, null, 8 /* PROPS */, ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1251,14 +1258,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 label: "adres",
                 readonly: true,
                 modelValue: _ctx.adres,
-                "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
+                "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
                   return _ctx.adres = $event;
                 })
               }, null, 8 /* PROPS */, ["modelValue"])];
             }),
             _: 1 /* STABLE */
           }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-            onClick: _cache[6] || (_cache[6] = function () {
+            onClick: _cache[8] || (_cache[8] = function () {
               _ctx.familieToevoegen();
             })
           }, {
