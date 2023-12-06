@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Adres;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdresController extends Controller
 {
@@ -13,7 +14,7 @@ class AdresController extends Controller
     public function index(Request $request)
     {
         $validate = $request->validate([
-            "huisnummer" => "nullable|number",
+            "huisnummer" => "nullable|integer",
             "bijvoeging" => "nullable|string",
             "straat" => "required|string",
             "stad" => "required|string",
@@ -22,7 +23,7 @@ class AdresController extends Controller
 
         $adressen = Adres::select("huisnummer", "bijvoeging")
         ->where(function($query) use ($request){
-            return $query->where(function(Builder $query) use($request){
+            return $query->where(function($query) use($request){
                 $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", $request["huisnummer"] . $request["bijvoeging"] . "%")
                 ->orWhere("huisnummer", "like", $request["huisnummer"] . $request["bijvoeging"] . "%");
             });
