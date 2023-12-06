@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Familie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FamilieController extends Controller
 {
@@ -14,7 +15,7 @@ class FamilieController extends Controller
     {
         $validate = $request->validate([
             "naam" => "nullable|string",
-            "huisnummer" => "required|number",
+            "huisnummer" => "required|integer",
             "bijvoeging" => "nullable|string",
             "straat" => "required|string",
             "stad" => "required|string",
@@ -22,27 +23,25 @@ class FamilieController extends Controller
         ]);
 
         $families = Familie::select("naam")
-        ->where("naam", "like", $request["naam"], "%")
-        ->whereHas("straat", function($query) use($request){
-            return $query->where("huisnummer", $request["huisnummer"])
-            ->where(function($query) use ($request){
-                $query = $query->where("bijvoeging", $request["bijvoeging"]);
-                if (is_null($request["bijvoeging"]) || empty($request["bijvoeging"])) {
-                    $query = $query->orWhereNull("bijvoeging");
-                }
-                return $query;
+        ->where("naam", "like", $request["naam"] . "%")
+        ->whereHas("adres", function($query) use($request){
+            return $query->where(function($query) use ($request){
+                return $query->where(function($query) use($request){
+                    $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), $request["huisnummer"] . $request["bijvoeging"])
+                    ->orWhere("huisnummer", $request["huisnummer"] . $request["bijvoeging"]);
+                });
             })->whereHas("straat", function($query) use($request){
                 return $query->where("naam", $request["straat"])
-                ->whereHas("steden", function($query) use($request){
+                ->whereHas("stad", function($query) use($request){
                     return $query->where("naam", $request["stad"])
-                    ->whereHas("landen", function($query) use($request){
+                    ->whereHas("land", function($query) use($request){
                         return $query->where("naam", $request["land"]);
                     });
                 });
             });
         })->offset(0)->limit(10)->get();
 
-        return $adressen;
+        return $families;
     }
 
     /**

@@ -35,16 +35,16 @@ Route::group(["middleware" => "auth:web"], function(){
             Route::post("/create", "App\Http\Controllers\FamilielidController@create");
         });
 
-        Route::post("families/", "App\Http\Controllers\FamilieController@index");
+        Route::post("families", "App\Http\Controllers\FamilieController@index");
 
-        Route::post("adressen/", "App\Http\Controllers\AdresController@index");
+        Route::post("adressen", "App\Http\Controllers\AdresController@index");
 
-        Route::post("straten/", "App\Http\Controllers\StraatController@index");
+        Route::post("straten", "App\Http\Controllers\StraatController@index");
 
-        Route::post("steden/", "App\Http\Controllers\StadController@index");
+        Route::post("steden", "App\Http\Controllers\StadController@index");
 
-        Route::post("landen/", "App\Http\Controllers\LandController@index");
+        Route::post("landen", "App\Http\Controllers\LandController@index");
 
-        Route::post("/soorten_leden", "App\Http\Controllers\SoortLidController@index");
+        Route::post("soorten_leden", "App\Http\Controllers\SoortLidController@index");
     });
 });

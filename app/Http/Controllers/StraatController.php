@@ -22,7 +22,7 @@ class StraatController extends Controller
         ->where("naam", "like", $request["naam"] . "%")
         ->whereHas("stad", function($query) use ($request){
             return $query->where("naam", $request["stad"])
-            ->whereHas("landen", function($query) use ($request){
+            ->whereHas("land", function($query) use ($request){
                 return $query->where("naam", $request["land"]);
             });
         })->offset(0)->limit(10)->get();

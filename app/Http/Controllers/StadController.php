@@ -20,7 +20,7 @@ class StadController extends Controller
         $steden = Stad::select("naam")
         ->where("naam", "like", $request["naam"] . "%")
         ->whereHas("land", function($query) use($request){
-            return $request->where("naam", $request["land"]);
+            return $query->where("naam", $request["land"]);
         })->offset(0)->limit(10)->get();
 
         return $steden;

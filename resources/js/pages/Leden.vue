@@ -38,6 +38,12 @@
                 Zoeken
             </ion-button>
         </div>
+        <div>
+            <ion-button  @click="LedenToevoegenModal()">
+                Lid toevoegen
+                <ion-icon :icon="addOutline"></ion-icon>
+            </ion-button>
+        </div>
     </div>
     <div class="w-100">
         <div ref="scroll1" class="sticky-top overflow-x-scroll">
@@ -113,12 +119,15 @@
         IonItem,
         IonContent,
         IonButton,
+        IonIcon,
         alertController,
         modalController,
      } from "@ionic/vue";
     import axios from "axios";
 
     import LedenModal from "../components/modals/LedenModal.vue";
+
+    import { addOutline } from "ionicons/icons";
 
     export default{
         created(){
@@ -255,11 +264,11 @@
                 })
             },
 
-            async LedenToevoegenModal(titel){
+            async LedenToevoegenModal(){
                 const modal = await modalController.create({
                     component: LedenModal,
                     componentProps: {
-                        titel: titel,
+                        titel: "Leden Toevoegen",
                     }
                 });
 
@@ -268,17 +277,18 @@
                 const {data, role} = await modal.onWillDismiss();
 
                 if (role == "confirm"){
-                    this.ledenToevoegen(
-                        data.naam, 
-                        data.email, 
-                        data.geboortedatum, 
-                        data.soort_lid, 
-                        data.familie, 
-                        data.adres, 
-                        data.straat, 
-                        data.stad, 
-                        data.land
-                    );
+                    console.log(data);
+                    // this.ledenToevoegen(
+                    //     data.naam, 
+                    //     data.email, 
+                    //     data.geboortedatum, 
+                    //     data.soort_lid, 
+                    //     data.familie, 
+                    //     data.adres, 
+                    //     data.straat, 
+                    //     data.stad, 
+                    //     data.land
+                    // );
                 }
             }
         },
@@ -295,6 +305,7 @@
             IonItem,
             IonContent,
             IonButton,
+            IonIcon,
         },
 
         props: {
@@ -335,7 +346,7 @@
                 await alert.present();
             }
 
-            return {deleteAlert};
+            return {deleteAlert, addOutline};
         }
     }
 </script>

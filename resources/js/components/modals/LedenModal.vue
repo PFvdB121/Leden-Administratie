@@ -36,10 +36,10 @@
             </ion-item>
             <div>
                 <ion-item class="d-flex justify-content-center">
-                    <ion-input label-placement="floating" label="familie" :disabled="true" v-model="this.familie"></ion-input>
-                    <ion-input label-placement="floating" label="adres" :disabled="true" ref="adres"></ion-input>
+                    <ion-input label-placement="floating" label="familie" :readonly="true" v-model="this.familie"></ion-input>
+                    <ion-input label-placement="floating" label="adres" :readonly="true" v-model="this.adres"></ion-input>
                 </ion-item>
-                <ion-button @click="FamilieToevoegen">Familie toevoegen</ion-button>
+                <ion-button @click="() => {familieToevoegen()}">Familie toevoegen</ion-button>
             </div>
         </ion-list>
     </ion-content>
@@ -57,6 +57,7 @@
         IonHeader,
         IonContent,
         IonSelect,
+        IonInput,
         IonSelectOption,
         modalController,
     } from '@ionic/vue';
@@ -79,6 +80,7 @@
                 straat: "",
                 stad: "",
                 land: "",
+                adres: "",
             }
         },
         beforeRouteUpdate(to, from, next) {
@@ -90,9 +92,9 @@
         },
         methods:{
             soortenLedenOphalen: function(){
-                axios.post("app/soorten_leden")
+                axios.post("soorten_leden")
                 .then((response) => {
-                    this.soortenLeden = response.data.data;
+                    this.soortenLeden = response.data;
                 })
                 .catch((error) => {
                     console.log(error);
@@ -121,7 +123,7 @@
             },
 
             async familieToevoegen(){
-                const modal = modalController.create({
+                const modal = await modalController.create({
                     component: FamilieModal,
                 });
 
@@ -137,7 +139,7 @@
                     this.stad = data.stad;
                     this.land = data.land;
 
-                    this.$refs.adres = this.straat + " " + this.huisnummer + this.bijvoeging + ", " + this.stad + ", " + this.land;
+                    this.adres = this.straat + " " + this.huisnummer + this.bijvoeging + ", " + this.stad + ", " + this.land;
                 }
             }
         },
@@ -152,6 +154,7 @@
             IonContent,
             IonSelect,
             IonSelectOption,
+            IonInput,
         },
 
         props: {
