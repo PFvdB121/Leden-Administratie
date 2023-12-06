@@ -209,7 +209,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       straat: "",
       stad: "",
       land: "",
-      adres: ""
+      adres: "",
+      isEmail: false
     };
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
@@ -217,6 +218,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.annuleren();
   },
   beforeMount: function beforeMount() {
+    this.validateEmail("patriquevdboom@hotmail.com");
     this.soortenLedenOphalen();
   },
   methods: {
@@ -1102,7 +1104,6 @@ var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNod
 var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Bevestigen ");
 var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Familie toevoegen");
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _this = this;
   var _component_ion_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-button");
   var _component_ion_buttons = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-buttons");
   var _component_ion_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-title");
@@ -1133,7 +1134,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             _: 1 /* STABLE */
           }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_title, null, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_this.titel), 1 /* TEXT */)];
+              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.titel), 1 /* TEXT */)];
             }),
 
             _: 1 /* STABLE */
@@ -1141,14 +1142,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             slot: "end"
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, null, {
+              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
+                disabled: !(_ctx.naam && _ctx.validateEmail(_ctx.email) && _ctx.geboortedatum && _ctx.soortLid && _ctx.familie)
+              }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [_hoisted_2];
                 }),
                 _: 1 /* STABLE */
-              })];
+              }, 8 /* PROPS */, ["disabled"])];
             }),
-
             _: 1 /* STABLE */
           })];
         }),
@@ -1169,9 +1171,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
                 "label-placement": "floating",
                 label: "naam",
-                modelValue: _this.naam,
+                modelValue: _ctx.naam,
                 "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
-                  return _this.naam = $event;
+                  return _ctx.naam = $event;
                 })
               }, null, 8 /* PROPS */, ["modelValue"])];
             }),
@@ -1180,22 +1182,27 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
               return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
                 "label-placement": "floating",
+                type: "email",
                 label: "email",
-                modelValue: _this.email,
+                "on-ion-change": function onIonChange() {
+                  _ctx.isEmail = _ctx.validateEmail();
+                },
+                modelValue: _ctx.email,
                 "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
-                  return _this.email = $event;
+                  return _ctx.email = $event;
                 })
-              }, null, 8 /* PROPS */, ["modelValue"])];
+              }, null, 8 /* PROPS */, ["on-ion-change", "modelValue"])];
             }),
             _: 1 /* STABLE */
           }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, null, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
               return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
                 "label-placement": "floating",
+                type: "date",
                 label: "geboortedatum",
-                modelValue: _this.geboortedatum,
+                modelValue: _ctx.geboortedatum,
                 "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
-                  return _this.geboortedatum = $event;
+                  return _ctx.geboortedatum = $event;
                 })
               }, null, 8 /* PROPS */, ["modelValue"])];
             }),
@@ -1204,9 +1211,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
               return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_select, {
                 placeholder: "Selecteer wat voor soort lid",
-                modelValue: _this.soortLid,
+                modelValue: _ctx.soortLid,
                 "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
-                  return _this.soortLid = $event;
+                  return _ctx.soortLid = $event;
                 })
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -1235,17 +1242,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "label-placement": "floating",
                 label: "familie",
                 readonly: true,
-                modelValue: _this.familie,
+                modelValue: _ctx.familie,
                 "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
-                  return _this.familie = $event;
+                  return _ctx.familie = $event;
                 })
               }, null, 8 /* PROPS */, ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
                 "label-placement": "floating",
                 label: "adres",
                 readonly: true,
-                modelValue: _this.adres,
+                modelValue: _ctx.adres,
                 "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
-                  return _this.adres = $event;
+                  return _ctx.adres = $event;
                 })
               }, null, 8 /* PROPS */, ["modelValue"])];
             }),

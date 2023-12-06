@@ -7,10 +7,10 @@
                 </ion-button>
             </ion-buttons>
             <ion-title>
-                {{ this.titel }}
+                {{ titel }}
             </ion-title>
             <ion-buttons slot="end">
-                <ion-button>
+                <ion-button :disabled="!(naam && validateEmail(email) && geboortedatum && soortLid && familie)">
                     Bevestigen
                 </ion-button>
             </ion-buttons>
@@ -19,16 +19,16 @@
     <ion-content class="ion-padding">
         <ion-list>
             <ion-item>
-                <ion-input label-placement="floating" label="naam" v-model="this.naam"></ion-input>
+                <ion-input label-placement="floating" label="naam" v-model="naam"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-input label-placement="floating" label="email" v-model="this.email"></ion-input>
+                <ion-input label-placement="floating" type="email" label="email" :on-ion-change="function(){isEmail = validateEmail()}" v-model="email"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-input label-placement="floating" label="geboortedatum" v-model="this.geboortedatum"></ion-input>
+                <ion-input label-placement="floating" type="date" label="geboortedatum" v-model="geboortedatum"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-select placeholder="Selecteer wat voor soort lid" v-model="this.soortLid">
+                <ion-select placeholder="Selecteer wat voor soort lid" v-model="soortLid">
                     <ion-select-option v-for="s in soortenLeden" :value="s.omschrijving">
                         {{ s.omschrijving }}
                     </ion-select-option>
@@ -36,8 +36,8 @@
             </ion-item>
             <div>
                 <ion-item class="d-flex justify-content-center">
-                    <ion-input label-placement="floating" label="familie" :readonly="true" v-model="this.familie"></ion-input>
-                    <ion-input label-placement="floating" label="adres" :readonly="true" v-model="this.adres"></ion-input>
+                    <ion-input label-placement="floating" label="familie" :readonly="true" v-model="familie"></ion-input>
+                    <ion-input label-placement="floating" label="adres" :readonly="true" v-model="adres"></ion-input>
                 </ion-item>
                 <ion-button @click="() => {familieToevoegen()}">Familie toevoegen</ion-button>
             </div>
@@ -81,6 +81,7 @@
                 stad: "",
                 land: "",
                 adres: "",
+                isEmail: false,
             }
         },
         beforeRouteUpdate(to, from, next) {
@@ -88,6 +89,7 @@
             this.annuleren();
         },
         beforeMount(){
+            this.validateEmail("patriquevdboom@hotmail.com") 
             this.soortenLedenOphalen();
         },
         methods:{
@@ -141,7 +143,7 @@
 
                     this.adres = this.straat + " " + this.huisnummer + this.bijvoeging + ", " + this.stad + ", " + this.land;
                 }
-            }
+            },
         },
         components: {
             IonButton,

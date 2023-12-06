@@ -19,6 +19,12 @@ module.exports.functions = function(app){
                 else{
                     console.error("Second parameter must be an array");
                 }
+            },
+
+            validateEmail: function(email){
+                const validRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                
+                return !!email.match(validRegex);
             }
         }
     });
