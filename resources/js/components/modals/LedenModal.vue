@@ -141,7 +141,7 @@
                     this.stad = data.stad;
                     this.land = data.land;
 
-                    this.adres = this.straat + " " + this.huisnummer + this.bijvoeging + ", " + this.stad + ", " + this.land;
+                    this.adres = this.straat + " " + this.huisnummer + (this.bijvoeging? this.bijvoeging : "") + ", " + this.stad + ", " + this.land;
                 }
             },
         },

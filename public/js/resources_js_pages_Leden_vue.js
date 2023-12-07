@@ -275,7 +275,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this2.straat = data.straat;
                 _this2.stad = data.stad;
                 _this2.land = data.land;
-                _this2.adres = _this2.straat + " " + _this2.huisnummer + _this2.bijvoeging + ", " + _this2.stad + ", " + _this2.land;
+                _this2.adres = _this2.straat + " " + _this2.huisnummer + (_this2.bijvoeging ? _this2.bijvoeging : "") + ", " + _this2.stad + ", " + _this2.land;
               }
             case 10:
             case "end":
@@ -391,7 +391,7 @@ var __default__ = {
     },
     leden: function leden(page, naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land) {
       var _this = this;
-      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("/app/leden", {
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden", {
         "page": page,
         "naam": naam,
         "email": email,
@@ -424,14 +424,15 @@ var __default__ = {
     syncScroll: function syncScroll() {
       this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
     },
-    ledenToevoegen: function ledenToevoegen(naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land) {
-      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("app/leden/toevoegen", {
+    ledenToevoegen: function ledenToevoegen(naam, email, geboortedatum, soort_lid, familie, huisnummer, bijvoeging, straat, stad, land) {
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/create", {
         "naam": naam,
         "email": email,
         "geboortedatum": geboortedatum,
         "soort_lid": soort_lid,
         "familie": familie,
-        "adres": adres,
+        "huisnummer": huisnummer,
+        "bijvoeging": bijvoeging,
         "straat": straat,
         "stad": stad,
         "land": land
@@ -442,6 +443,7 @@ var __default__ = {
       });
     },
     LedenToevoegenModal: function LedenToevoegenModal() {
+      var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var modal, _yield$modal$onWillDi, data, role;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -464,18 +466,7 @@ var __default__ = {
               data = _yield$modal$onWillDi.data;
               role = _yield$modal$onWillDi.role;
               if (role == "confirm") {
-                console.log(data);
-                // this.ledenToevoegen(
-                //     data.naam, 
-                //     data.email, 
-                //     data.geboortedatum, 
-                //     data.soort_lid, 
-                //     data.familie, 
-                //     data.adres, 
-                //     data.straat, 
-                //     data.stad, 
-                //     data.land
-                // );
+                _this2.ledenToevoegen(data.naam, data.email, data.geboortedatum, data.soort_lid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
               }
             case 10:
             case "end":
@@ -503,7 +494,7 @@ var __default__ = {
   },
   setup: function setup() {
     function deleteLid(email) {
-      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("/app/leden/delete", {
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/delete", {
         "email": email
       }).then(function () {
         location.reload();

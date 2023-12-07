@@ -206,7 +206,7 @@
             },
 
             leden: function(page, naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
-                axios.post("/app/leden", {
+                axios.post("leden", {
                     "page": page,
                     "naam": naam,
                     "email": email,
@@ -244,14 +244,15 @@
                 this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
             },
 
-            ledenToevoegen: function(naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
-                axios.post("app/leden/toevoegen", {
+            ledenToevoegen: function(naam, email, geboortedatum, soort_lid, familie, huisnummer, bijvoeging, straat, stad, land){
+                axios.post("leden/create", {
                     "naam": naam,
                     "email": email,
                     "geboortedatum": geboortedatum,
                     "soort_lid": soort_lid,
                     "familie": familie,
-                    "adres": adres,
+                    "huisnummer": huisnummer,
+                    "bijvoeging": bijvoeging,
                     "straat": straat,
                     "stad": stad,
                     "land": land,
@@ -277,18 +278,18 @@
                 const {data, role} = await modal.onWillDismiss();
 
                 if (role == "confirm"){
-                    console.log(data);
-                    // this.ledenToevoegen(
-                    //     data.naam, 
-                    //     data.email, 
-                    //     data.geboortedatum, 
-                    //     data.soort_lid, 
-                    //     data.familie, 
-                    //     data.adres, 
-                    //     data.straat, 
-                    //     data.stad, 
-                    //     data.land
-                    // );
+                    this.ledenToevoegen(
+                        data.naam, 
+                        data.email, 
+                        data.geboortedatum, 
+                        data.soort_lid, 
+                        data.familie, 
+                        data.huisnummer, 
+                        data.bijvoeging, 
+                        data.straat, 
+                        data.stad, 
+                        data.land
+                    );
                 }
             }
         },
@@ -314,7 +315,7 @@
 
         setup() {
             function deleteLid(email){
-                axios.post("/app/leden/delete", {
+                axios.post("leden/delete", {
                     "email": email,
                 })
                 .then(() => {
