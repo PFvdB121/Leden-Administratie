@@ -87,7 +87,6 @@ __webpack_require__.r(__webpack_exports__);
           "naam": this.stad,
           "land": this.land
         }).then(function (response) {
-          console.log(response);
           _this2.steden = response.data;
         })["catch"](function (error) {
           console.error(error);
@@ -210,7 +209,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       stad: "",
       land: "",
       adres: "",
-      isEmail: false
+      isEmail: false,
+      huidigeDatum: "",
+      date: new Date()
     };
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
@@ -220,6 +221,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   beforeMount: function beforeMount() {
     this.validateEmail("patriquevdboom@hotmail.com");
     this.soortenLedenOphalen();
+    this.huidigeDatum = this.date.toLocaleDateString("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
   },
   methods: {
     soortenLedenOphalen: function soortenLedenOphalen() {
@@ -337,14 +343,24 @@ var __default__ = {
     }
     this.naam = this.get.naam;
     this.email = this.get.email;
-    this.geboortedatum = this.get.geboortedatum;
+    this.minGeboortedatum = this.get.min_geboortedatum;
+    this.maxGeboortedatum = this.get.max_geboortedatum;
     this.soort_lid = this.get.soort_lid;
     this.familie = this.get.familie;
     this.adres = this.get.adres;
     this.straat = this.get.straat;
     this.stad = this.get.stad;
     this.land = this.get.land;
-    this.leden(this.pagina, this.get.naam, this.get.email, this.get.geboortedatum, this.get.soort_lid, this.get.familie, this.get.adres, this.get.straat, this.get.stad, this.get.land);
+    this.day = this.date.getDate();
+    this.month = this.date.getMonth() + 1;
+    this.year = this.date.getFullYear();
+    this.soortenLedenOphalen();
+    this.huidigeDatum = this.date.toLocaleDateString("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
+    this.leden(this.pagina, this.get.naam, this.get.email, this.get.min_geboortedatum, this.get.max_geboortedatum, this.get.soort_lid, this.get.familie, this.get.adres, this.get.straat, this.get.stad, this.get.land);
   },
   data: function data() {
     return {
@@ -359,6 +375,7 @@ var __default__ = {
         "aanpassen": 2,
         "deleten": 2
       },
+      soortenLeden: {},
       colomnBreedte: 100,
       gridTotaal: 0,
       gridBreedte: "",
@@ -366,13 +383,16 @@ var __default__ = {
       laatstePagina: 1,
       naam: "",
       email: "",
-      geboortedatum: "",
+      minGeboortedatum: "",
+      maxGeboortedatum: "",
       soort_lid: "",
       familie: "",
       adres: "",
       straat: "",
       stad: "",
-      land: ""
+      land: "",
+      huidigeDatum: "",
+      date: new Date()
     };
   },
   methods: {
@@ -380,7 +400,8 @@ var __default__ = {
       this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
         "naam": this.naam,
         "email": this.email,
-        "geboortedatum": this.geboortedatum,
+        "min_geboortedatum": this.minGeboortedatum,
+        "max_geboortedatum": this.maxGeboortedatum,
         "soort_lid": this.soort_lid,
         "familie": this.familie,
         "adres": this.adres,
@@ -389,13 +410,22 @@ var __default__ = {
         "land": this.land
       });
     },
-    leden: function leden(page, naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land) {
+    soortenLedenOphalen: function soortenLedenOphalen() {
       var _this = this;
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("soorten_leden").then(function (response) {
+        _this.soortenLeden = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    leden: function leden(page, naam, email, minGeboortedatum, maxGeboortedatum, soort_lid, familie, adres, straat, stad, land) {
+      var _this2 = this;
       axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden", {
         "page": page,
         "naam": naam,
         "email": email,
-        "geboortedatum": geboortedatum,
+        "minGeboortedatum": minGeboortedatum,
+        "maxGeboortedatum": maxGeboortedatum,
         "soort_lid": soort_lid,
         "familie": familie,
         "adres": adres,
@@ -403,23 +433,11 @@ var __default__ = {
         "stad": stad,
         "land": land
       }).then(function (response) {
-        _this.laatstePagina = response.data.meta.last_page;
-        _this.items = response.data.data;
+        _this2.laatstePagina = response.data.meta.last_page;
+        _this2.items = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
-    },
-    gridColTellen: function gridColTellen(grid) {
-      var col = 0;
-      for (var g in grid) {
-        col += grid[g];
-      }
-      ;
-      return col;
-    },
-    gridBreedteTellen: function gridBreedteTellen(gridTotaal, colomnBreedte) {
-      var gridBreedte = gridTotaal * colomnBreedte + "px";
-      return gridBreedte;
     },
     syncScroll: function syncScroll() {
       this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
@@ -443,7 +461,7 @@ var __default__ = {
       });
     },
     LedenToevoegenModal: function LedenToevoegenModal() {
-      var _this2 = this;
+      var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var modal, _yield$modal$onWillDi, data, role;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -466,7 +484,7 @@ var __default__ = {
               data = _yield$modal$onWillDi.data;
               role = _yield$modal$onWillDi.role;
               if (role == "confirm") {
-                _this2.ledenToevoegen(data.naam, data.email, data.geboortedatum, data.soort_lid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
+                _this3.ledenToevoegen(data.naam, data.email, data.geboortedatum, data.soort_lid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
               }
             case 10:
             case "end":
@@ -487,7 +505,9 @@ var __default__ = {
     IonItem: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonItem,
     IonContent: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonContent,
     IonButton: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonButton,
-    IonIcon: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonIcon
+    IonIcon: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonIcon,
+    IonSelect: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonSelect,
+    IonSelectOption: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonSelectOption
   },
   props: {
     "get": Object
@@ -931,6 +951,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
                     label: "Huisnummer",
+                    min: "0",
+                    max: "9999",
                     "label-placement": "floating",
                     modelValue: _ctx.huisnummer,
                     "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
@@ -946,6 +968,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
                     label: "Bijvoeging",
+                    maxlength: "3",
                     "label-placement": "floating",
                     modelValue: _ctx.bijvoeging,
                     "onUpdate:modelValue": _cache[15] || (_cache[15] = function ($event) {
@@ -1197,12 +1220,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
                 "label-placement": "floating",
                 type: "date",
+                min: "1900-01-01",
+                max: _ctx.huidigeDatum,
                 label: "geboortedatum",
                 modelValue: _ctx.geboortedatum,
                 "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
                   return _ctx.geboortedatum = $event;
                 })
-              }, null, 8 /* PROPS */, ["modelValue"])];
+              }, null, 8 /* PROPS */, ["max", "modelValue"])];
             }),
             _: 1 /* STABLE */
           }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, null, {
@@ -1330,6 +1355,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _this = this;
   var _component_ion_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-input");
   var _component_ion_item = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-item");
+  var _component_ion_select_option = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-select-option");
+  var _component_ion_select = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-select");
   var _component_ion_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-button");
   var _component_ion_icon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-icon");
   var _component_ion_col = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-col");
@@ -1372,14 +1399,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
-        modelValue: $data.geboortedatum,
+        type: "date",
+        min: "1900-01-01",
+        max: $data.maxGeboortedatum ? $data.maxGeboortedatum : $data.huidigeDatum,
+        modelValue: $data.minGeboortedatum,
         "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
-          return $data.geboortedatum = $event;
+          return $data.minGeboortedatum = $event;
         }),
         "class": "d-inline-block",
-        label: "geboortedatum",
+        label: "min geboortedatum",
         "label-placement": "floating"
-      }, null, 8 /* PROPS */, ["modelValue"])];
+      }, null, 8 /* PROPS */, ["max", "modelValue"])];
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
@@ -1387,14 +1417,47 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
-        modelValue: $data.soort_lid,
+        type: "date",
+        min: $data.minGeboortedatum ? $data.minGeboortedatum : '1900-01-01',
+        max: $data.huidigeDatum,
+        modelValue: $data.maxGeboortedatum,
         "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
-          return $data.soort_lid = $event;
+          return $data.maxGeboortedatum = $event;
         }),
         "class": "d-inline-block",
+        label: "max geboortedatum",
+        "label-placement": "floating"
+      }, null, 8 /* PROPS */, ["min", "max", "modelValue"])];
+    }),
+    _: 1 /* STABLE */
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
+    "class": "d-inline-block w-25"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_select, {
+        modelValue: $data.soort_lid,
+        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+          return $data.soort_lid = $event;
+        }),
         label: "soort lid",
         "label-placement": "floating"
-      }, null, 8 /* PROPS */, ["modelValue"])];
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.soorten_leden, function (s) {
+            return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ion_select_option, {
+              value: s.omschrijving
+            }, {
+              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(s.omschrijving), 1 /* TEXT */)];
+              }),
+
+              _: 2 /* DYNAMIC */
+            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["value"]);
+          }), 256 /* UNKEYED_FRAGMENT */))];
+        }),
+
+        _: 1 /* STABLE */
+      }, 8 /* PROPS */, ["modelValue"])];
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
@@ -1403,7 +1466,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
         modelValue: $data.familie,
-        "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+        "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
           return $data.familie = $event;
         }),
         "class": "d-inline-block",
@@ -1418,7 +1481,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
         modelValue: $data.adres,
-        "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
+        "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
           return $data.adres = $event;
         }),
         "class": "d-inline-block",
@@ -1433,7 +1496,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
         modelValue: $data.straat,
-        "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
+        "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
           return $data.straat = $event;
         }),
         "class": "d-inline-block",
@@ -1448,7 +1511,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
         modelValue: $data.stad,
-        "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
+        "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
           return $data.stad = $event;
         }),
         "class": "d-inline-block",
@@ -1463,7 +1526,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
         modelValue: $data.land,
-        "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
+        "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
           return $data.land = $event;
         }),
         "class": "d-inline-block",
@@ -1473,7 +1536,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-    onClick: _cache[9] || (_cache[9] = function ($event) {
+    onClick: _cache[10] || (_cache[10] = function ($event) {
       return $options.zoeken();
     })
   }, {
@@ -1482,7 +1545,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-    onClick: _cache[10] || (_cache[10] = function ($event) {
+    onClick: _cache[11] || (_cache[11] = function ($event) {
       return $options.LedenToevoegenModal();
     })
   }, {

@@ -25,7 +25,20 @@ module.exports.functions = function(app){
                 const validRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 
                 return !!email.match(validRegex);
-            }
+            },
+
+            gridColTellen: function (grid) {
+                var col = 0;
+                for(const g in grid) {
+                    col += grid[g];
+                };
+                return col;
+            },
+
+            gridBreedteTellen: function(gridTotaal, colomnBreedte){
+                var gridBreedte = gridTotaal * colomnBreedte + "px";
+                return gridBreedte;
+            },
         }
     });
 }

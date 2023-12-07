@@ -25,7 +25,7 @@
                 <ion-input label-placement="floating" type="email" label="email" :on-ion-change="function(){isEmail = validateEmail()}" v-model="email"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-input label-placement="floating" type="date" label="geboortedatum" v-model="geboortedatum"></ion-input>
+                <ion-input label-placement="floating" type="date" min="1900-01-01" :max="huidigeDatum" label="geboortedatum" v-model="geboortedatum"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-select placeholder="Selecteer wat voor soort lid" v-model="soortLid">
@@ -82,6 +82,8 @@
                 land: "",
                 adres: "",
                 isEmail: false,
+                huidigeDatum: "",
+                date: new Date,
             }
         },
         beforeRouteUpdate(to, from, next) {
@@ -91,6 +93,11 @@
         beforeMount(){
             this.validateEmail("patriquevdboom@hotmail.com") 
             this.soortenLedenOphalen();
+            this.huidigeDatum = this.date.toLocaleDateString("en-CA", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            });
         },
         methods:{
             soortenLedenOphalen: function(){

@@ -30,6 +30,8 @@ class FamilielidController extends Controller
             "straat" => "nullable|string",
             "stad" => "nullable|string",
             "land" => "nullable|string",
+            "minGeboortedatum" => "nullable|date",
+            "maxGeboortedatum" => "nullable|date",
         ]);
         $familieLeden = Familielid::where("naam", "like", "%" . $request["naam"] . "%")
         ->where("email", "like", "%" . $request["email"] . "%")->whereHas("familie", function($query) use($request){
@@ -49,8 +51,17 @@ class FamilielidController extends Controller
                     });
                 });
             });
-        })
-        ->paginate(20);
+        });
+
+        if ($request["minGeboortedatum"]) {
+            $familieLeden = $familieLeden->where("geboortedatum", ">=", $request["minGeboortedatum"]);
+        }
+
+        if (!is_null($request["maxGeboortedatum"])) {
+            $familieLeden = $familieLeden->where("geboortedatum", "<=", $request["maxGeboortedatum"]);
+        }
+
+        $familieLeden = $familieLeden->paginate(20);
 
         return FamilielidResource::collection($familieLeden);
     }
@@ -75,7 +86,7 @@ class FamilielidController extends Controller
             "soort_lid" => "required|string", 
             "familie" => "required|string", 
             "huisnummer" => "required|integer", 
-            "bijvoeging" => "nullable|string", 
+            "bijvoeging" => "nullable|string|max:3", 
             "straat" => "required|string", 
             "stad" => "required|string", 
             "land" => "required|string",

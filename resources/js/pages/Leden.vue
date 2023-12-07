@@ -12,10 +12,17 @@
                 <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="geboortedatum" class="d-inline-block" label="geboortedatum" label-placement="floating"></ion-input>
+                <ion-input type="date" min="1900-01-01" :max="(maxGeboortedatum ? maxGeboortedatum : huidigeDatum)" v-model="minGeboortedatum" class="d-inline-block" label="min geboortedatum" label-placement="floating"></ion-input>
             </ion-item>
             <ion-item class="d-inline-block">
-                <ion-input v-model="soort_lid" class="d-inline-block" label="soort lid" label-placement="floating"></ion-input>
+                <ion-input type="date" :min="(minGeboortedatum ? minGeboortedatum : '1900-01-01')" :max="huidigeDatum" v-model="maxGeboortedatum" class="d-inline-block" label="max geboortedatum" label-placement="floating"></ion-input>
+            </ion-item>
+            <ion-item class="d-inline-block w-25">
+                <ion-select v-model="soort_lid" label="soort lid" label-placement="floating">
+                    <ion-select-option v-for="s in soorten_leden" :value="s.omschrijving">
+                        {{ s.omschrijving }}
+                    </ion-select-option>
+                </ion-select>
             </ion-item>
             <ion-item class="d-inline-block">
                 <ion-input v-model="familie" class="d-inline-block" label="familie" label-placement="floating"></ion-input>
@@ -122,6 +129,8 @@
         IonIcon,
         alertController,
         modalController,
+        IonSelect,
+        IonSelectOption,
      } from "@ionic/vue";
     import axios from "axios";
 
@@ -139,7 +148,8 @@
             }
             this.naam = this.get.naam;
             this.email = this.get.email;
-            this.geboortedatum = this.get.geboortedatum;
+            this.minGeboortedatum = this.get.min_geboortedatum;
+            this.maxGeboortedatum = this.get.max_geboortedatum;
             this.soort_lid = this.get.soort_lid;
             this.familie = this.get.familie;
             this.adres = this.get.adres;
@@ -147,11 +157,23 @@
             this.stad = this.get.stad;
             this.land = this.get.land;
 
+            this.day = this.date.getDate();
+            this.month = this.date.getMonth() + 1;
+            this.year = this.date.getFullYear();
+
+            this.soortenLedenOphalen();
+            this.huidigeDatum = this.date.toLocaleDateString("en-CA", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            });
+
             this.leden(
                 this.pagina,
                 this.get.naam, 
                 this.get.email,
-                this.get.geboortedatum,
+                this.get.min_geboortedatum,
+                this.get.max_geboortedatum,
                 this.get.soort_lid,
                 this.get.familie, 
                 this.get.adres, 
@@ -173,6 +195,7 @@
                     "aanpassen": 2,
                     "deleten": 2,
                 },
+                soortenLeden: {},
                 colomnBreedte: 100,
                 gridTotaal: 0,
                 gridBreedte: "",
@@ -180,13 +203,16 @@
                 laatstePagina: 1,
                 naam: "",
                 email: "",
-                geboortedatum: "",
+                minGeboortedatum: "",
+                maxGeboortedatum: "",
                 soort_lid: "",
                 familie: "",
                 adres: "",
                 straat: "",
                 stad: "",
                 land: "",
+                huidigeDatum: "",
+                date: new Date,
             }
         },
 
@@ -195,7 +221,8 @@
                 this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
                     "naam": this.naam,
                     "email": this.email,
-                    "geboortedatum": this.geboortedatum,
+                    "min_geboortedatum": this.minGeboortedatum,
+                    "max_geboortedatum": this.maxGeboortedatum,
                     "soort_lid": this.soort_lid,
                     "familie": this.familie,
                     "adres": this.adres,
@@ -205,12 +232,23 @@
                 });
             },
 
-            leden: function(page, naam, email, geboortedatum, soort_lid, familie, adres, straat, stad, land){
+            soortenLedenOphalen: function(){
+                axios.post("soorten_leden")
+                .then((response) => {
+                    this.soortenLeden = response.data;
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+            },
+
+            leden: function(page, naam, email, minGeboortedatum, maxGeboortedatum, soort_lid, familie, adres, straat, stad, land){
                 axios.post("leden", {
                     "page": page,
                     "naam": naam,
                     "email": email,
-                    "geboortedatum": geboortedatum,
+                    "minGeboortedatum": minGeboortedatum,
+                    "maxGeboortedatum": maxGeboortedatum,
                     "soort_lid": soort_lid,
                     "familie": familie,
                     "adres": adres,
@@ -225,19 +263,6 @@
                 .catch((error) => {
                     console.log(error);
                 });
-            },
-
-            gridColTellen: function (grid) {
-                var col = 0;
-                for(const g in grid) {
-                    col += grid[g];
-                };
-                return col;
-            },
-
-            gridBreedteTellen: function(gridTotaal, colomnBreedte){
-                var gridBreedte = gridTotaal * colomnBreedte + "px";
-                return gridBreedte;
             },
 
             syncScroll: function(){
@@ -307,6 +332,8 @@
             IonContent,
             IonButton,
             IonIcon,
+            IonSelect,
+            IonSelectOption,
         },
 
         props: {

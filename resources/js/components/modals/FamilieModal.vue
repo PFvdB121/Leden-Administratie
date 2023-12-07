@@ -77,10 +77,10 @@
                     <div class="d-flex justify-content-center">
                         <ion-button @click="toggleAccordion('straat')">Terug</ion-button>
                         <ion-item class="border d-inline-block">
-                            <ion-input label="Huisnummer" label-placement="floating" v-model="huisnummer" :on-ion-change="adresZoeken()"></ion-input>
+                            <ion-input label="Huisnummer" min="0" max="9999" label-placement="floating" v-model="huisnummer" :on-ion-change="adresZoeken()"></ion-input>
                         </ion-item>
                         <ion-item class="border d-inline-block">
-                            <ion-input label="Bijvoeging" label-placement="floating" v-model="bijvoeging" :on-ion-change="adresZoeken()"></ion-input>
+                            <ion-input label="Bijvoeging" maxlength="3" label-placement="floating" v-model="bijvoeging" :on-ion-change="adresZoeken()"></ion-input>
                         </ion-item>
                         <ion-button :disabled="!huisnummer" @click="toggleAccordion('familie')">Volgende</ion-button>
                     </div>
@@ -213,7 +213,6 @@
                         "land": this.land
                     })
                     .then((response) => {
-                        console.log(response)
                         this.steden = response.data;
                     })
                     .catch((error) => {
