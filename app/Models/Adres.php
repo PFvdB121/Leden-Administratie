@@ -11,6 +11,11 @@ class Adres extends Model
 {
     use HasFactory;
     protected $table = "adressen";
+    protected $fillable = [
+        "huisnummer",
+        "bijvoeging",
+        "straat_id",
+    ];
 
     public function straat(): BelongsTo
     {

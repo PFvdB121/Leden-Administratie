@@ -10,6 +10,9 @@ class Land extends Model
 {
     use HasFactory;
     protected $table = "landen";
+    protected $fillable = [
+        "naam",
+    ];
 
     public function steden(): HasMany
     {

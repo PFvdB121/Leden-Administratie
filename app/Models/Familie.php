@@ -11,6 +11,10 @@ class Familie extends Model
 {
     use HasFactory;
     protected $table = "families";
+    protected $fillable = [
+        "naam",
+        "adres_id",
+    ];
 
     public function familieleden(): HasMany
     {

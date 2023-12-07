@@ -11,6 +11,13 @@ class Familielid extends Model
 {
     use HasFactory;
     protected $table = "familie_leden";
+    protected $fillable = [
+        "naam",
+        "email",
+        "geboortedatum",
+        "soort_lid_id",
+        "familie_id",
+    ];
 
     public function familie(): BelongsTo
     {

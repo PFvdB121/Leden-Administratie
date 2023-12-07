@@ -11,6 +11,10 @@ class Stad extends Model
 {
     use HasFactory;
     protected $table = "steden";
+    protected $fillable = [
+        "naam",
+        "land_id",
+    ];
 
     public function land(): BelongsTo
     {
