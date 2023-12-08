@@ -181,9 +181,15 @@ class FamilielidController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Familielid $familielid)
+    public function show(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "id" => "required|integer",
+        ]);
+
+        $lid = Familielid::where("id", $request["id"])->first();
+
+        return new FamilielidResource($lid);
     }
 
     /**
@@ -197,9 +203,32 @@ class FamilielidController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Familielid $familielid)
+    public function update(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "id" => "required|integer",
+            "naam" => "required|string", 
+            "email" => "required|email", 
+            "geboortedatum" => "required|date", 
+            "soortLid" => "required|string", 
+            "familie" => "required|string", 
+            "huisnummer" => "required|integer", 
+            "bijvoeging" => "nullable|string|max:3", 
+            "straat" => "required|string", 
+            "stad" => "required|string", 
+            "land" => "required|string",
+        ]);
+
+        $familie = $this->checkFamily($request);
+        $soortLid = SoortLid::where("omschrijving", $request["soortLid"])->first();
+
+        Familielid::where("id", $request["id"])->update([
+            "naam" => $request["naam"],
+            "email" => $request["email"],
+            "geboortedatum" => $request["geboortedatum"],
+            "soort_lid_id" => $soortLid->id,
+            "familie_id" => $familie->id,
+        ]);
     }
 
     /**

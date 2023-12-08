@@ -102,10 +102,10 @@
                         {{ item.familie }}
                     </ion-col>
                     <ion-col :size="this.grid.adres">
-                        {{ item.straat }} {{ item.adres }} {{ item.stad }} {{ item.land }}
+                        {{ item.straat }} {{ item.huisnummer + (item.bijvoeging ? item.bijvoeging : "") }} {{ item.stad }} {{ item.land }}
                     </ion-col>
                     <ion-col :size="this.grid.aanpassen">
-                        aanpassen
+                        <ion-button @click="LidUpdatenModal(item.id, item.naam)">aanpassen</ion-button>
                     </ion-col>
                     <ion-col :size="this.grid.deleten" class="d-flex justify-content-center">
                         <ion-button @click="deleteAlert(item.email, item.naam)" color="danger">deleten</ion-button>
@@ -297,10 +297,10 @@
                         this.get.stad, 
                         this.get.land
                     );
-                    this.Toast("Lid succesvol toegevoegd", "success", 1500, "top");
+                    this.Toast("Lid succesvol toegevoegd", "success", 3000, "top");
                 })
                 .catch((error) => {
-                    this.Toast("Er is iets misgegaan", "danger", 1500, "top");
+                    this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                 })
             },
 
@@ -341,6 +341,119 @@
                 });
 
                 toast.present();
+            },
+
+            deleteLid: function(email){
+                axios.post("leden/delete", {
+                    "email": email,
+                })
+                .then(() => {
+                    this.leden(
+                        this.get.page,
+                        this.get.naam, 
+                        this.get.email,
+                        this.get.min_geboortedatum,
+                        this.get.max_geboortedatum,
+                        this.get.soort_lid,
+                        this.get.familie, 
+                        this.get.adres, 
+                        this.get.straat, 
+                        this.get.stad, 
+                        this.get.land
+                    );
+                    this.Toast("Lid succesvol gedelete", "success", 3000, "top");
+                })
+                .catch((error) => {
+                    this.Toast("Er is iets misgegaan", "danger", 3000, "top");
+                });
+            },
+            
+            async deleteAlert(email, naam){
+                const alert = await alertController.create({
+                    header: "Let op!",
+                    message: "Weet u zeker dat u " + naam + " wilt deleten?",
+                    buttons: [
+                        {
+                            text: "Ja",
+                            role: "confirm",
+                            handler: () => {
+                                this.deleteLid(email);
+                            }
+                        },
+                        {
+                            text: "Nee",
+                            role: "cancel"
+                        }
+                    ]
+                });
+
+                await alert.present();
+            },
+
+            async LidUpdatenModal(id, naam){
+                const modal = await modalController.create({
+                    component: LedenModal,
+                    componentProps: {
+                        titel: naam + " updaten",
+                        id: id,
+                    }
+                });
+
+                modal.present();
+
+                const {data, role} = await modal.onWillDismiss();
+
+                if (role == "confirm"){
+                    this.lidUpdaten(
+                        id,
+                        data.naam, 
+                        data.email, 
+                        data.geboortedatum, 
+                        data.soortLid, 
+                        data.familie, 
+                        data.huisnummer, 
+                        data.bijvoeging, 
+                        data.straat, 
+                        data.stad, 
+                        data.land
+                    );
+                }
+            },
+
+            lidUpdaten: function(id, naam, email, geboortedatum, soortLid, familie, huisnummer, bijvoeging, straat, stad, land){
+                axios.post("leden/update", {
+                    "id": id,
+                    "naam": naam,
+                    "email": email,
+                    "geboortedatum": geboortedatum,
+                    "soortLid": soortLid,
+                    "familie": familie,
+                    "huisnummer": huisnummer,
+                    "bijvoeging": bijvoeging,
+                    "straat": straat,
+                    "stad": stad,
+                    "land": land,
+                })
+                .then(() => {
+                    this.leden(
+                        this.get.page,
+                        this.get.naam, 
+                        this.get.email,
+                        this.get.min_geboortedatum,
+                        this.get.max_geboortedatum,
+                        this.get.soort_lid,
+                        this.get.familie, 
+                        this.get.adres, 
+                        this.get.straat, 
+                        this.get.stad, 
+                        this.get.land
+                    );
+                    this.Toast("Lid succesvol aangepast", "success", 3000, "top");
+                })
+                .catch((error) => {
+                    console.log(error)
+                    this.Toast("Er is iets misgegaan", "danger", 3000, "top");
+                });
             }
         },
 
@@ -365,41 +478,8 @@
             "get": Object
         },
 
-        setup() {
-            function deleteLid(email){
-                axios.post("leden/delete", {
-                    "email": email,
-                })
-                .then(() => {
-                    location.reload();
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-            }
-            const deleteAlert = async(email, naam) =>{
-                const alert = await alertController.create({
-                    header: "Let op!",
-                    message: "Weet u zeker dat u " + naam + " wilt deleten?",
-                    buttons: [
-                        {
-                            text: "Ja",
-                            role: "confirm",
-                            handler: () => {
-                                deleteLid(email);
-                            }
-                        },
-                        {
-                            text: "Nee",
-                            role: "cancel"
-                        }
-                    ]
-                });
-
-                await alert.present();
-            }
-
-            return {deleteAlert, addOutline};
+        setup(){
+            return {addOutline};
         }
     }
 </script>

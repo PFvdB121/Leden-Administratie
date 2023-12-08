@@ -22,7 +22,7 @@
                 <ion-input label-placement="floating" label="naam" v-model="naam"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-input label-placement="floating" type="email" label="email" :on-ion-change="function(){isEmail = validateEmail()}" v-model="email"></ion-input>
+                <ion-input label-placement="floating" type="email" label="email" v-model="email"></ion-input>
             </ion-item>
             <ion-item>
                 <ion-input label-placement="floating" type="date" min="1900-01-01" :max="huidigeDatum" label="geboortedatum" v-model="geboortedatum"></ion-input>
@@ -37,7 +37,7 @@
             <div>
                 <ion-item class="d-flex justify-content-center">
                     <ion-input label-placement="floating" label="familie" :readonly="true" v-model="familie"></ion-input>
-                    <ion-input label-placement="floating" label="adres" :readonly="true" v-model="adres"></ion-input>
+                    <ion-input label-placement="floating" label="adres" :readonly="true" :value="(straat? straat + ' ' + huisnummer + ((bijvoeging) ? bijvoeging : '') + ', ' + stad + ', ' + land : '')"></ion-input>
                 </ion-item>
                 <ion-button @click="() => {familieToevoegen()}">Familie toevoegen</ion-button>
             </div>
@@ -60,6 +60,7 @@
         IonInput,
         IonSelectOption,
         modalController,
+        toastController,
     } from '@ionic/vue';
     import axios from 'axios';
 
@@ -91,13 +92,15 @@
             this.annuleren();
         },
         beforeMount(){
-            this.validateEmail("patriquevdboom@hotmail.com") 
             this.soortenLedenOphalen();
             this.huidigeDatum = this.date.toLocaleDateString("en-CA", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
             });
+            if (this.id) {
+                this.lidOphalen(this.id);
+            }
         },
         methods:{
             soortenLedenOphalen: function(){
@@ -108,6 +111,33 @@
                 .catch((error) => {
                     console.log(error);
                 })
+            },
+
+            lidOphalen: function(id){
+                if (id) {
+                    axios.post("leden/show", {
+                        id: id,
+                    })
+                    .then((response) => {
+                        this.naam = response.data.data.naam;
+                        this.soortLid = response.data.data.soortLid;
+                        this.email = response.data.data.email;
+                        this.geboortedatum = response.data.data.geboortedatum;
+                        this.familie = response.data.data.familie;
+                        this.huisnummer = response.data.data.huisnummer;
+                        this.bijvoeging = response.data.data.bijvoeging;
+                        this.straat = response.data.data.straat;
+                        this.stad = response.data.data.stad;
+                        this.land = response.data.data.land;
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        this.Toast("Er is iets misgegaan", "danger", 3000, "top");
+                    })
+                }
+                else{
+                    console.error("Geen id toegevoegd");
+                }
             },
 
             annuleren: function(){
@@ -134,6 +164,14 @@
             async familieToevoegen(){
                 const modal = await modalController.create({
                     component: FamilieModal,
+                    componentProps: {
+                        pFamilie: this.familie,
+                        pHuisnummer: this.huisnummer,
+                        pBijvoeging: this.bijvoeging,
+                        pStraat: this.straat,
+                        pStad: this.stad,
+                        pLand: this.land,
+                    }
                 });
 
                 modal.present();
@@ -147,9 +185,18 @@
                     this.straat = data.straat;
                     this.stad = data.stad;
                     this.land = data.land;
-
-                    this.adres = this.straat + " " + this.huisnummer + (this.bijvoeging? this.bijvoeging : "") + ", " + this.stad + ", " + this.land;
                 }
+            },
+
+            async Toast(message, color, duration, position){
+                const toast = await toastController.create({
+                    message: message,
+                    color: color,
+                    duration: duration,
+                    position: position,
+                });
+
+                toast.present();
             },
         },
         components: {
@@ -168,6 +215,7 @@
 
         props: {
             titel: String,
+            id: Number,
         }
     });
 </script>

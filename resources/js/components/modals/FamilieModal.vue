@@ -77,7 +77,7 @@
                     <div class="d-flex justify-content-center">
                         <ion-button @click="toggleAccordion('straat')">Terug</ion-button>
                         <ion-item class="border d-inline-block">
-                            <ion-input label="Huisnummer" min="0" max="9999" label-placement="floating" v-model="huisnummer" :on-ion-change="adresZoeken()"></ion-input>
+                            <ion-input label="Huisnummer" min="1" max="9999" label-placement="floating" type="number" v-model="huisnummer" :on-ion-change="adresZoeken()"></ion-input>
                         </ion-item>
                         <ion-item class="border d-inline-block">
                             <ion-input label="Bijvoeging" maxlength="3" label-placement="floating" v-model="bijvoeging" :on-ion-change="adresZoeken()"></ion-input>
@@ -138,6 +138,16 @@
     import axios from 'axios';
 
     export default defineComponent({
+        beforeMount(){
+            this.land = this.pLand;
+            this.stad = this.pStad;
+            this.straat = this.pStraat;
+            if (this.pHuisnummer) {
+                this.huisnummer = this.pHuisnummer;
+            }
+            this.bijvoeging = this.pBijvoeging;
+            this.familie = this.pFamilie;
+        },
         beforeRouteUpdate(to, from, next){
             next(false);
             this.annuleren();
@@ -294,6 +304,14 @@
             }
         },
         name: "testModal",
+        props: {
+            pFamilie: String,
+            pHuisnummer: Number,
+            pBijvoeging: String,
+            pStraat: String,
+            pStad: String,
+            pLand: String,
+        },
         setup() {
             const accordionGroup = ref(null);
             const toggleAccordion = (waarde) => {

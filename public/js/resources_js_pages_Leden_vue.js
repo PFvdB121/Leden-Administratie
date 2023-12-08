@@ -18,6 +18,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+  beforeMount: function beforeMount() {
+    this.land = this.pLand;
+    this.stad = this.pStad;
+    this.straat = this.pStraat;
+    if (this.pHuisnummer) {
+      this.huisnummer = this.pHuisnummer;
+    }
+    this.bijvoeging = this.pBijvoeging;
+    this.familie = this.pFamilie;
+  },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
     next(false);
     this.annuleren();
@@ -153,6 +163,14 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   name: "testModal",
+  props: {
+    pFamilie: String,
+    pHuisnummer: Number,
+    pBijvoeging: String,
+    pStraat: String,
+    pStad: String,
+    pLand: String
+  },
   setup: function setup() {
     var accordionGroup = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
     var toggleAccordion = function toggleAccordion(waarde) {
@@ -219,13 +237,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.annuleren();
   },
   beforeMount: function beforeMount() {
-    this.validateEmail("patriquevdboom@hotmail.com");
     this.soortenLedenOphalen();
     this.huidigeDatum = this.date.toLocaleDateString("en-CA", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit"
     });
+    if (this.id) {
+      this.lidOphalen(this.id);
+    }
   },
   methods: {
     soortenLedenOphalen: function soortenLedenOphalen() {
@@ -235,6 +255,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    lidOphalen: function lidOphalen(id) {
+      var _this2 = this;
+      if (id) {
+        axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/show", {
+          id: id
+        }).then(function (response) {
+          _this2.naam = response.data.data.naam;
+          _this2.soortLid = response.data.data.soortLid;
+          _this2.email = response.data.data.email;
+          _this2.geboortedatum = response.data.data.geboortedatum;
+          _this2.familie = response.data.data.familie;
+          _this2.huisnummer = response.data.data.huisnummer;
+          _this2.bijvoeging = response.data.data.bijvoeging;
+          _this2.straat = response.data.data.straat;
+          _this2.stad = response.data.data.stad;
+          _this2.land = response.data.data.land;
+        })["catch"](function (error) {
+          console.log(error);
+          _this2.Toast("Er is iets misgegaan", "danger", 3000, "top");
+        });
+      } else {
+        console.error("Geen id toegevoegd");
+      }
     },
     annuleren: function annuleren() {
       _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.dismiss(null, "cancel");
@@ -255,7 +299,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.dismiss(data, "confirm");
     },
     familieToevoegen: function familieToevoegen() {
-      var _this2 = this;
+      var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var modal, _yield$modal$onWillDi, data, role;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -263,7 +307,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             case 0:
               _context.next = 2;
               return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.create({
-                component: _FamilieModal_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+                component: _FamilieModal_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+                componentProps: {
+                  pFamilie: _this3.familie,
+                  pHuisnummer: _this3.huisnummer,
+                  pBijvoeging: _this3.bijvoeging,
+                  pStraat: _this3.straat,
+                  pStad: _this3.stad,
+                  pLand: _this3.land
+                }
               });
             case 2:
               modal = _context.sent;
@@ -275,19 +327,41 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               data = _yield$modal$onWillDi.data;
               role = _yield$modal$onWillDi.role;
               if (role === "confirm") {
-                _this2.familie = data.familie;
-                _this2.huisnummer = data.huisnummer;
-                _this2.bijvoeging = data.bijvoeging;
-                _this2.straat = data.straat;
-                _this2.stad = data.stad;
-                _this2.land = data.land;
-                _this2.adres = _this2.straat + " " + _this2.huisnummer + (_this2.bijvoeging ? _this2.bijvoeging : "") + ", " + _this2.stad + ", " + _this2.land;
+                _this3.familie = data.familie;
+                _this3.huisnummer = data.huisnummer;
+                _this3.bijvoeging = data.bijvoeging;
+                _this3.straat = data.straat;
+                _this3.stad = data.stad;
+                _this3.land = data.land;
               }
             case 10:
             case "end":
               return _context.stop();
           }
         }, _callee);
+      }))();
+    },
+    Toast: function Toast(message, color, duration, position) {
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var toast;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.toastController.create({
+                message: message,
+                color: color,
+                duration: duration,
+                position: position
+              });
+            case 2:
+              toast = _context2.sent;
+              toast.present();
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2);
       }))();
     }
   },
@@ -305,7 +379,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     IonInput: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonInput
   },
   props: {
-    titel: String
+    titel: String,
+    id: Number
   }
 }));
 
@@ -457,9 +532,9 @@ var __default__ = {
         "land": land
       }).then(function () {
         _this3.leden(_this3.get.page, _this3.get.naam, _this3.get.email, _this3.get.min_geboortedatum, _this3.get.max_geboortedatum, _this3.get.soort_lid, _this3.get.familie, _this3.get.adres, _this3.get.straat, _this3.get.stad, _this3.get.land);
-        _this3.Toast("Lid succesvol toegevoegd", "success", 1500, "top");
+        _this3.Toast("Lid succesvol toegevoegd", "success", 3000, "top");
       })["catch"](function (error) {
-        _this3.Toast("Er is iets misgegaan", "danger", 1500, "top");
+        _this3.Toast("Er is iets misgegaan", "danger", 3000, "top");
       });
     },
     LedenToevoegenModal: function LedenToevoegenModal() {
@@ -517,6 +592,106 @@ var __default__ = {
           }
         }, _callee2);
       }))();
+    },
+    deleteLid: function deleteLid(email) {
+      var _this5 = this;
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/delete", {
+        "email": email
+      }).then(function () {
+        _this5.leden(_this5.get.page, _this5.get.naam, _this5.get.email, _this5.get.min_geboortedatum, _this5.get.max_geboortedatum, _this5.get.soort_lid, _this5.get.familie, _this5.get.adres, _this5.get.straat, _this5.get.stad, _this5.get.land);
+        _this5.Toast("Lid succesvol gedelete", "success", 3000, "top");
+      })["catch"](function (error) {
+        _this5.Toast("Er is iets misgegaan", "danger", 3000, "top");
+      });
+    },
+    deleteAlert: function deleteAlert(email, naam) {
+      var _this6 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var alert;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.alertController.create({
+                header: "Let op!",
+                message: "Weet u zeker dat u " + naam + " wilt deleten?",
+                buttons: [{
+                  text: "Ja",
+                  role: "confirm",
+                  handler: function handler() {
+                    _this6.deleteLid(email);
+                  }
+                }, {
+                  text: "Nee",
+                  role: "cancel"
+                }]
+              });
+            case 2:
+              alert = _context3.sent;
+              _context3.next = 5;
+              return alert.present();
+            case 5:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3);
+      }))();
+    },
+    LidUpdatenModal: function LidUpdatenModal(id, naam) {
+      var _this7 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        var modal, _yield$modal$onWillDi2, data, role;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.create({
+                component: _components_modals_LedenModal_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+                componentProps: {
+                  titel: naam + " updaten",
+                  id: id
+                }
+              });
+            case 2:
+              modal = _context4.sent;
+              modal.present();
+              _context4.next = 6;
+              return modal.onWillDismiss();
+            case 6:
+              _yield$modal$onWillDi2 = _context4.sent;
+              data = _yield$modal$onWillDi2.data;
+              role = _yield$modal$onWillDi2.role;
+              if (role == "confirm") {
+                _this7.lidUpdaten(id, data.naam, data.email, data.geboortedatum, data.soortLid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
+              }
+            case 10:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4);
+      }))();
+    },
+    lidUpdaten: function lidUpdaten(id, naam, email, geboortedatum, soortLid, familie, huisnummer, bijvoeging, straat, stad, land) {
+      var _this8 = this;
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/update", {
+        "id": id,
+        "naam": naam,
+        "email": email,
+        "geboortedatum": geboortedatum,
+        "soortLid": soortLid,
+        "familie": familie,
+        "huisnummer": huisnummer,
+        "bijvoeging": bijvoeging,
+        "straat": straat,
+        "stad": stad,
+        "land": land
+      }).then(function () {
+        _this8.leden(_this8.get.page, _this8.get.naam, _this8.get.email, _this8.get.min_geboortedatum, _this8.get.max_geboortedatum, _this8.get.soort_lid, _this8.get.familie, _this8.get.adres, _this8.get.straat, _this8.get.stad, _this8.get.land);
+        _this8.Toast("Lid succesvol aangepast", "success", 3000, "top");
+      })["catch"](function (error) {
+        console.log(error);
+        _this8.Toast("Er is iets misgegaan", "danger", 3000, "top");
+      });
     }
   },
   mounted: function mounted() {
@@ -538,52 +713,7 @@ var __default__ = {
     "get": Object
   },
   setup: function setup() {
-    function deleteLid(email) {
-      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/delete", {
-        "email": email
-      }).then(function () {
-        location.reload();
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    }
-    var deleteAlert = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(email, naam) {
-        var alert;
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.next = 2;
-              return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.alertController.create({
-                header: "Let op!",
-                message: "Weet u zeker dat u " + naam + " wilt deleten?",
-                buttons: [{
-                  text: "Ja",
-                  role: "confirm",
-                  handler: function handler() {
-                    deleteLid(email);
-                  }
-                }, {
-                  text: "Nee",
-                  role: "cancel"
-                }]
-              });
-            case 2:
-              alert = _context3.sent;
-              _context3.next = 5;
-              return alert.present();
-            case 5:
-            case "end":
-              return _context3.stop();
-          }
-        }, _callee3);
-      }));
-      return function deleteAlert(_x, _x2) {
-        return _ref.apply(this, arguments);
-      };
-    }();
     return {
-      deleteAlert: deleteAlert,
       addOutline: ionicons_icons__WEBPACK_IMPORTED_MODULE_1__.addOutline
     };
   }
@@ -976,9 +1106,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                   return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
                     label: "Huisnummer",
-                    min: "0",
+                    min: "1",
                     max: "9999",
                     "label-placement": "floating",
+                    type: "number",
                     modelValue: _ctx.huisnummer,
                     "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
                       return _ctx.huisnummer = $event;
@@ -1230,14 +1361,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "label-placement": "floating",
                 type: "email",
                 label: "email",
-                "on-ion-change": function onIonChange() {
-                  _ctx.isEmail = _ctx.validateEmail();
-                },
                 modelValue: _ctx.email,
                 "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
                   return _ctx.email = $event;
                 })
-              }, null, 8 /* PROPS */, ["on-ion-change", "modelValue"])];
+              }, null, 8 /* PROPS */, ["modelValue"])];
             }),
             _: 1 /* STABLE */
           }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, null, {
@@ -1298,15 +1426,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                 "label-placement": "floating",
                 label: "adres",
                 readonly: true,
-                modelValue: _ctx.adres,
-                "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
-                  return _ctx.adres = $event;
-                })
-              }, null, 8 /* PROPS */, ["modelValue"])];
+                value: _ctx.straat ? _ctx.straat + ' ' + _ctx.huisnummer + (_ctx.bijvoeging ? _ctx.bijvoeging : '') + ', ' + _ctx.stad + ', ' + _ctx.land : ''
+              }, null, 8 /* PROPS */, ["value"])];
             }),
             _: 1 /* STABLE */
           }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-            onClick: _cache[8] || (_cache[8] = function () {
+            onClick: _cache[7] || (_cache[7] = function () {
               _ctx.familieToevoegen();
             })
           }, {
@@ -1374,7 +1499,7 @@ var _hoisted_16 = {
   ref: "scroll2",
   "class": "overflow-x-hidden"
 };
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" aanpassen ");
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("aanpassen");
 var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("deleten");
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _this = this;
@@ -1704,7 +1829,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               size: _this.grid.adres
             }, {
               "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.straat) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.adres) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.stad) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.land), 1 /* TEXT */)];
+                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.straat) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.huisnummer + (item.bijvoeging ? item.bijvoeging : "")) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.stad) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.land), 1 /* TEXT */)];
               }),
 
               _: 2 /* DYNAMIC */
@@ -1712,17 +1837,26 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               size: _this.grid.aanpassen
             }, {
               "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [_hoisted_17];
+                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
+                  onClick: function onClick($event) {
+                    return $options.LidUpdatenModal(item.id, item.naam);
+                  }
+                }, {
+                  "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                    return [_hoisted_17];
+                  }),
+                  _: 2 /* DYNAMIC */
+                }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])];
               }),
-              _: 1 /* STABLE */
-            }, 8 /* PROPS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
+              _: 2 /* DYNAMIC */
+            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
               size: _this.grid.deleten,
               "class": "d-flex justify-content-center"
             }, {
               "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                 return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
                   onClick: function onClick($event) {
-                    return $setup.deleteAlert(item.email, item.naam);
+                    return $options.deleteAlert(item.email, item.naam);
                   },
                   color: "danger"
                 }, {
@@ -1765,7 +1899,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.leden-grid[data-v-f1cdf38a]{\r\n        min-width: var(--f1cdf38a-gridBreedte);\r\n        --ion-grid-columns: var(--f1cdf38a-gridTotaal);\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.leden-grid[data-v-f1cdf38a]{\n        min-width: var(--f1cdf38a-gridBreedte);\n        --ion-grid-columns: var(--f1cdf38a-gridTotaal);\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

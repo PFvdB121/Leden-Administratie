@@ -31,7 +31,9 @@ Route::group(["middleware" => "auth:web"], function(){
 
         Route::prefix("leden")->group(function(){
             Route::post("/", "App\Http\Controllers\FamilielidController@index");
+            Route::post("/show", "App\Http\Controllers\FamilielidController@show");
             Route::post("/delete", "App\Http\Controllers\FamilielidController@delete");
+            Route::post("/update", "App\Http\Controllers\FamilielidController@update");
             Route::post("/create", "App\Http\Controllers\FamilielidController@store");
         });
 
