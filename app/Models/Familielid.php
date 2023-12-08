@@ -24,7 +24,7 @@ class Familielid extends Model
         return $this->belongsTo(Familie::class, "familie_id", "id");
     }
 
-    public function soort_lid(): BelongsTo
+    public function soortLid(): BelongsTo
     {
         return $this->belongsTo(SoortLid::class, "soort_lid_id", "id");
     }

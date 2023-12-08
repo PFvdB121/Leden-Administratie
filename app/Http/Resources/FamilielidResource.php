@@ -17,7 +17,7 @@ class FamilielidResource extends JsonResource
         return [
             "id" => $this->id,
             "naam" => $this->naam,
-            "soort_lid" => $this->soort_lid->omschrijving,
+            "soortLid" => $this->soortLid->omschrijving,
             "geboortedatum" => $this->geboortedatum,
             "email" => $this->email,
             "familie" => $this->familie->naam,

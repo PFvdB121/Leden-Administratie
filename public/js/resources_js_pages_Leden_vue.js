@@ -244,7 +244,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         "naam": this.naam,
         "email": this.email,
         "geboortedatum": this.geboortedatum,
-        "soort_lid": this.soortLid,
+        "soortLid": this.soortLid,
         "familie": this.familie,
         "huisnummer": this.huisnummer,
         "bijvoeging": this.bijvoeging,
@@ -345,7 +345,7 @@ var __default__ = {
     this.email = this.get.email;
     this.minGeboortedatum = this.get.min_geboortedatum;
     this.maxGeboortedatum = this.get.max_geboortedatum;
-    this.soort_lid = this.get.soort_lid;
+    this.soortLid = this.get.soort_lid;
     this.familie = this.get.familie;
     this.adres = this.get.adres;
     this.straat = this.get.straat;
@@ -360,7 +360,7 @@ var __default__ = {
       month: "2-digit",
       day: "2-digit"
     });
-    this.leden(this.pagina, this.get.naam, this.get.email, this.get.min_geboortedatum, this.get.max_geboortedatum, this.get.soort_lid, this.get.familie, this.get.adres, this.get.straat, this.get.stad, this.get.land);
+    this.leden(this.get.page, this.get.naam, this.get.email, this.get.min_geboortedatum, this.get.max_geboortedatum, this.get.soort_lid, this.get.familie, this.get.adres, this.get.straat, this.get.stad, this.get.land);
   },
   data: function data() {
     return {
@@ -369,7 +369,7 @@ var __default__ = {
         "naam": 2,
         "email": 3,
         "geboortedatum": 2,
-        "soort_lid": 1,
+        "soortLid": 1,
         "familie": 2,
         "adres": 2,
         "aanpassen": 2,
@@ -385,7 +385,7 @@ var __default__ = {
       email: "",
       minGeboortedatum: "",
       maxGeboortedatum: "",
-      soort_lid: "",
+      soortLid: "",
       familie: "",
       adres: "",
       straat: "",
@@ -402,7 +402,7 @@ var __default__ = {
         "email": this.email,
         "min_geboortedatum": this.minGeboortedatum,
         "max_geboortedatum": this.maxGeboortedatum,
-        "soort_lid": this.soort_lid,
+        "soort_lid": this.soortLid,
         "familie": this.familie,
         "adres": this.adres,
         "straat": this.straat,
@@ -418,7 +418,7 @@ var __default__ = {
         console.log(error);
       });
     },
-    leden: function leden(page, naam, email, minGeboortedatum, maxGeboortedatum, soort_lid, familie, adres, straat, stad, land) {
+    leden: function leden(page, naam, email, minGeboortedatum, maxGeboortedatum, soortLid, familie, adres, straat, stad, land) {
       var _this2 = this;
       axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden", {
         "page": page,
@@ -426,7 +426,7 @@ var __default__ = {
         "email": email,
         "minGeboortedatum": minGeboortedatum,
         "maxGeboortedatum": maxGeboortedatum,
-        "soort_lid": soort_lid,
+        "soortLid": soortLid,
         "familie": familie,
         "adres": adres,
         "straat": straat,
@@ -442,12 +442,13 @@ var __default__ = {
     syncScroll: function syncScroll() {
       this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
     },
-    ledenToevoegen: function ledenToevoegen(naam, email, geboortedatum, soort_lid, familie, huisnummer, bijvoeging, straat, stad, land) {
+    ledenToevoegen: function ledenToevoegen(naam, email, geboortedatum, soortLid, familie, huisnummer, bijvoeging, straat, stad, land) {
+      var _this3 = this;
       axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/create", {
         "naam": naam,
         "email": email,
         "geboortedatum": geboortedatum,
-        "soort_lid": soort_lid,
+        "soortLid": soortLid,
         "familie": familie,
         "huisnummer": huisnummer,
         "bijvoeging": bijvoeging,
@@ -455,13 +456,14 @@ var __default__ = {
         "stad": stad,
         "land": land
       }).then(function () {
-        location.reload();
+        _this3.leden(_this3.get.page, _this3.get.naam, _this3.get.email, _this3.get.min_geboortedatum, _this3.get.max_geboortedatum, _this3.get.soort_lid, _this3.get.familie, _this3.get.adres, _this3.get.straat, _this3.get.stad, _this3.get.land);
+        _this3.Toast("Lid succesvol toegevoegd", "success", 1500, "top");
       })["catch"](function (error) {
-        console.log(error);
+        _this3.Toast("Er is iets misgegaan", "danger", 1500, "top");
       });
     },
     LedenToevoegenModal: function LedenToevoegenModal() {
-      var _this3 = this;
+      var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var modal, _yield$modal$onWillDi, data, role;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -484,13 +486,36 @@ var __default__ = {
               data = _yield$modal$onWillDi.data;
               role = _yield$modal$onWillDi.role;
               if (role == "confirm") {
-                _this3.ledenToevoegen(data.naam, data.email, data.geboortedatum, data.soort_lid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
+                _this4.ledenToevoegen(data.naam, data.email, data.geboortedatum, data.soortLid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
               }
             case 10:
             case "end":
               return _context.stop();
           }
         }, _callee);
+      }))();
+    },
+    Toast: function Toast(message, color, duration, position) {
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var toast;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.toastController.create({
+                message: message,
+                color: color,
+                duration: duration,
+                position: position
+              });
+            case 2:
+              toast = _context2.sent;
+              toast.present();
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2);
       }))();
     }
   },
@@ -523,12 +548,12 @@ var __default__ = {
       });
     }
     var deleteAlert = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(email, naam) {
+      var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(email, naam) {
         var alert;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.next = 2;
+              _context3.next = 2;
               return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.alertController.create({
                 header: "Let op!",
                 message: "Weet u zeker dat u " + naam + " wilt deleten?",
@@ -544,14 +569,14 @@ var __default__ = {
                 }]
               });
             case 2:
-              alert = _context2.sent;
-              _context2.next = 5;
+              alert = _context3.sent;
+              _context3.next = 5;
               return alert.present();
             case 5:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2);
+        }, _callee3);
       }));
       return function deleteAlert(_x, _x2) {
         return _ref.apply(this, arguments);
@@ -1323,7 +1348,7 @@ var _hoisted_1 = /*#__PURE__*/_withScopeId(function () {
   }, "Leden", -1 /* HOISTED */);
 });
 var _hoisted_2 = {
-  "class": "m-2"
+  "class": "m-2 bg-secondary p-1"
 };
 var _hoisted_3 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", null, " Zoeken ", -1 /* HOISTED */);
@@ -1364,7 +1389,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_ion_grid = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-grid");
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block"
+    "class": "border mx-1 d-inline-block"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1379,7 +1404,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block"
+    "class": "border mx-1 d-inline-block"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1395,7 +1420,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block"
+    "class": "border mx-1 d-inline-block"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1413,7 +1438,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block"
+    "class": "border mx-1 d-inline-block"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1431,19 +1456,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block w-25"
+    "class": "border mx-1 d-inline-block w-25"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_select, {
-        modelValue: $data.soort_lid,
+        modelValue: $data.soortLid,
         "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
-          return $data.soort_lid = $event;
+          return $data.soortLid = $event;
         }),
         label: "soort lid",
         "label-placement": "floating"
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.soorten_leden, function (s) {
+          return [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.soortenLeden, function (s) {
             return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ion_select_option, {
               value: s.omschrijving
             }, {
@@ -1461,7 +1486,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block"
+    "class": "border mx-1 d-inline-block"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1476,7 +1501,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block"
+    "class": "border mx-1 d-inline-block"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1491,7 +1516,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block"
+    "class": "border mx-1 d-inline-block"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1506,7 +1531,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block"
+    "class": "border mx-1 d-inline-block"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1521,7 +1546,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     _: 1 /* STABLE */
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
-    "class": "d-inline-block"
+    "class": "border mx-1 d-inline-block"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
@@ -1585,7 +1610,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             }),
             _: 1 /* STABLE */
           }, 8 /* PROPS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-            size: _this.grid.soort_lid
+            size: _this.grid.soortLid
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
               return [_hoisted_11];
@@ -1660,10 +1685,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
               _: 2 /* DYNAMIC */
             }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-              size: _this.grid.soort_lid
+              size: _this.grid.soortLid
             }, {
               "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.soort_lid), 1 /* TEXT */)];
+                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.soortLid), 1 /* TEXT */)];
               }),
 
               _: 2 /* DYNAMIC */

@@ -25,6 +25,7 @@ class FamilielidController extends Controller
             "page" => "nullable|numeric",
             "naam" => "nullable|string",
             "email" => "nullable|string",
+            "soortLid" => "nullable|string",
             "familie" => "nullable|string",
             "adres" => "nullable|string",
             "straat" => "nullable|string",
@@ -52,12 +53,18 @@ class FamilielidController extends Controller
                 });
             });
         });
+        
+        if ($request["soortLid"]) {
+            $familieLeden = $familieLeden->whereHas("soortLid", function($query) use($request){
+                return $query->where("omschrijving", $request["soortLid"]);
+            });
+        }
 
         if ($request["minGeboortedatum"]) {
             $familieLeden = $familieLeden->where("geboortedatum", ">=", $request["minGeboortedatum"]);
         }
 
-        if (!is_null($request["maxGeboortedatum"])) {
+        if ($request["maxGeboortedatum"]) {
             $familieLeden = $familieLeden->where("geboortedatum", "<=", $request["maxGeboortedatum"]);
         }
 
@@ -74,16 +81,9 @@ class FamilielidController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    protected function checkFamily(Request $request)
     {
         $validate = $request->validate([
-            "naam" => "required|string", 
-            "email" => "required|email", 
-            "geboortedatum" => "required|date", 
-            "soort_lid" => "required|string", 
             "familie" => "required|string", 
             "huisnummer" => "required|integer", 
             "bijvoeging" => "nullable|string|max:3", 
@@ -144,13 +144,36 @@ class FamilielidController extends Controller
         }
 
         $familie = Familie::where("naam", "=", $request["familie"])->where("adres_id", "=", $adres->id)->first();
-        $soort_lid = SoortLid::where("omschrijving", $request["soort_lid"])->first();
+
+        return $familie;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validate = $request->validate([
+            "naam" => "required|string", 
+            "email" => "required|email", 
+            "geboortedatum" => "required|date", 
+            "soortLid" => "required|string", 
+            "familie" => "required|string", 
+            "huisnummer" => "required|integer", 
+            "bijvoeging" => "nullable|string|max:3", 
+            "straat" => "required|string", 
+            "stad" => "required|string", 
+            "land" => "required|string",
+        ]);
+
+        $family = $this->checkFamily($request);
+        $soortLid = SoortLid::where("omschrijving", $request["soortLid"])->first();
 
         Familielid::create([
             "naam" => $request["naam"],
             "email" => $request["email"],
             "geboortedatum" => $request["geboortedatum"],
-            "soort_lid_id" => $soort_lid->id,
+            "soort_lid_id" => $soortLid->id,
             "familie_id" => $familie->id,
         ]);
     }

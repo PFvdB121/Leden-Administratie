@@ -21,7 +21,7 @@ class Contributie extends Model
         return $this->belongsTo(Boekjaar::class, "boekjaar_id", "id");
     }
 
-    public function soort_lid(): BelongsTo
+    public function soortLid(): BelongsTo
     {
         return $this->belongsTo(SoortLid::class, "soort_lid_id", "id");
     }

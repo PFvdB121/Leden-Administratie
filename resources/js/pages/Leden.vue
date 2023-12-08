@@ -1,42 +1,42 @@
 <template>
     <h1 class="d-flex justify-content-center">Leden</h1>
-    <div class="m-2">
+    <div class="m-2 bg-secondary p-1">
         <h2>
             Zoeken
         </h2>
         <div>
-            <ion-item class="d-inline-block">
+            <ion-item class="border mx-1 d-inline-block">
                 <ion-input v-model="naam" class="d-inline-block" label="naam" label-placement="floating"></ion-input>
             </ion-item>
-            <ion-item class="d-inline-block">
+            <ion-item class="border mx-1 d-inline-block">
                 <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
             </ion-item>
-            <ion-item class="d-inline-block">
+            <ion-item class="border mx-1 d-inline-block">
                 <ion-input type="date" min="1900-01-01" :max="(maxGeboortedatum ? maxGeboortedatum : huidigeDatum)" v-model="minGeboortedatum" class="d-inline-block" label="min geboortedatum" label-placement="floating"></ion-input>
             </ion-item>
-            <ion-item class="d-inline-block">
+            <ion-item class="border mx-1 d-inline-block">
                 <ion-input type="date" :min="(minGeboortedatum ? minGeboortedatum : '1900-01-01')" :max="huidigeDatum" v-model="maxGeboortedatum" class="d-inline-block" label="max geboortedatum" label-placement="floating"></ion-input>
             </ion-item>
-            <ion-item class="d-inline-block w-25">
-                <ion-select v-model="soort_lid" label="soort lid" label-placement="floating">
-                    <ion-select-option v-for="s in soorten_leden" :value="s.omschrijving">
+            <ion-item class="border mx-1 d-inline-block w-25">
+                <ion-select v-model="soortLid" label="soort lid" label-placement="floating">
+                    <ion-select-option v-for="s in soortenLeden" :value="s.omschrijving">
                         {{ s.omschrijving }}
                     </ion-select-option>
                 </ion-select>
             </ion-item>
-            <ion-item class="d-inline-block">
+            <ion-item class="border mx-1 d-inline-block">
                 <ion-input v-model="familie" class="d-inline-block" label="familie" label-placement="floating"></ion-input>
             </ion-item>
-            <ion-item class="d-inline-block">
+            <ion-item class="border mx-1 d-inline-block">
                 <ion-input v-model="adres" class="d-inline-block" label="adres" label-placement="floating"></ion-input>
             </ion-item>
-            <ion-item class="d-inline-block">
+            <ion-item class="border mx-1 d-inline-block">
                 <ion-input v-model="straat" class="d-inline-block" label="straat" label-placement="floating"></ion-input>
             </ion-item>
-            <ion-item class="d-inline-block">
+            <ion-item class="border mx-1 d-inline-block">
                 <ion-input v-model="stad" class="d-inline-block" label="stad" label-placement="floating"></ion-input>
             </ion-item>
-            <ion-item class="d-inline-block">
+            <ion-item class="border mx-1 d-inline-block">
                 <ion-input v-model="land" class="d-inline-block" label="land" label-placement="floating"></ion-input>
             </ion-item>
         </div>
@@ -65,7 +65,7 @@
                     <ion-col :size="this.grid.geboortedatum">
                         geboortedatum
                     </ion-col>
-                    <ion-col :size="this.grid.soort_lid">
+                    <ion-col :size="this.grid.soortLid">
                         soort lid
                     </ion-col>
                     <ion-col :size="this.grid.familie">
@@ -95,8 +95,8 @@
                     <ion-col :size="this.grid.geboortedatum">
                         {{ item.geboortedatum }}
                     </ion-col>
-                    <ion-col :size="this.grid.soort_lid">
-                        {{ item.soort_lid }}
+                    <ion-col :size="this.grid.soortLid">
+                        {{ item.soortLid }}
                     </ion-col>
                     <ion-col :size="this.grid.familie">
                         {{ item.familie }}
@@ -131,6 +131,7 @@
         modalController,
         IonSelect,
         IonSelectOption,
+        toastController,
      } from "@ionic/vue";
     import axios from "axios";
 
@@ -150,7 +151,7 @@
             this.email = this.get.email;
             this.minGeboortedatum = this.get.min_geboortedatum;
             this.maxGeboortedatum = this.get.max_geboortedatum;
-            this.soort_lid = this.get.soort_lid;
+            this.soortLid = this.get.soort_lid;
             this.familie = this.get.familie;
             this.adres = this.get.adres;
             this.straat = this.get.straat;
@@ -169,7 +170,7 @@
             });
 
             this.leden(
-                this.pagina,
+                this.get.page,
                 this.get.naam, 
                 this.get.email,
                 this.get.min_geboortedatum,
@@ -189,7 +190,7 @@
                     "naam": 2,
                     "email": 3,
                     "geboortedatum": 2,
-                    "soort_lid": 1,
+                    "soortLid": 1,
                     "familie": 2,
                     "adres": 2,
                     "aanpassen": 2,
@@ -205,7 +206,7 @@
                 email: "",
                 minGeboortedatum: "",
                 maxGeboortedatum: "",
-                soort_lid: "",
+                soortLid: "",
                 familie: "",
                 adres: "",
                 straat: "",
@@ -223,7 +224,7 @@
                     "email": this.email,
                     "min_geboortedatum": this.minGeboortedatum,
                     "max_geboortedatum": this.maxGeboortedatum,
-                    "soort_lid": this.soort_lid,
+                    "soort_lid": this.soortLid,
                     "familie": this.familie,
                     "adres": this.adres,
                     "straat": this.straat,
@@ -242,14 +243,14 @@
                 })
             },
 
-            leden: function(page, naam, email, minGeboortedatum, maxGeboortedatum, soort_lid, familie, adres, straat, stad, land){
+            leden: function(page, naam, email, minGeboortedatum, maxGeboortedatum, soortLid, familie, adres, straat, stad, land){
                 axios.post("leden", {
                     "page": page,
                     "naam": naam,
                     "email": email,
                     "minGeboortedatum": minGeboortedatum,
                     "maxGeboortedatum": maxGeboortedatum,
-                    "soort_lid": soort_lid,
+                    "soortLid": soortLid,
                     "familie": familie,
                     "adres": adres,
                     "straat": straat,
@@ -269,12 +270,12 @@
                 this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
             },
 
-            ledenToevoegen: function(naam, email, geboortedatum, soort_lid, familie, huisnummer, bijvoeging, straat, stad, land){
+            ledenToevoegen: function(naam, email, geboortedatum, soortLid, familie, huisnummer, bijvoeging, straat, stad, land){
                 axios.post("leden/create", {
                     "naam": naam,
                     "email": email,
                     "geboortedatum": geboortedatum,
-                    "soort_lid": soort_lid,
+                    "soortLid": soortLid,
                     "familie": familie,
                     "huisnummer": huisnummer,
                     "bijvoeging": bijvoeging,
@@ -283,10 +284,23 @@
                     "land": land,
                 })
                 .then(() => {
-                    location.reload();
+                    this.leden(
+                        this.get.page,
+                        this.get.naam, 
+                        this.get.email,
+                        this.get.min_geboortedatum,
+                        this.get.max_geboortedatum,
+                        this.get.soort_lid,
+                        this.get.familie, 
+                        this.get.adres, 
+                        this.get.straat, 
+                        this.get.stad, 
+                        this.get.land
+                    );
+                    this.Toast("Lid succesvol toegevoegd", "success", 1500, "top");
                 })
                 .catch((error) => {
-                    console.log(error);
+                    this.Toast("Er is iets misgegaan", "danger", 1500, "top");
                 })
             },
 
@@ -307,7 +321,7 @@
                         data.naam, 
                         data.email, 
                         data.geboortedatum, 
-                        data.soort_lid, 
+                        data.soortLid, 
                         data.familie, 
                         data.huisnummer, 
                         data.bijvoeging, 
@@ -316,6 +330,17 @@
                         data.land
                     );
                 }
+            },
+
+            async Toast(message, color, duration, position){
+                const toast = await toastController.create({
+                    message: message,
+                    color: color,
+                    duration: duration,
+                    position: position,
+                });
+
+                toast.present();
             }
         },
 

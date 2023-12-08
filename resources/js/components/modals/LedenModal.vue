@@ -119,7 +119,7 @@
                     "naam": this.naam,
                     "email": this.email,
                     "geboortedatum": this.geboortedatum,
-                    "soort_lid": this.soortLid,
+                    "soortLid": this.soortLid,
                     "familie": this.familie,
                     "huisnummer": this.huisnummer,
                     "bijvoeging": this.bijvoeging,
