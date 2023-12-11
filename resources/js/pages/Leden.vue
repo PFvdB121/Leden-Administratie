@@ -52,68 +52,7 @@
             </ion-button>
         </div>
     </div>
-    <div class="w-100">
-        <div ref="scroll1" class="sticky-top overflow-x-scroll">
-            <ion-grid class="grid-gap leden-grid">
-                <ion-row class="bg-secondary">
-                    <ion-col :size="this.grid.naam">
-                        naam
-                    </ion-col>
-                    <ion-col :size="this.grid.email">
-                        email
-                    </ion-col>
-                    <ion-col :size="this.grid.geboortedatum">
-                        geboortedatum
-                    </ion-col>
-                    <ion-col :size="this.grid.soortLid">
-                        soort lid
-                    </ion-col>
-                    <ion-col :size="this.grid.familie">
-                        familie
-                    </ion-col>
-                    <ion-col :size="this.grid.adres">
-                        adres
-                    </ion-col>
-                    <ion-col :size="this.grid.aanpassen">
-                        aanpassen
-                    </ion-col>
-                    <ion-col :size="this.grid.deleten">
-                        deleten
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </div>
-        <div ref="scroll2" class="overflow-x-hidden">
-            <ion-grid class="grid-gap leden-grid">
-                <ion-row v-for="item in items" class="bg-muted">
-                    <ion-col :size="this.grid.naam">
-                        {{ item.naam }}
-                    </ion-col>
-                    <ion-col :size="this.grid.email">
-                        {{ item.email }}
-                    </ion-col>
-                    <ion-col :size="this.grid.geboortedatum">
-                        {{ item.geboortedatum }}
-                    </ion-col>
-                    <ion-col :size="this.grid.soortLid">
-                        {{ item.soortLid }}
-                    </ion-col>
-                    <ion-col :size="this.grid.familie">
-                        {{ item.familie }}
-                    </ion-col>
-                    <ion-col :size="this.grid.adres">
-                        {{ item.straat }} {{ item.huisnummer + (item.bijvoeging ? item.bijvoeging : "") }} {{ item.stad }} {{ item.land }}
-                    </ion-col>
-                    <ion-col :size="this.grid.aanpassen">
-                        <ion-button @click="LidUpdatenModal(item.id, item.naam)">aanpassen</ion-button>
-                    </ion-col>
-                    <ion-col :size="this.grid.deleten" class="d-flex justify-content-center">
-                        <ion-button @click="deleteAlert(item.email, item.naam)" color="danger">deleten</ion-button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-        </div>
-    </div>
+    <grid-container :items="items" :colomnBreedte="colomnBreedte" :gridCols="grid" :updating="LidUpdatenModal" :deleting="deleteAlert"></grid-container>
     <pagination :get="this.get" :laatstePagina="this.laatstePagina"/>
 </template>
 
@@ -140,10 +79,7 @@
     import { addOutline } from "ionicons/icons";
 
     export default{
-        created(){
-            this.gridTotaal = this.gridColTellen(this.grid);
-            this.gridBreedte = this.gridBreedteTellen(this.gridTotaal, this.colomnBreedte);
-            
+        beforeMount(){
             if (typeof this.get.page !== undefined) {
                 this.pagina = this.get.page;
             }
@@ -183,6 +119,9 @@
                 this.get.land
             );
         },
+        created(){
+
+        },
         data(){
             return{
                 items: [],
@@ -190,7 +129,7 @@
                     "naam": 2,
                     "email": 3,
                     "geboortedatum": 2,
-                    "soortLid": 1,
+                    "soort lid": 1,
                     "familie": 2,
                     "adres": 2,
                     "aanpassen": 2,
@@ -266,10 +205,6 @@
                 });
             },
 
-            syncScroll: function(){
-                this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
-            },
-
             ledenToevoegen: function(naam, email, geboortedatum, soortLid, familie, huisnummer, bijvoeging, straat, stad, land){
                 axios.post("leden/create", {
                     "naam": naam,
@@ -343,9 +278,9 @@
                 toast.present();
             },
 
-            deleteLid: function(email){
+            deleteLid: function(id){
                 axios.post("leden/delete", {
-                    "email": email,
+                    "id": id,
                 })
                 .then(() => {
                     this.leden(
@@ -368,7 +303,7 @@
                 });
             },
             
-            async deleteAlert(email, naam){
+            async deleteAlert(id){
                 const alert = await alertController.create({
                     header: "Let op!",
                     message: "Weet u zeker dat u " + naam + " wilt deleten?",
@@ -377,7 +312,7 @@
                             text: "Ja",
                             role: "confirm",
                             handler: () => {
-                                this.deleteLid(email);
+                                this.deleteLid(id);
                             }
                         },
                         {
@@ -390,11 +325,11 @@
                 await alert.present();
             },
 
-            async LidUpdatenModal(id, naam){
+            async LidUpdatenModal(id){
                 const modal = await modalController.create({
                     component: LedenModal,
                     componentProps: {
-                        titel: naam + " updaten",
+                        titel: "updaten",
                         id: id,
                     }
                 });
@@ -454,11 +389,7 @@
                     console.log(error)
                     this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                 });
-            }
-        },
-
-        mounted(){
-            this.$refs.scroll1.addEventListener("scroll", this.syncScroll);
+            },
         },
 
         components: {

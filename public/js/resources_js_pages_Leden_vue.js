@@ -263,7 +263,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           id: id
         }).then(function (response) {
           _this2.naam = response.data.data.naam;
-          _this2.soortLid = response.data.data.soortLid;
+          _this2.soortLid = response.data.data["soort lid"];
           _this2.email = response.data.data.email;
           _this2.geboortedatum = response.data.data.geboortedatum;
           _this2.familie = response.data.data.familie;
@@ -410,9 +410,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 
 
 var __default__ = {
-  created: function created() {
-    this.gridTotaal = this.gridColTellen(this.grid);
-    this.gridBreedte = this.gridBreedteTellen(this.gridTotaal, this.colomnBreedte);
+  beforeMount: function beforeMount() {
     if (_typeof(this.get.page) !== undefined) {
       this.pagina = this.get.page;
     }
@@ -437,6 +435,7 @@ var __default__ = {
     });
     this.leden(this.get.page, this.get.naam, this.get.email, this.get.min_geboortedatum, this.get.max_geboortedatum, this.get.soort_lid, this.get.familie, this.get.adres, this.get.straat, this.get.stad, this.get.land);
   },
+  created: function created() {},
   data: function data() {
     return {
       items: [],
@@ -444,7 +443,7 @@ var __default__ = {
         "naam": 2,
         "email": 3,
         "geboortedatum": 2,
-        "soortLid": 1,
+        "soort lid": 1,
         "familie": 2,
         "adres": 2,
         "aanpassen": 2,
@@ -513,9 +512,6 @@ var __default__ = {
       })["catch"](function (error) {
         console.log(error);
       });
-    },
-    syncScroll: function syncScroll() {
-      this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
     },
     ledenToevoegen: function ledenToevoegen(naam, email, geboortedatum, soortLid, familie, huisnummer, bijvoeging, straat, stad, land) {
       var _this3 = this;
@@ -593,10 +589,10 @@ var __default__ = {
         }, _callee2);
       }))();
     },
-    deleteLid: function deleteLid(email) {
+    deleteLid: function deleteLid(id) {
       var _this5 = this;
       axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/delete", {
-        "email": email
+        "id": id
       }).then(function () {
         _this5.leden(_this5.get.page, _this5.get.naam, _this5.get.email, _this5.get.min_geboortedatum, _this5.get.max_geboortedatum, _this5.get.soort_lid, _this5.get.familie, _this5.get.adres, _this5.get.straat, _this5.get.stad, _this5.get.land);
         _this5.Toast("Lid succesvol gedelete", "success", 3000, "top");
@@ -604,7 +600,7 @@ var __default__ = {
         _this5.Toast("Er is iets misgegaan", "danger", 3000, "top");
       });
     },
-    deleteAlert: function deleteAlert(email, naam) {
+    deleteAlert: function deleteAlert(id) {
       var _this6 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var alert;
@@ -619,7 +615,7 @@ var __default__ = {
                   text: "Ja",
                   role: "confirm",
                   handler: function handler() {
-                    _this6.deleteLid(email);
+                    _this6.deleteLid(id);
                   }
                 }, {
                   text: "Nee",
@@ -637,7 +633,7 @@ var __default__ = {
         }, _callee3);
       }))();
     },
-    LidUpdatenModal: function LidUpdatenModal(id, naam) {
+    LidUpdatenModal: function LidUpdatenModal(id) {
       var _this7 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         var modal, _yield$modal$onWillDi2, data, role;
@@ -648,7 +644,7 @@ var __default__ = {
               return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.create({
                 component: _components_modals_LedenModal_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
                 componentProps: {
-                  titel: naam + " updaten",
+                  titel: "updaten",
                   id: id
                 }
               });
@@ -693,9 +689,6 @@ var __default__ = {
         _this8.Toast("Er is iets misgegaan", "danger", 3000, "top");
       });
     }
-  },
-  mounted: function mounted() {
-    this.$refs.scroll1.addEventListener("scroll", this.syncScroll);
   },
   components: {
     IonGrid: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonGrid,
@@ -1480,38 +1473,14 @@ var _hoisted_3 = /*#__PURE__*/_withScopeId(function () {
 });
 var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Zoeken ");
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Lid toevoegen ");
-var _hoisted_6 = {
-  "class": "w-100"
-};
-var _hoisted_7 = {
-  ref: "scroll1",
-  "class": "sticky-top overflow-x-scroll"
-};
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" naam ");
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" email ");
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" geboortedatum ");
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" soort lid ");
-var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" familie ");
-var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" adres ");
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" aanpassen ");
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" deleten ");
-var _hoisted_16 = {
-  ref: "scroll2",
-  "class": "overflow-x-hidden"
-};
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("aanpassen");
-var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("deleten");
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _this = this;
   var _component_ion_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-input");
   var _component_ion_item = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-item");
   var _component_ion_select_option = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-select-option");
   var _component_ion_select = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-select");
   var _component_ion_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-button");
   var _component_ion_icon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-icon");
-  var _component_ion_col = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-col");
-  var _component_ion_row = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-row");
-  var _component_ion_grid = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-grid");
+  var _component_grid_container = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("grid-container");
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
     "class": "border mx-1 d-inline-block"
@@ -1705,177 +1674,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, null, 8 /* PROPS */, ["icon"])];
     }),
     _: 1 /* STABLE */
-  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_grid, {
-    "class": "grid-gap leden-grid"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_row, {
-        "class": "bg-secondary"
-      }, {
-        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-            size: _this.grid.naam
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_8];
-            }),
-            _: 1 /* STABLE */
-          }, 8 /* PROPS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-            size: _this.grid.email
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_9];
-            }),
-            _: 1 /* STABLE */
-          }, 8 /* PROPS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-            size: _this.grid.geboortedatum
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_10];
-            }),
-            _: 1 /* STABLE */
-          }, 8 /* PROPS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-            size: _this.grid.soortLid
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_11];
-            }),
-            _: 1 /* STABLE */
-          }, 8 /* PROPS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-            size: _this.grid.familie
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_12];
-            }),
-            _: 1 /* STABLE */
-          }, 8 /* PROPS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-            size: _this.grid.adres
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_13];
-            }),
-            _: 1 /* STABLE */
-          }, 8 /* PROPS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-            size: _this.grid.aanpassen
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_14];
-            }),
-            _: 1 /* STABLE */
-          }, 8 /* PROPS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-            size: _this.grid.deleten
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_15];
-            }),
-            _: 1 /* STABLE */
-          }, 8 /* PROPS */, ["size"])];
-        }),
-        _: 1 /* STABLE */
-      })];
-    }),
-
-    _: 1 /* STABLE */
-  })], 512 /* NEED_PATCH */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_grid, {
-    "class": "grid-gap leden-grid"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.items, function (item) {
-        return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ion_row, {
-          "class": "bg-muted"
-        }, {
-          "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-            return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-              size: _this.grid.naam
-            }, {
-              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.naam), 1 /* TEXT */)];
-              }),
-
-              _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-              size: _this.grid.email
-            }, {
-              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.email), 1 /* TEXT */)];
-              }),
-
-              _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-              size: _this.grid.geboortedatum
-            }, {
-              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.geboortedatum), 1 /* TEXT */)];
-              }),
-
-              _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-              size: _this.grid.soortLid
-            }, {
-              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.soortLid), 1 /* TEXT */)];
-              }),
-
-              _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-              size: _this.grid.familie
-            }, {
-              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.familie), 1 /* TEXT */)];
-              }),
-
-              _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-              size: _this.grid.adres
-            }, {
-              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.straat) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.huisnummer + (item.bijvoeging ? item.bijvoeging : "")) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.stad) + " " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(item.land), 1 /* TEXT */)];
-              }),
-
-              _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-              size: _this.grid.aanpassen
-            }, {
-              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-                  onClick: function onClick($event) {
-                    return $options.LidUpdatenModal(item.id, item.naam);
-                  }
-                }, {
-                  "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                    return [_hoisted_17];
-                  }),
-                  _: 2 /* DYNAMIC */
-                }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])];
-              }),
-              _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-              size: _this.grid.deleten,
-              "class": "d-flex justify-content-center"
-            }, {
-              "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-                  onClick: function onClick($event) {
-                    return $options.deleteAlert(item.email, item.naam);
-                  },
-                  color: "danger"
-                }, {
-                  "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-                    return [_hoisted_18];
-                  }),
-                  _: 2 /* DYNAMIC */
-                }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])];
-              }),
-              _: 2 /* DYNAMIC */
-            }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"])];
-          }),
-          _: 2 /* DYNAMIC */
-        }, 1024 /* DYNAMIC_SLOTS */);
-      }), 256 /* UNKEYED_FRAGMENT */))];
-    }),
-
-    _: 1 /* STABLE */
-  })], 512 /* NEED_PATCH */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
+  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_grid_container, {
+    items: $data.items,
+    colomnBreedte: $data.colomnBreedte,
+    gridCols: $data.grid,
+    updating: $options.LidUpdatenModal,
+    deleting: $options.deleteAlert
+  }, null, 8 /* PROPS */, ["items", "colomnBreedte", "gridCols", "updating", "deleting"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
     get: this.get,
     laatstePagina: this.laatstePagina
   }, null, 8 /* PROPS */, ["get", "laatstePagina"])], 64 /* STABLE_FRAGMENT */);

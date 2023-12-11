@@ -17,7 +17,7 @@ class FamilielidResource extends JsonResource
         return [
             "id" => $this->id,
             "naam" => $this->naam,
-            "soortLid" => $this->soortLid->omschrijving,
+            "soort lid" => $this->soortLid->omschrijving,
             "geboortedatum" => $this->geboortedatum,
             "email" => $this->email,
             "familie" => $this->familie->naam,
@@ -26,7 +26,6 @@ class FamilielidResource extends JsonResource
             "straat" => $this->familie->adres->straat->naam,
             "stad" => $this->familie->adres->straat->stad->naam,
             "land" => $this->familie->adres->straat->stad->land->naam,
-            "naam" => $this->naam,
         ];
     }
 }

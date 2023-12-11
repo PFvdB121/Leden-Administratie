@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\FamilielidResource;
+use App\Http\Resources\FamilielidFrontResource;
 
 class FamilielidController extends Controller
 {
@@ -70,7 +71,7 @@ class FamilielidController extends Controller
 
         $familieLeden = $familieLeden->paginate(20);
 
-        return FamilielidResource::collection($familieLeden);
+        return FamilielidFrontResource::collection($familieLeden);
     }
 
     /**
@@ -237,9 +238,9 @@ class FamilielidController extends Controller
     public function delete(Request $request)
     {
         $validated = $request->validate([
-            "email" => "required|email",
+            "id" => "required|numeric",
         ]);
         
-        Familielid::where("email", $request["email"])->delete();
+        Familielid::where("id", $request["id"])->delete();
     }
 }

@@ -51,5 +51,6 @@ window.axios.interceptors.response.use(
 app.component("ion-app", IonApp);
 app.component("ionic-menu", require("./components/menu.vue").default);
 app.component("pagination", require("./components/pagination.vue").default);
+app.component("grid-container", require("./components/grid-container.vue").default);
 
 app.mount("#app");

@@ -120,7 +120,7 @@
                     })
                     .then((response) => {
                         this.naam = response.data.data.naam;
-                        this.soortLid = response.data.data.soortLid;
+                        this.soortLid = response.data.data["soort lid"];
                         this.email = response.data.data.email;
                         this.geboortedatum = response.data.data.geboortedatum;
                         this.familie = response.data.data.familie;
