@@ -11,6 +11,7 @@ class Contributie extends Model
     use HasFactory;
     protected $table = "contributies";
     protected $fillable = [
+        "bedrag",
         "leeftijd",
         "soort_lid_id",
         "boekjaar_id",

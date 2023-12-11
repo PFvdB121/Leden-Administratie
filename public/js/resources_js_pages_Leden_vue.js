@@ -416,9 +416,9 @@ var __default__ = {
     }
     this.naam = this.get.naam;
     this.email = this.get.email;
-    this.minGeboortedatum = this.get.min_geboortedatum;
-    this.maxGeboortedatum = this.get.max_geboortedatum;
-    this.soortLid = this.get.soort_lid;
+    this.minGeboortedatum = this.get.minGeboortedatum;
+    this.maxGeboortedatum = this.get.maxGeboortedatum;
+    this.soortLid = this.get.soortLid;
     this.familie = this.get.familie;
     this.adres = this.get.adres;
     this.straat = this.get.straat;
@@ -433,9 +433,8 @@ var __default__ = {
       month: "2-digit",
       day: "2-digit"
     });
-    this.leden(this.get.page, this.get.naam, this.get.email, this.get.min_geboortedatum, this.get.max_geboortedatum, this.get.soort_lid, this.get.familie, this.get.adres, this.get.straat, this.get.stad, this.get.land);
+    this.leden(this.get.page, this.get.naam, this.get.email, this.get.minGeboortedatum, this.get.maxGeboortedatum, this.get.soortLid, this.get.familie, this.get.adres, this.get.straat, this.get.stad, this.get.land);
   },
-  created: function created() {},
   data: function data() {
     return {
       items: [],
@@ -466,6 +465,7 @@ var __default__ = {
       stad: "",
       land: "",
       huidigeDatum: "",
+      lid: {},
       date: new Date()
     };
   },
@@ -474,9 +474,9 @@ var __default__ = {
       this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
         "naam": this.naam,
         "email": this.email,
-        "min_geboortedatum": this.minGeboortedatum,
-        "max_geboortedatum": this.maxGeboortedatum,
-        "soort_lid": this.soortLid,
+        "minGeboortedatum": this.minGeboortedatum,
+        "maxGeboortedatum": this.maxGeboortedatum,
+        "soortLid": this.soortLid,
         "familie": this.familie,
         "adres": this.adres,
         "straat": this.straat,
@@ -484,16 +484,31 @@ var __default__ = {
         "land": this.land
       });
     },
-    soortenLedenOphalen: function soortenLedenOphalen() {
+    lidOphalen: function lidOphalen(id) {
       var _this = this;
+      if (id) {
+        axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/show", {
+          id: id
+        }).then(function (response) {
+          _this.lid = response.data.data;
+        })["catch"](function (error) {
+          console.log(error);
+          _this.Toast("Er is iets misgegaan", "danger", 3000, "top");
+        });
+      } else {
+        console.error("Geen id toegevoegd");
+      }
+    },
+    soortenLedenOphalen: function soortenLedenOphalen() {
+      var _this2 = this;
       axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("soorten_leden").then(function (response) {
-        _this.soortenLeden = response.data;
+        _this2.soortenLeden = response.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     leden: function leden(page, naam, email, minGeboortedatum, maxGeboortedatum, soortLid, familie, adres, straat, stad, land) {
-      var _this2 = this;
+      var _this3 = this;
       axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden", {
         "page": page,
         "naam": naam,
@@ -507,14 +522,14 @@ var __default__ = {
         "stad": stad,
         "land": land
       }).then(function (response) {
-        _this2.laatstePagina = response.data.meta.last_page;
-        _this2.items = response.data.data;
+        _this3.laatstePagina = response.data.meta.last_page;
+        _this3.items = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     ledenToevoegen: function ledenToevoegen(naam, email, geboortedatum, soortLid, familie, huisnummer, bijvoeging, straat, stad, land) {
-      var _this3 = this;
+      var _this4 = this;
       axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/create", {
         "naam": naam,
         "email": email,
@@ -527,14 +542,14 @@ var __default__ = {
         "stad": stad,
         "land": land
       }).then(function () {
-        _this3.leden(_this3.get.page, _this3.get.naam, _this3.get.email, _this3.get.min_geboortedatum, _this3.get.max_geboortedatum, _this3.get.soort_lid, _this3.get.familie, _this3.get.adres, _this3.get.straat, _this3.get.stad, _this3.get.land);
-        _this3.Toast("Lid succesvol toegevoegd", "success", 3000, "top");
+        _this4.leden(_this4.get.page, _this4.get.naam, _this4.get.email, _this4.get.minGeboortedatum, _this4.get.maxGeboortedatum, _this4.get.soortLid, _this4.get.familie, _this4.get.adres, _this4.get.straat, _this4.get.stad, _this4.get.land);
+        _this4.Toast("Lid succesvol toegevoegd", "success", 3000, "top");
       })["catch"](function (error) {
-        _this3.Toast("Er is iets misgegaan", "danger", 3000, "top");
+        _this4.Toast("Er is iets misgegaan", "danger", 3000, "top");
       });
     },
     LedenToevoegenModal: function LedenToevoegenModal() {
-      var _this4 = this;
+      var _this5 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var modal, _yield$modal$onWillDi, data, role;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -557,7 +572,7 @@ var __default__ = {
               data = _yield$modal$onWillDi.data;
               role = _yield$modal$onWillDi.role;
               if (role == "confirm") {
-                _this4.ledenToevoegen(data.naam, data.email, data.geboortedatum, data.soortLid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
+                _this5.ledenToevoegen(data.naam, data.email, data.geboortedatum, data.soortLid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
               }
             case 10:
             case "end":
@@ -590,43 +605,46 @@ var __default__ = {
       }))();
     },
     deleteLid: function deleteLid(id) {
-      var _this5 = this;
+      var _this6 = this;
       axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/delete", {
         "id": id
       }).then(function () {
-        _this5.leden(_this5.get.page, _this5.get.naam, _this5.get.email, _this5.get.min_geboortedatum, _this5.get.max_geboortedatum, _this5.get.soort_lid, _this5.get.familie, _this5.get.adres, _this5.get.straat, _this5.get.stad, _this5.get.land);
-        _this5.Toast("Lid succesvol gedelete", "success", 3000, "top");
+        _this6.leden(_this6.get.page, _this6.get.naam, _this6.get.email, _this6.get.minGeboortedatum, _this6.get.maxGeboortedatum, _this6.get.soortLid, _this6.get.familie, _this6.get.adres, _this6.get.straat, _this6.get.stad, _this6.get.land);
+        _this6.Toast("Lid succesvol gedelete", "success", 3000, "top");
       })["catch"](function (error) {
-        _this5.Toast("Er is iets misgegaan", "danger", 3000, "top");
+        _this6.Toast("Er is iets misgegaan", "danger", 3000, "top");
       });
     },
     deleteAlert: function deleteAlert(id) {
-      var _this6 = this;
+      var _this7 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        var alert;
+        var lid, alert;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              _context3.next = 2;
+              lid = _this7.items.filter(function (item) {
+                return item.id == id;
+              });
+              _context3.next = 3;
               return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.alertController.create({
                 header: "Let op!",
-                message: "Weet u zeker dat u " + naam + " wilt deleten?",
+                message: "Weet u zeker dat u " + lid[0].naam + " wilt deleten?",
                 buttons: [{
                   text: "Ja",
                   role: "confirm",
                   handler: function handler() {
-                    _this6.deleteLid(id);
+                    _this7.deleteLid(id);
                   }
                 }, {
                   text: "Nee",
                   role: "cancel"
                 }]
               });
-            case 2:
+            case 3:
               alert = _context3.sent;
-              _context3.next = 5;
+              _context3.next = 6;
               return alert.present();
-            case 5:
+            case 6:
             case "end":
               return _context3.stop();
           }
@@ -634,7 +652,7 @@ var __default__ = {
       }))();
     },
     LidUpdatenModal: function LidUpdatenModal(id) {
-      var _this7 = this;
+      var _this8 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         var modal, _yield$modal$onWillDi2, data, role;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
@@ -658,7 +676,7 @@ var __default__ = {
               data = _yield$modal$onWillDi2.data;
               role = _yield$modal$onWillDi2.role;
               if (role == "confirm") {
-                _this7.lidUpdaten(id, data.naam, data.email, data.geboortedatum, data.soortLid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
+                _this8.lidUpdaten(id, data.naam, data.email, data.geboortedatum, data.soortLid, data.familie, data.huisnummer, data.bijvoeging, data.straat, data.stad, data.land);
               }
             case 10:
             case "end":
@@ -668,7 +686,7 @@ var __default__ = {
       }))();
     },
     lidUpdaten: function lidUpdaten(id, naam, email, geboortedatum, soortLid, familie, huisnummer, bijvoeging, straat, stad, land) {
-      var _this8 = this;
+      var _this9 = this;
       axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/update", {
         "id": id,
         "naam": naam,
@@ -682,11 +700,11 @@ var __default__ = {
         "stad": stad,
         "land": land
       }).then(function () {
-        _this8.leden(_this8.get.page, _this8.get.naam, _this8.get.email, _this8.get.min_geboortedatum, _this8.get.max_geboortedatum, _this8.get.soort_lid, _this8.get.familie, _this8.get.adres, _this8.get.straat, _this8.get.stad, _this8.get.land);
-        _this8.Toast("Lid succesvol aangepast", "success", 3000, "top");
+        _this9.leden(_this9.get.page, _this9.get.naam, _this9.get.email, _this9.get.minGeboortedatum, _this9.get.maxGeboortedatum, _this9.get.soortLid, _this9.get.familie, _this9.get.adres, _this9.get.straat, _this9.get.stad, _this9.get.land);
+        _this9.Toast("Lid succesvol aangepast", "success", 3000, "top");
       })["catch"](function (error) {
         console.log(error);
-        _this8.Toast("Er is iets misgegaan", "danger", 3000, "top");
+        _this9.Toast("Er is iets misgegaan", "danger", 3000, "top");
       });
     }
   },

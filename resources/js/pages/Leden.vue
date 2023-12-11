@@ -85,9 +85,9 @@
             }
             this.naam = this.get.naam;
             this.email = this.get.email;
-            this.minGeboortedatum = this.get.min_geboortedatum;
-            this.maxGeboortedatum = this.get.max_geboortedatum;
-            this.soortLid = this.get.soort_lid;
+            this.minGeboortedatum = this.get.minGeboortedatum;
+            this.maxGeboortedatum = this.get.maxGeboortedatum;
+            this.soortLid = this.get.soortLid;
             this.familie = this.get.familie;
             this.adres = this.get.adres;
             this.straat = this.get.straat;
@@ -109,18 +109,15 @@
                 this.get.page,
                 this.get.naam, 
                 this.get.email,
-                this.get.min_geboortedatum,
-                this.get.max_geboortedatum,
-                this.get.soort_lid,
+                this.get.minGeboortedatum,
+                this.get.maxGeboortedatum,
+                this.get.soortLid,
                 this.get.familie, 
                 this.get.adres, 
                 this.get.straat, 
                 this.get.stad, 
                 this.get.land
             );
-        },
-        created(){
-
         },
         data(){
             return{
@@ -152,6 +149,7 @@
                 stad: "",
                 land: "",
                 huidigeDatum: "",
+                lid: {},
                 date: new Date,
             }
         },
@@ -161,15 +159,33 @@
                 this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
                     "naam": this.naam,
                     "email": this.email,
-                    "min_geboortedatum": this.minGeboortedatum,
-                    "max_geboortedatum": this.maxGeboortedatum,
-                    "soort_lid": this.soortLid,
+                    "minGeboortedatum": this.minGeboortedatum,
+                    "maxGeboortedatum": this.maxGeboortedatum,
+                    "soortLid": this.soortLid,
                     "familie": this.familie,
                     "adres": this.adres,
                     "straat": this.straat,
                     "stad": this.stad,
                     "land": this.land,
                 });
+            },
+
+            lidOphalen: function(id){
+                if (id) {
+                    axios.post("leden/show", {
+                        id: id,
+                    })
+                    .then((response) => {
+                        this.lid = response.data.data;
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        this.Toast("Er is iets misgegaan", "danger", 3000, "top");
+                    })
+                }
+                else{
+                    console.error("Geen id toegevoegd");
+                }
             },
 
             soortenLedenOphalen: function(){
@@ -223,9 +239,9 @@
                         this.get.page,
                         this.get.naam, 
                         this.get.email,
-                        this.get.min_geboortedatum,
-                        this.get.max_geboortedatum,
-                        this.get.soort_lid,
+                        this.get.minGeboortedatum,
+                        this.get.maxGeboortedatum,
+                        this.get.soortLid,
                         this.get.familie, 
                         this.get.adres, 
                         this.get.straat, 
@@ -287,9 +303,9 @@
                         this.get.page,
                         this.get.naam, 
                         this.get.email,
-                        this.get.min_geboortedatum,
-                        this.get.max_geboortedatum,
-                        this.get.soort_lid,
+                        this.get.minGeboortedatum,
+                        this.get.maxGeboortedatum,
+                        this.get.soortLid,
                         this.get.familie, 
                         this.get.adres, 
                         this.get.straat, 
@@ -304,9 +320,12 @@
             },
             
             async deleteAlert(id){
+                var lid = this.items.filter((item) => {
+                    return item.id == id;
+                });
                 const alert = await alertController.create({
                     header: "Let op!",
-                    message: "Weet u zeker dat u " + naam + " wilt deleten?",
+                    message: "Weet u zeker dat u " + lid[0].naam + " wilt deleten?",
                     buttons: [
                         {
                             text: "Ja",
@@ -374,9 +393,9 @@
                         this.get.page,
                         this.get.naam, 
                         this.get.email,
-                        this.get.min_geboortedatum,
-                        this.get.max_geboortedatum,
-                        this.get.soort_lid,
+                        this.get.minGeboortedatum,
+                        this.get.maxGeboortedatum,
+                        this.get.soortLid,
                         this.get.familie, 
                         this.get.adres, 
                         this.get.straat, 
