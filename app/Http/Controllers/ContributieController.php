@@ -10,9 +10,19 @@ class ContributieController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "page" => "nullable|numeric",
+            "boekjaar" => "nullable|numeric",
+            "email" => "nullable|string",
+            "soortLid" => "nullable|string",
+            "minLeeftijd" => "nullable|numeric",
+            "maxLeeftijd" => "nullable|numeric",
+        ]);
+
+        $contributies = Contributie::where("leeftijd", ">=", $request["minLeeftijd"])
+        ->where("leeftijd", "<=", $request["maxLeeftijd"]);
     }
 
     /**

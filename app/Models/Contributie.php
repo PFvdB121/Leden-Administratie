@@ -10,8 +10,14 @@ class Contributie extends Model
 {
     use HasFactory;
     protected $table = "contributies";
+    protected $fillable = [
+        "leeftijd",
+        "soort_lid_id",
+        "boekjaar_id",
+        "familie_lid_id",
+    ];
 
-    public function familie_lid(): BelongsTo
+    public function familieLid(): BelongsTo
     {
         return $this->belongsTo(Familielid::class, "familie_lid_id", "id");
     }

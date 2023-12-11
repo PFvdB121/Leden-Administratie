@@ -16,8 +16,8 @@ class ContributieResource extends JsonResource
     {
         return [
             "bedrag" => $this->bedrag,
-            "lid" => $this->familie_lid->first()->naam,
-            "email_lid" => $this->familie_lid->first()->email,
+            "lid" => $this->familieLid->first()->naam,
+            "emailLid" => $this->familieLid->first()->email,
             "soortLid" => $this->soortLid->first()->omschrijving,
             "boekjaar" => $this->boekjaar->first()->jaar,
         ];

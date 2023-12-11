@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('soorten_leden', function (Blueprint $table) {
             $table->id();
             $table->string("omschrijving");
+            $table->integer("min_leeftijd");
+            $table->integer("max_leeftijd")->nullable();
+            $table->integer("korting");
             $table->timestamps();
         });
     }

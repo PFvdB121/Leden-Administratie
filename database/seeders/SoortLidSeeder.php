@@ -16,18 +16,32 @@ class SoortLidSeeder extends Seeder
         $soortenLeden = [
             [
                 "omschrijving" => "Jeugd",
+                "min_leeftijd" => 0,
+                "max_leeftijd" => 7,
+                "korting" => 50,
             ],
             [
                 "omschrijving" => "Aspirant",
+                "min_leeftijd" => 8,
+                "max_leeftijd" => 12,
+                "korting" => 40,
             ],
             [
                 "omschrijving" => "Junior",
+                "min_leeftijd" => 13,
+                "max_leeftijd" => 17,
+                "korting" => 25,
             ],
             [
                 "omschrijving" => "Senior",
+                "min_leeftijd" => 18,
+                "max_leeftijd" => 50,
+                "korting" => 0,
             ],
             [
                 "omschrijving" => "Oudere",
+                "min_leeftijd" => 51,
+                "korting" => 45,
             ],
         ];
 

@@ -10,8 +10,14 @@ class SoortLid extends Model
 {
     use HasFactory;
     protected $table = "soorten_leden";
+    protected $fillable = [
+        "omschrijving",
+        "min_leeftijd",
+        "max_leeftijd",
+        "korting",
+    ];
 
-    public function familie_leden(): HasMany
+    public function familieLeden(): HasMany
     {
         return $this->hasMany(Familielid::class, "familie_lid_id", "id");
     }
