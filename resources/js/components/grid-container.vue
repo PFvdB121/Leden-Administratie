@@ -12,15 +12,10 @@
         <div ref="scroll2" class="overflow-x-hidden">
             <ion-grid class="grid-gap leden-grid">
                 <ion-row v-for="item in items" class="bg-muted">
-                    <ion-col :size="this.gridCols[key]" v-for="(value, key) in filterObject(item, 'id')">
+                    <ion-col :size="this.gridCols[key]" v-for="(value, key) in sortingObject(filterObject(item, gridCols), gridCols)">
                         {{ value }}
                     </ion-col>
-                    <ion-col :size="this.gridCols.aanpassen" class="d-flex justify-content-center">
-                        <ion-button @click="updating(item.id)">aanpassen</ion-button>
-                    </ion-col>
-                    <ion-col :size="this.gridCols.deleten" class="d-flex justify-content-center">
-                        <ion-button @click="deleting(item.id)" color="danger">deleten</ion-button>
-                    </ion-col>
+                    <slot :item="item"></slot>
                 </ion-row>
             </ion-grid>
         </div>
@@ -53,29 +48,37 @@
                 this.$refs.scroll2.scrollLeft = this.$refs.scroll1.scrollLeft;
             },
 
-            filterObject: function(object, filter){
-                if(object !== null && object !== undefined){
-                    var array = Object.entries(object);
-                    array = array.filter((index) => {return index[0] !== filter});
-                    object = Object.fromEntries(array);
-                    return object;
+            filterObject: function(object1, object2){
+                if(object1 !== null && object1 !== undefined && object2 !== null && object2 !== undefined){
+                    var array1 = Object.entries(object1);
+                    var array2 = Object.keys(object2);
+                    array1 = array1.filter((index) => {return array2.includes(index[0])});
+                    object1 = Object.fromEntries(array1);
+                    return object1;
                 }
                 return {};
-            }
+            },
+
+            sortingObject: function(object1, object2){
+                if (object1 !== null && object1 !== undefined && object2 !== null && object2 !== undefined) {
+                    var array1 = Object.entries(object1);
+                    var array2 = Object.keys(this.filterObject(object2, object1));
+                    array1.sort((a, b) => {return array2.indexOf(a[0]) - array2.indexOf(b[0])});
+                    object1 = Object.fromEntries(array1);
+                    return object1;
+                }
+            },
         },
 
-        updated(){
+        mounted(){
             this.$refs.scroll1.addEventListener("scroll", this.syncScroll);
-            this.gridItems = this.items;
         },
 
         props: {
-            updating: Function,
-            deleting: Function,
             items: Object,
             gridCols: Object,
             colomnBreedte: Number,
-        }
+        },
     });
 </script>
 

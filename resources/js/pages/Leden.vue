@@ -52,7 +52,14 @@
             </ion-button>
         </div>
     </div>
-    <grid-container :items="items" :colomnBreedte="colomnBreedte" :gridCols="grid" :updating="LidUpdatenModal" :deleting="deleteAlert"></grid-container>
+    <grid-container :items="items" :colomnBreedte="colomnBreedte" :gridCols="grid" v-slot="slotProps">
+        <ion-col :size="grid.aanpassen" class="d-flex justify-content-center">
+            <ion-button @click="LidUpdatenModal(slotProps.item.id)">aanpassen</ion-button>
+        </ion-col>
+        <ion-col :size="grid.deleten" class="d-flex justify-content-center">
+            <ion-button @click="deleteAlert(slotProps.item.id)" color="danger">deleten</ion-button>
+        </ion-col>
+    </grid-container>
     <pagination :get="this.get" :laatstePagina="this.laatstePagina"/>
 </template>
 
@@ -430,7 +437,7 @@
 
         setup(){
             return {addOutline};
-        }
+        },
     }
 </script>
 

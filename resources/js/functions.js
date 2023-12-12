@@ -39,6 +39,22 @@ module.exports.functions = function(app){
                 var gridBreedte = gridTotaal * colomnBreedte + "px";
                 return gridBreedte;
             },
+        },
+
+        mounted(){
+            if (!Object.keys) {
+                Object.keys = function(obj){
+                    var keys = [];
+    
+                    for (var o in obj) {
+                        if (obj.hasOwnProperty(o)) {
+                            keys.push(o);
+                        }
+                    }
+    
+                    return keys;
+                }
+            }
         }
     });
 }
