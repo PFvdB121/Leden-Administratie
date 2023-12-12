@@ -57,12 +57,12 @@ class ContributieController extends Controller
         $validate = $request->validate([
             "bedrag" => "required|decimal:0,2",
             "boekjaar" => "required|numeric",
-            "soortLid" => "required|string",
             "email" => "required|string",
         ]);
 
         $lid = Familielid::where("email", $request["email"])->first();
-        $soortLid = SoortLid::where("omschrijving", $request["soortLid"])->first();
+        $soortLid = SoortLid::where("omschrijving", $lid->soortLid->omschrijving)->first();
+
         $boekjaar = Boekjaar::where("jaar", $request["boekjaar"])->first();
 
         $datum = new DateTime($request["boekjaar"] . "-01-01");
@@ -74,7 +74,7 @@ class ContributieController extends Controller
         Contributie::create([
             "bedrag" => $request["bedrag"],
             "familie_lid_id" => $lid->id,
-            "soort_lid_id" => $soortLid->id,
+            "soort_lid_id" => $lid->soortLid->id,
             "boekjaar_id" => $boekjaar->id,
         ]);
     }
@@ -88,7 +88,7 @@ class ContributieController extends Controller
             "id" => "required|numeric",
         ]);
 
-        $contributie = Contributie::where("id", $request["id"]);
+        $contributie = Contributie::where("id", $request["id"])->first();
 
         return new ContributieResource($contributie);
     }
@@ -104,7 +104,7 @@ class ContributieController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Contributie $contributie)
+    public function update(Request $request)
     {
         $validate = $request->validate([
             "id" => "required|numeric",
@@ -135,8 +135,12 @@ class ContributieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function delete(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "id" => "required|numeric",
+        ]);
+
+        $contributie = Contributie::where("id", $request["id"])->destroy();
     }
 }

@@ -15,6 +15,17 @@ class BoekjaarController extends Controller
         //
     }
 
+    public function searchYears(Request $request)
+    {
+        $validate = $request->validate([
+            "jaar" => "nullable|numeric",
+        ]);
+
+        $boekenjaren = Boekjaar::select("jaar")->where("jaar", "like", $request . "%");
+
+        return $boekenjaren;
+    }
+
     /**
      * Show the form for creating a new resource.
      */

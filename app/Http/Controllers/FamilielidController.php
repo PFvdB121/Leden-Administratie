@@ -82,6 +82,17 @@ class FamilielidController extends Controller
         //
     }
 
+    public function searchEmail(Request $request)
+    {
+        $validate = $request->validate([
+            "email" => "nullable|string",
+        ]);
+
+        $emails = Familielid::select("email")->where("email", "like", $request["email"] . "%")->offset(0)->limit(10)->get();
+
+        return $emails;
+    }
+
     protected function checkFamily(Request $request)
     {
         $validate = $request->validate([

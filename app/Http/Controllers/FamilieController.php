@@ -79,7 +79,7 @@ class FamilieController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Familie $familie)
+    public function update(Request $request)
     {
         //
     }
@@ -87,7 +87,7 @@ class FamilieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Familie $familie)
+    public function delete(Request $request)
     {
         //
     }

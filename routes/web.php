@@ -35,18 +35,51 @@ Route::group(["middleware" => "auth:web"], function(){
             Route::post("/delete", "App\Http\Controllers\FamilielidController@delete");
             Route::post("/update", "App\Http\Controllers\FamilielidController@update");
             Route::post("/create", "App\Http\Controllers\FamilielidController@store");
+            Route::post("/zoek_mail", "App\Http\Controllers\FamilielidController@searchEmail");
         });
 
-        Route::post("families", "App\Http\Controllers\FamilieController@index");
+        Route::prefix("soorten_leden")->group(function(){
+            Route::post("/", "App\Http\Controllers\SoortLidController@index");
+            Route::post("/show", "App\Http\Controllers\SoortLidController@show");
+            Route::post("/delete", "App\Http\Controllers\SoortLidController@delete");
+            Route::post("/update", "App\Http\Controllers\SoortLidController@update");
+            Route::post("/store", "App\Http\Controllers\SoortLidController@store");
+        });
 
-        Route::post("adressen", "App\Http\Controllers\AdresController@index");
+        Route::prefix("contributies")->group(function(){
+            Route::post("/", "App\Http\Controllers\ContributieController@index");
+            Route::post("/show", "App\Http\Controllers\ContributieController@show");
+            Route::post("/delete", "App\Http\Controllers\ContributieController@delete");
+            Route::post("/update", "App\Http\Controllers\ContributieController@update");
+            Route::post("/store", "App\Http\Controllers\ContributieController@store");
+        });
 
-        Route::post("straten", "App\Http\Controllers\StraatController@index");
+        Route::prefix("families")->group(function(){
+            Route::post("/", "App\Http\Controllers\FamilieController@index");
+            Route::post("/store", "App\Http\Controllers\FamilieController@store");
+            Route::post("/delete", "App\Http\Controllers\FamilieController@delete");
+            Route::post("/update", "App\Http\Controllers\FamilieController@update");
+            Route::post("/show", "App\Http\Controllers\FamilieController@show");
+        });
 
-        Route::post("steden", "App\Http\Controllers\StadController@index");
+        Route::prefix("boekenjaren")->group(function(){
+            Route::post("zoek_jaar", "App\Http\Controllers\BoekjaarController@searchYears");
+        });
 
-        Route::post("landen", "App\Http\Controllers\LandController@index");
+        Route::prefix("adressen")->group(function(){
+            Route::post("/", "App\Http\Controllers\AdresController@index");
+        });
 
-        Route::post("soorten_leden", "App\Http\Controllers\SoortLidController@index");
+        Route::prefix("straten")->group(function(){
+            Route::post("/", "App\Http\Controllers\StraatController@index");
+        });
+
+        Route::prefix("steden")->group(function(){
+            Route::post("/", "App\Http\Controllers\StadController@index");
+        });
+
+        Route::prefix("landen")->group(function(){
+            Route::post("/", "App\Http\Controllers\LandController@index");
+        });
     });
 });

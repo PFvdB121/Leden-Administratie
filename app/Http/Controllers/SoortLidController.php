@@ -60,7 +60,7 @@ class SoortLidController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SoortLid $soortLid)
+    public function delete(Request $request)
     {
         //
     }
