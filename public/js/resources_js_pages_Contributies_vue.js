@@ -384,7 +384,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       minLeeftijd: "",
       maxLeeftijd: "",
       boekjaar: "",
-      soortenLeden: []
+      soortenLeden: [],
+      grid: {
+        "bedrag": 1,
+        "email": 3,
+        "leeftijd": 1,
+        "boekjaar": 1,
+        "soort lid": 2,
+        "aanpassen": 2,
+        "deleten": 2
+      }
     };
   },
   beforeMount: function beforeMount() {
@@ -878,15 +887,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
-            modelValue: $data.email,
+            modelValue: $data.minBedrag,
             "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
-              return $data.email = $event;
+              return $data.minBedrag = $event;
             }),
             "class": "d-inline-block",
-            label: "email",
-            type: "email",
+            label: "minimum bedrag",
+            type: "number",
+            step: ".01",
+            min: 0,
+            max: $data.maxBedrag,
             "label-placement": "floating"
-          }, null, 8 /* PROPS */, ["modelValue"])];
+          }, null, 8 /* PROPS */, ["modelValue", "max"])];
         }),
         _: 1 /* STABLE */
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
@@ -894,15 +906,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
-            modelValue: $data.email,
+            modelValue: $data.maxBedrag,
             "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
-              return $data.email = $event;
+              return $data.maxBedrag = $event;
             }),
             "class": "d-inline-block",
-            label: "email",
-            type: "email",
+            label: "maximum bedrag",
+            type: "number",
+            step: ".01",
+            min: $data.minBedrag ? $data.minBedrag : 0,
             "label-placement": "floating"
-          }, null, 8 /* PROPS */, ["modelValue"])];
+          }, null, 8 /* PROPS */, ["modelValue", "min"])];
         }),
         _: 1 /* STABLE */
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
@@ -910,15 +924,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
-            modelValue: $data.email,
+            modelValue: $data.minLeeftijd,
             "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
-              return $data.email = $event;
+              return $data.minLeeftijd = $event;
             }),
             "class": "d-inline-block",
-            label: "email",
-            type: "email",
+            label: "minimum leeftijd",
+            type: "number",
+            min: 0,
+            max: $data.maxLeeftijd,
             "label-placement": "floating"
-          }, null, 8 /* PROPS */, ["modelValue"])];
+          }, null, 8 /* PROPS */, ["modelValue", "max"])];
         }),
         _: 1 /* STABLE */
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
@@ -926,15 +942,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_input, {
-            modelValue: $data.email,
+            modelValue: $data.maxLeeftijd,
             "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
-              return $data.email = $event;
+              return $data.maxLeeftijd = $event;
             }),
             "class": "d-inline-block",
-            label: "email",
-            type: "email",
+            label: "maximum leeftijd",
+            type: "number",
+            min: $data.minLeeftijd ? $data.minLeeftijd : 0,
             "label-placement": "floating"
-          }, null, 8 /* PROPS */, ["modelValue"])];
+          }, null, 8 /* PROPS */, ["modelValue", "min"])];
         }),
         _: 1 /* STABLE */
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
@@ -947,8 +964,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               return $data.email = $event;
             }),
             "class": "d-inline-block",
-            label: "email",
-            type: "email",
+            label: "boekjaar",
+            type: "number",
+            min: 0,
             "label-placement": "floating"
           }, null, 8 /* PROPS */, ["modelValue"])];
         }),
@@ -990,11 +1008,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_grid_container, {
     items: $data.items,
     colomnBreedte: $data.colomnBreedte,
-    gridCols: _ctx.grid
+    gridCols: $data.grid
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function (slotProps) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-        size: _ctx.grid.aanpassen,
+        size: $data.grid.aanpassen,
         "class": "d-flex justify-content-center"
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -1011,7 +1029,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }),
         _: 2 /* DYNAMIC */
       }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-        size: _ctx.grid.deleten,
+        size: $data.grid.deleten,
         "class": "d-flex justify-content-center"
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {

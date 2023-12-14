@@ -4,19 +4,19 @@
             <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
+            <ion-input v-model="minBedrag" class="d-inline-block" label="minimum bedrag" type="number" step=".01" :min="0" :max="maxBedrag" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
+            <ion-input v-model="maxBedrag" class="d-inline-block" label="maximum bedrag" type="number" step=".01" :min="(minBedrag ? minBedrag : 0)" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
+            <ion-input v-model="minLeeftijd" class="d-inline-block" label="minimum leeftijd" type="number" :min="0" :max="maxLeeftijd" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
+            <ion-input v-model="maxLeeftijd" class="d-inline-block" label="maximum leeftijd" type="number" :min="(minLeeftijd ? minLeeftijd : 0)" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
+            <ion-input v-model="email" class="d-inline-block" label="boekjaar" type="number" :min="0" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block w-25">
             <ion-select v-model="soortLid" label="soort lid" label-placement="floating">
@@ -215,6 +215,15 @@
                 maxLeeftijd: "",
                 boekjaar: "",
                 soortenLeden: [],
+                grid: {
+                    "bedrag": 1,
+                    "email": 3,
+                    "leeftijd": 1,
+                    "boekjaar": 1,
+                    "soort lid": 2,
+                    "aanpassen": 2,
+                    "deleten": 2,
+                }
             }
         },
 
