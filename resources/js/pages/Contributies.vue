@@ -39,6 +39,7 @@
         IonItem,
         IonSelect,
         IonSelectOption,
+        modalController,
      } from "@ionic/vue";
     import axios from "axios";
 

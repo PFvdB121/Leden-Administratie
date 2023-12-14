@@ -249,7 +249,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return modalController.create({
+              return _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.modalController.create({
                 component: _components_modals_ContributiesModal_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
                 componentProps: {
                   titel: "Contributies Toevoegen"
@@ -329,7 +329,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               _context3.next = 2;
-              return modalController.create({
+              return _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.modalController.create({
                 component: _components_modals_ContributiesModal_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
                 componentProps: {
                   titel: "updaten",
