@@ -304,7 +304,7 @@
             }
         },
         
-        name: "testModal",
+        name: "FamilieVLModal",
 
         props: {
             pFamilie: String,

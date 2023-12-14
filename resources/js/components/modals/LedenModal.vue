@@ -63,7 +63,7 @@
     } from '@ionic/vue';
     import axios from 'axios';
 
-    import FamilieModal from './FamilieModal.vue';
+    import FamilieVLModal from './FamilieVLModal.vue';
 
     export default defineComponent({
         name: "LedenModal",
@@ -162,7 +162,7 @@
 
             async familieToevoegen(){
                 const modal = await modalController.create({
-                    component: FamilieModal,
+                    component: FamilieVLModal,
                     componentProps: {
                         pFamilie: this.familie,
                         pHuisnummer: this.huisnummer,
