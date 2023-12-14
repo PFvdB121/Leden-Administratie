@@ -354,16 +354,5 @@
         props: {
             "get": Object
         },
-
-        setup(){
-            return {addOutline};
-        },
     }
 </script>
-
-<style scoped>
-    .leden-grid{
-        min-width: v-bind(gridBreedte);
-        --ion-grid-columns: v-bind(gridTotaal);
-    }
-</style>
