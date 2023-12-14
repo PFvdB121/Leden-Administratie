@@ -1,5 +1,5 @@
 <template>
-    <zoek-container>
+    <zoek-container :zoeken="zoeken" :toevoegen="contributieToevoegen" toevoegenTitel="Contributie toevoegen">
         <ion-item class="border mx-1 d-inline-block">
             <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
         </ion-item>
@@ -40,6 +40,7 @@
         IonSelect,
         IonSelectOption,
         modalController,
+        alertController,
      } from "@ionic/vue";
     import axios from "axios";
 

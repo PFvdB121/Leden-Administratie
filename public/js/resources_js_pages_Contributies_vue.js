@@ -296,7 +296,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return item.id == id;
               });
               _context2.next = 3;
-              return alertController.create({
+              return _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.alertController.create({
                 header: "Let op!",
                 message: "Weet u zeker dat u de contributie van" + contributie[0].email + " op " + contributie[0].boekjaar + " wilt deleten?",
                 buttons: [{
@@ -864,7 +864,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_ion_col = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-col");
   var _component_grid_container = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("grid-container");
   var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_zoek_container, null, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_zoek_container, {
+    zoeken: $options.zoeken,
+    toevoegen: $options.contributieToevoegen,
+    toevoegenTitel: "Contributie toevoegen"
+  }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, {
         "class": "border mx-1 d-inline-block"
@@ -1005,7 +1009,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
 
     _: 1 /* STABLE */
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_grid_container, {
+  }, 8 /* PROPS */, ["zoeken", "toevoegen"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_grid_container, {
     items: $data.items,
     colomnBreedte: $data.colomnBreedte,
     gridCols: $data.grid
