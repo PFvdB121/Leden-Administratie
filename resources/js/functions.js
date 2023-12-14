@@ -1,3 +1,4 @@
+import { toastController } from "@ionic/vue";
 module.exports.functions = function(app){
     app.mixin({
         methods: {
@@ -38,6 +39,17 @@ module.exports.functions = function(app){
             gridBreedteTellen: function(gridTotaal, colomnBreedte){
                 var gridBreedte = gridTotaal * colomnBreedte + "px";
                 return gridBreedte;
+            },
+
+            async Toast(message, color, duration, position){
+                const toast = await toastController.create({
+                    message: message,
+                    color: color,
+                    duration: duration,
+                    position: position,
+                });
+
+                toast.present();
             },
         },
 

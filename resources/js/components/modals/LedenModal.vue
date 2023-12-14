@@ -60,7 +60,6 @@
         IonInput,
         IonSelectOption,
         modalController,
-        toastController,
     } from '@ionic/vue';
     import axios from 'axios';
 
@@ -186,17 +185,6 @@
                     this.stad = data.stad;
                     this.land = data.land;
                 }
-            },
-
-            async Toast(message, color, duration, position){
-                const toast = await toastController.create({
-                    message: message,
-                    color: color,
-                    duration: duration,
-                    position: position,
-                });
-
-                toast.present();
             },
         },
         components: {

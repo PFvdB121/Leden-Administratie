@@ -20,13 +20,16 @@ class ContributieController extends Controller
             "minLeeftijd" => "nullable|numeric",
             "maxLeeftijd" => "nullable|numeric",
             "boekjaar" => "nullable|numeric",
-            "naam" => "nullable|string",
             "email" => "nullable|string",
             "soortLid" => "nullable|string",
+            "minBedrag" => "nullable|decimal:0,2",
+            "maxBedrag" => "nullable|decimal:0,2",
         ]);
 
         $contributies = Contributie::where("leeftijd", ">=", $request["minLeeftijd"])
         ->where("leeftijd", "<=", $request["maxLeeftijd"])
+        ->where("bedrag", ">=", $request["minBedrag"])
+        ->where("bedrag", "<=", $request["maxBedrag"])
         ->whereHas("boekjaar", function($query) use ($request){
             return $query->where("jaar", "like", "%" . $request['boekjaar'] . "%");
         })
@@ -58,10 +61,11 @@ class ContributieController extends Controller
             "bedrag" => "required|decimal:0,2",
             "boekjaar" => "required|numeric",
             "email" => "required|string",
+            "soortLid" => "required|string",
         ]);
 
         $lid = Familielid::where("email", $request["email"])->first();
-        $soortLid = SoortLid::where("omschrijving", $lid->soortLid->omschrijving)->first();
+        $soortLid = SoortLid::where("omschrijving", $request["soortLid"])->first();
 
         $boekjaar = Boekjaar::where("jaar", $request["boekjaar"])->first();
 

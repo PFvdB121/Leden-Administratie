@@ -36,9 +36,15 @@ class SoortLidController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(SoortLid $soortLid)
+    public function show(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "id" => "required|integer",
+        ]);
+
+        $soortLid = SoortLid::where("id", $request["id"])->first();
+
+        return $soortLid;
     }
 
     /**

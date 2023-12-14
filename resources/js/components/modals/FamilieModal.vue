@@ -303,7 +303,9 @@
                 this[index] = waarde;
             }
         },
+        
         name: "testModal",
+
         props: {
             pFamilie: String,
             pHuisnummer: Number,
@@ -312,6 +314,7 @@
             pStad: String,
             pLand: String,
         },
+
         setup() {
             const accordionGroup = ref(null);
             const toggleAccordion = (waarde) => {
