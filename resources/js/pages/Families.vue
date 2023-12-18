@@ -35,7 +35,7 @@
 
     import axios from "axios";
 
-    import FamilieVLModal from './FamilieVLModal.vue';
+    import FamilieVLModal from '../components/modals/FamilieVLModal.vue';
     
     export default({
         beforeMount(){
