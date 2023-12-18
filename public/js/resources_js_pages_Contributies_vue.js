@@ -221,7 +221,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     soortenLedenOphalen: function soortenLedenOphalen() {
       var _this2 = this;
-      axios__WEBPACK_IMPORTED_MODULE_1__["default"].post("soorten_leden").then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_1__["default"].post("soorten_leden/get").then(function (response) {
         _this2.soortenLeden = response.data;
       })["catch"](function (error) {
         console.log(error);
