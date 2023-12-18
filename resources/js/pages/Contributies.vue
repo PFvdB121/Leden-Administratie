@@ -201,6 +201,17 @@
                     this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                 });
             },
+
+            async Toast(message, color, duration, position){
+                const toast = await this.toastController.create({
+                    message: message,
+                    color: color,
+                    duration: duration,
+                    position: position,
+                });
+
+                toast.present();
+            },
         },
 
         data(){

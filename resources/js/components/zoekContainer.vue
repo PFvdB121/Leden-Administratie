@@ -24,6 +24,8 @@
         IonIcon,
     } from "@ionic/vue";
 
+    import { addOutline } from "ionicons/icons";
+
     export default({
         props: {
             toevoegen: Function,
@@ -34,6 +36,10 @@
         components: {
             IonButton,
             IonIcon,
+        },
+
+        setup(){
+            return {addOutline};
         }
     })
 </script>

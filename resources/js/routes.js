@@ -1,6 +1,7 @@
 const notFound = () => import("./pages/NotFound.vue");
 const contributies = () => import("./pages/Contributies.vue");
 const leden = () => import("./pages/Leden.vue");
+const families = () => import("./pages/Families.vue");
 
 const routes = [
     {
@@ -20,6 +21,13 @@ const routes = [
     {
         path: "/app/leden",
         component: leden,
+        props: {
+            get: true,
+        }
+    },
+    {
+        path: "/app/families",
+        component: families,
         props: {
             get: true,
         }

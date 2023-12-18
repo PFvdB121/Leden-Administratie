@@ -102,11 +102,11 @@
                     <div class="d-flex justify-content-center">
                         <ion-button @click="toggleAccordion('huisnummer')">Terug</ion-button>
                         <ion-item class="border d-inline-block">
-                            <ion-input label="Familie" label-placement="floating" v-model="familie" :on-ion-change="familieZoeken()"></ion-input>
+                            <ion-input label="Familie" ref="FamilieIn" label-placement="floating" v-model="familie"></ion-input>
                         </ion-item>
                         <ion-button :disabled="!familie" @click="bevestigen()">Bevestigen</ion-button>
                     </div>
-                    <ion-list>
+                    <ion-list v-if="voorLid">
                         <ion-item v-for="familieItem in families" :button="true" @click="waardeAanpassen('familie', familieItem['naam'])">
                             {{ familieItem['naam'] }}
                         </ion-item>
@@ -142,9 +142,7 @@
             this.land = this.pLand;
             this.stad = this.pStad;
             this.straat = this.pStraat;
-            if (this.pHuisnummer) {
-                this.huisnummer = this.pHuisnummer;
-            }
+            this.huisnummer = this.pHuisnummer;
             this.bijvoeging = this.pBijvoeging;
             this.familie = this.pFamilie;
         },
@@ -301,6 +299,12 @@
 
             waardeAanpassen: function(index, waarde){
                 this[index] = waarde;
+            }
+        },
+
+        mounted(){
+            if (this.voorLid) {
+                this.$refs.FamilieIn.onIonChange = this.familieZoeken();
             }
         },
         

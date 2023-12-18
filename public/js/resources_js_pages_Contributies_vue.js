@@ -370,6 +370,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(error);
         _this8.Toast("Er is iets misgegaan", "danger", 3000, "top");
       });
+    },
+    Toast: function Toast(message, color, duration, position) {
+      var _this9 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        var toast;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return _this9.toastController.create({
+                message: message,
+                color: color,
+                duration: duration,
+                position: position
+              });
+            case 2:
+              toast = _context4.sent;
+              toast.present();
+            case 4:
+            case "end":
+              return _context4.stop();
+          }
+        }, _callee4);
+      }))();
     }
   },
   data: function data() {
