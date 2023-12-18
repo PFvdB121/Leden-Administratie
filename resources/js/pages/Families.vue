@@ -66,13 +66,10 @@
                 colomnBreedte: 100,
                 grid: {
                     "naam": 2,
-                    "huisnummer": 1,
-                    "straat": 2,
-                    "stad": 2,
-                    "land": 2,
+                    "adres": 3,
                     "hoeveelheid leden": 2,
-                    "aanpassen": 2,
-                    "deleten": 2,
+                    "aanpassen": 1,
+                    "deleten": 1,
                 }
             }
         },

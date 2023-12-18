@@ -253,7 +253,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   methods: {
     soortenLedenOphalen: function soortenLedenOphalen() {
       var _this = this;
-      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("soorten_leden").then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("soorten_leden/get").then(function (response) {
         _this.soortenLeden = response.data;
       })["catch"](function (error) {
         console.log(error);
@@ -457,7 +457,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     soortenLedenOphalen: function soortenLedenOphalen() {
       var _this = this;
-      axios__WEBPACK_IMPORTED_MODULE_1__["default"].post("soorten_leden").then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_1__["default"].post("soorten_leden/get").then(function (response) {
         _this.soortenLeden = response.data;
       })["catch"](function (error) {
         console.log(error);

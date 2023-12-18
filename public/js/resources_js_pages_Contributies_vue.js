@@ -48,7 +48,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     soortenLedenOphalen: function soortenLedenOphalen() {
       var _this = this;
-      axios.post("soorten_leden").then(function (response) {
+      axios.post("soorten_leden/get").then(function (response) {
         _this.soortenLeden = response.data;
       })["catch"](function (error) {
         console.log(error);

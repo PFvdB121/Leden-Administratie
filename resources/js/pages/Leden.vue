@@ -125,7 +125,7 @@
             },
 
             soortenLedenOphalen: function(){
-                axios.post("soorten_leden")
+                axios.post("soorten_leden/get")
                 .then((response) => {
                     this.soortenLeden = response.data;
                 })

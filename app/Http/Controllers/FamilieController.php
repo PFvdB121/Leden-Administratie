@@ -43,7 +43,7 @@ class FamilieController extends Controller
             });
         })->offset(0)->limit(10)->get();
 
-        return $families;
+        return FamilieFrontResource::collection($families);
     }
 
     /**

@@ -18,6 +18,16 @@ class SoortLidController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     */
+    public function get()
+    {
+        $soortenLeden = SoortLid::get();
+
+        return $soortenLeden;
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
