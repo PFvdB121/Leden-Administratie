@@ -26,7 +26,7 @@ class ContributieController extends Controller
             "maxBedrag" => "nullable|decimal:0,2",
         ]);
 
-        $contributies = Contributie::where("leeftijd", ">=", $request["minLeeftijd"])
+        $contributies = ContributieResource::collection(Contributie::where("leeftijd", ">=", $request["minLeeftijd"])
         ->where("leeftijd", "<=", $request["maxLeeftijd"])
         ->where("bedrag", ">=", $request["minBedrag"])
         ->where("bedrag", "<=", $request["maxBedrag"])
@@ -39,7 +39,7 @@ class ContributieController extends Controller
         })
         ->whereHas("soortLid", function($query) use ($request){
             return $query->where("omschrijving", "like", "%" . $request['soortLid'] . "%");
-        })->paginate(20);
+        })->paginate(20));
 
         return $contributies;
     }
