@@ -666,16 +666,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   components: {
-    IonGrid: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonGrid,
-    IonRow: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonRow,
     IonCol: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonCol,
     IonInput: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonInput,
     IonItem: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonItem,
-    IonContent: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonContent,
-    IonButton: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonButton,
-    IonIcon: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonIcon,
-    IonSelect: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonSelect,
-    IonSelectOption: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonSelectOption
+    IonButton: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonButton
   },
   props: {
     "get": Object

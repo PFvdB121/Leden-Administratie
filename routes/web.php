@@ -40,6 +40,7 @@ Route::group(["middleware" => "auth:web"], function(){
 
         Route::prefix("soorten_leden")->group(function(){
             Route::post("/", "App\Http\Controllers\SoortLidController@index");
+            Route::post("/get", "App\Http\Controllers\SoortLidController@gets");
             Route::post("/show", "App\Http\Controllers\SoortLidController@show");
             Route::post("/delete", "App\Http\Controllers\SoortLidController@delete");
             Route::post("/update", "App\Http\Controllers\SoortLidController@update");

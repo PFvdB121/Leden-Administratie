@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SoortLid;
 use Illuminate\Http\Request;
+use App\Http\Resources\SoortLidResource;
 
 class SoortLidController extends Controller
 {
@@ -12,7 +13,7 @@ class SoortLidController extends Controller
      */
     public function index()
     {
-        $soortenLeden = SoortLid::get();
+        $soortenLeden = SoortLidResource::collection(SoortLid::get());
 
         return $soortenLeden;
     }

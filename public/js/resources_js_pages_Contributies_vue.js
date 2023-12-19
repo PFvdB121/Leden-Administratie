@@ -346,7 +346,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               data = _yield$modal$onWillDi2.data;
               role = _yield$modal$onWillDi2.role;
               if (role == "confirm") {
-                _this7.Contributies(id, data.bedrag, data.boekjaar, data.email, data.soortLid);
+                _this7.contributieUpdaten(id, data.bedrag, data.boekjaar, data.email, data.soortLid);
               }
             case 10:
             case "end":

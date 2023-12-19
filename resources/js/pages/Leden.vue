@@ -21,18 +21,12 @@
 
 <script>
     import { 
-        IonGrid,
-        IonRow,
         IonCol,
         IonInput,
         IonItem,
-        IonContent,
         IonButton,
-        IonIcon,
         alertController,
         modalController,
-        IonSelect,
-        IonSelectOption,
      } from "@ionic/vue";
     import axios from "axios";
 
@@ -348,16 +342,10 @@
         },
 
         components: {
-            IonGrid,
-            IonRow,
             IonCol,
             IonInput,
             IonItem,
-            IonContent,
             IonButton,
-            IonIcon,
-            IonSelect,
-            IonSelectOption,
         },
 
         props: {
