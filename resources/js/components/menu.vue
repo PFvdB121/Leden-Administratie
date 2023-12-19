@@ -19,6 +19,12 @@
                     <ion-item>
                         <router-link to="/app/contributies">contributies</router-link>
                     </ion-item>
+                    <ion-item>
+                        <router-link to="/app/soorten_leden">soorten leden</router-link>
+                    </ion-item>
+                    <ion-item>
+                        <router-link to="/app/families">families</router-link>
+                    </ion-item>
                 </ion-list>
             </ion-content>
         </ion-menu>
