@@ -21,6 +21,10 @@ module.exports.functions = function(app){
                 }
             },
 
+            waardeAanpassen: function(index, waarde){
+                this[index] = waarde;
+            },
+
             validateEmail: function(email){
                 const validRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 
@@ -38,6 +42,29 @@ module.exports.functions = function(app){
             gridBreedteTellen: function(gridTotaal, colomnBreedte){
                 var gridBreedte = gridTotaal * colomnBreedte + "px";
                 return gridBreedte;
+            },
+
+            noZero: function(val){
+                if (String(this[val]).match(/^0+/)) {
+                    this[val] = '';
+                }
+            },
+
+            noDec: function(val){
+                const num = Number(this[val]);
+                if (this[val] && !isNaN(num) && !Number.isInteger(this[val])){
+                    this[val] = Math.floor(this[val]);
+                }
+            },
+
+            resDec: function(val){
+                const re = /^\d+\.?\d{0,2}/
+                if ((this[val] !== null && this[val] !== undefined && this[val] !== "") && String(this[val]).match(re) != String(this[val])) {
+                    this[val] = String(String(this[val]).match(re));
+                }
+                else if(this[val] === null || this[val] === undefined){
+                    this[val] = "";
+                }
             },
         },
 

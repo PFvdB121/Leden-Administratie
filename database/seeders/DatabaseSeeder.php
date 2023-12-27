@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder
         AdresSeeder::run();
         FamilieSeeder::run();
         FamilielidSeeder::run();
+        ContributieSeeder::run();
     }
 }

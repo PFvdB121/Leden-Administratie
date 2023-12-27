@@ -1,31 +1,42 @@
 <template>
-    <zoek-container :zoeken="zoeken" :toevoegen="contributieToevoegen" toevoegenTitel="Contributie toevoegen">
+    <zoek-container :zoeken="zoeken" :toevoegen="contributieToevoegenModal" toevoegenTitel="Contributie toevoegen">
+        <ion-item class="border mx-1 d-inline-block">
+            <ion-checkbox v-model="checkEmailNot" label-placement="start" class="d-inline-block">check email niet</ion-checkbox>
+        </ion-item>
         <ion-item class="border mx-1 d-inline-block">
             <ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="minBedrag" class="d-inline-block" label="minimum bedrag" type="number" step=".01" :min="0" :max="maxBedrag" label-placement="floating"></ion-input>
+            <ion-input v-model="minBedrag" :on-ion-input="resDec('minBedrag')" class="d-inline-block" label="minimum bedrag" type="number" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="maxBedrag" class="d-inline-block" label="maximum bedrag" type="number" step=".01" :min="(minBedrag ? minBedrag : 0)" label-placement="floating"></ion-input>
+            <ion-input v-model="maxBedrag" class="d-inline-block" :on-ion-input="resDec('maxBedrag')" label="maximum bedrag" type="number" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="minLeeftijd" class="d-inline-block" label="minimum leeftijd" type="number" :min="0" :max="maxLeeftijd" label-placement="floating"></ion-input>
+            <ion-input v-model="minLeeftijd" class="d-inline-block" label="minimum leeftijd" type="number" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="maxLeeftijd" class="d-inline-block" label="maximum leeftijd" type="number" :min="(minLeeftijd ? minLeeftijd : 0)" label-placement="floating"></ion-input>
+            <ion-input v-model="maxLeeftijd" class="d-inline-block" label="maximum leeftijd" type="number" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="email" class="d-inline-block" label="boekjaar" type="number" :min="0" label-placement="floating"></ion-input>
+            <ion-input v-model="boekjaar" class="d-inline-block" :on-ion-change="noDec('boekjaar')" label="boekjaar" type="number" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block w-25">
             <ion-select v-model="soortLid" label="soort lid" label-placement="floating">
+                <ion-select-option value="Alle">
+                    Alle
+                </ion-select-option>
+                <ion-select-option value="geen">
+                    Geen soort
+                </ion-select-option>
                 <ion-select-option v-for="s in soortenLeden" :value="s.omschrijving">{{ s.omschrijving }}</ion-select-option>
             </ion-select>
         </ion-item>
     </zoek-container>
     <grid-container :items="items" :colomnBreedte="colomnBreedte" :gridCols="grid" v-slot="slotProps">
-        <ion-col :size="grid.aanpassen" class="d-flex justify-content-center"><ion-button @click="ContributieUpdatenModal(slotProps.item.id)">aanpassen</ion-button></ion-col>
+        <ion-col :size="grid.aanpassen" class="d-flex justify-content-center">
+            <ion-button @click="ContributieUpdatenModal(slotProps.item.id)">aanpassen</ion-button>
+        </ion-col>
         <ion-col :size="grid.deleten" class="d-flex justify-content-center"><ion-button @click="deleteAlert(slotProps.item.id)" color="danger">deleten</ion-button></ion-col>
     </grid-container>
     <pagination :get="this.get" :laatstePagina="this.laatstePagina"/>
@@ -39,8 +50,10 @@
         IonItem,
         IonSelect,
         IonSelectOption,
+        IonCheckbox,
         modalController,
         alertController,
+        toastController,
      } from "@ionic/vue";
     import axios from "axios";
 
@@ -55,6 +68,7 @@
             contributies: function(get){
                 axios.post("contributies", get)
                 .then((response) => {
+                    console.log(response)
                     this.laatstePagina = response.data.meta.last_page;
                     this.items = response.data.data;
                 })
@@ -62,6 +76,7 @@
                     console.error(error);
                 })
             },
+
             zoeken: function(){
                 this.redirectWithParams(location.protocol + "//" + location.host + location.pathname, {
                     "email": this.email,
@@ -71,6 +86,7 @@
                     "maxBedrag": this.maxBedrag,
                     "minLeeftijd": this.minLeeftijd,
                     "maxLeeftijd": this.maxLeeftijd,
+                    "checkEmailNot": this.checkEmailNot,
                 });
             },
 
@@ -85,7 +101,7 @@
             },
 
             contributieToevoegen: function(bedrag, boekjaar, email, soortLid){
-                axios.post("conntributies/store", {
+                axios.post("contributies/store", {
                     "bedrag": bedrag,
                     "boekjaar": boekjaar,
                     "email": email,
@@ -96,6 +112,7 @@
                     this.Toast("Contributie succesvol toegevoegd", "success", 3000, "top");
                 })
                 .catch((error) => {
+                    console.log(error)
                     this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                 })
             },
@@ -203,7 +220,7 @@
             },
 
             async Toast(message, color, duration, position){
-                const toast = await this.toastController.create({
+                const toast = await toastController.create({
                     message: message,
                     color: color,
                     duration: duration,
@@ -221,12 +238,13 @@
                 laatstePagina: 1,
                 email: "",
                 soortLid: "",
-                minBedrag: "",
-                maxBedrag: "",
+                minBedrag: 0.00,
+                maxBedrag: 0.00,
                 minLeeftijd: "",
                 maxLeeftijd: "",
                 boekjaar: "",
                 soortenLeden: [],
+                checkEmailNot: false,
                 grid: {
                     "bedrag": 1,
                     "email": 3,
@@ -247,6 +265,7 @@
             this.maxLeeftijd = this.get.maxLeeftijd;
             this.soortLid = this.get.soortLid;
             this.boekjaar = this.get.boekjaar;
+            this.checkEmailNot = this.get.checkEmailNot;
 
             this.soortenLedenOphalen();
 
@@ -260,6 +279,7 @@
             IonItem,
             IonSelect,
             IonSelectOption,
+            IonCheckbox,
         }
     });
 </script>

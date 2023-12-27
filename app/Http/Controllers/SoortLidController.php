@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\SoortLid;
+use App\Models\Contributie;
+use App\Models\Familielid;
 use Illuminate\Http\Request;
 use App\Http\Resources\SoortLidResource;
 
@@ -41,7 +43,19 @@ class SoortLidController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "omschrijving" => "required|string",
+            "korting" => "required|numeric",
+            "minLeeftijd" => "nullable|integer",
+            "maxLeeftijd" => "nullable|integer",
+        ]);
+
+        SoortLid::create([
+            "omschrijving" => $request["omschrijving"],
+            "korting" => $request["korting"],
+            "min_leeftijd" => $request["minLeeftijd"],
+            "max_leeftijd" => $request["maxLeeftijd"],
+        ]);
     }
 
     /**
@@ -71,7 +85,20 @@ class SoortLidController extends Controller
      */
     public function update(Request $request, SoortLid $soortLid)
     {
-        //
+        $validate = $request->validate([
+            "id" => "required|integer",
+            "omschrijving" => "required|string",
+            "korting" => "required|numeric",
+            "minLeeftijd" => "nullable|integer",
+            "maxLeeftijd" => "nullable|integer",
+        ]);
+
+        SoortLid::where("id", $request["id"])->update([
+            "omschrijving" => $request["omschrijving"],
+            "korting" => $request["korting"],
+            "min_leeftijd" => $request["minLeeftijd"],
+            "max_leeftijd" => $request["maxLeeftijd"],
+        ]);
     }
 
     /**
@@ -79,6 +106,12 @@ class SoortLidController extends Controller
      */
     public function delete(Request $request)
     {
-        //
+        $validate = $request->validate([
+            "id" => "required|integer",
+        ]);
+
+        Contributie::where("soort_lid_id", $request["id"])->update(["soort_lid_id" => null]);
+
+        SoortLid::where("id", $request["id"])->delete();
     }
 }

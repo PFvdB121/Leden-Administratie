@@ -19,7 +19,7 @@ class SoortLid extends Model
 
     public function familieLeden(): HasMany
     {
-        return $this->hasMany(Familielid::class, "familie_lid_id", "id");
+        return $this->hasMany(Familielid::class, "soort_lid_id", "id");
     }
 
     public function contributies(): HasMany

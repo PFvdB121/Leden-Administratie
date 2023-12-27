@@ -5,7 +5,16 @@
         <ion-item class="border mx-1 d-inline-block"><ion-input v-model="email" class="d-inline-block" label="email" type="email" label-placement="floating"></ion-input></ion-item>
         <ion-item class="border mx-1 d-inline-block"><ion-input type="date" min="1900-01-01" :max="(maxGeboortedatum ? maxGeboortedatum : huidigeDatum)" v-model="minGeboortedatum" class="d-inline-block" label="min geboortedatum" label-placement="floating"></ion-input></ion-item>
         <ion-item class="border mx-1 d-inline-block"><ion-input type="date" :min="(minGeboortedatum ? minGeboortedatum : '1900-01-01')" :max="huidigeDatum" v-model="maxGeboortedatum" class="d-inline-block" label="max geboortedatum" label-placement="floating"></ion-input></ion-item>
-        <ion-item class="border mx-1 d-inline-block w-25"><ion-select v-model="soortLid" label="soort lid" label-placement="floating"><ion-select-option v-for="s in soortenLeden" :value="s.omschrijving">{{ s.omschrijving }}</ion-select-option></ion-select></ion-item>
+        <ion-item class="border mx-1 d-inline-block w-25">
+            <ion-select v-model="soortLid" label="soort lid" label-placement="floating">
+                <ion-select-option value="Alle">
+                    Alle
+                </ion-select-option>
+                <ion-select-option v-for="s in soortenLeden" :value="s.omschrijving">
+                    {{ s.omschrijving }}
+                </ion-select-option>
+            </ion-select>
+        </ion-item>
         <ion-item class="border mx-1 d-inline-block"><ion-input v-model="familie" class="d-inline-block" label="familie" label-placement="floating"></ion-input></ion-item>
         <ion-item class="border mx-1 d-inline-block"><ion-input v-model="adres" class="d-inline-block" label="adres" label-placement="floating"></ion-input></ion-item>
         <ion-item class="border mx-1 d-inline-block"><ion-input v-model="straat" class="d-inline-block" label="straat" label-placement="floating"></ion-input></ion-item>
@@ -25,8 +34,11 @@
         IonInput,
         IonItem,
         IonButton,
+        IonSelect,
+        IonSelectOption,
         alertController,
         modalController,
+        toastController,
      } from "@ionic/vue";
     import axios from "axios";
 
@@ -181,6 +193,7 @@
                     this.Toast("Lid succesvol toegevoegd", "success", 3000, "top");
                 })
                 .catch((error) => {
+                    console.error(error)
                     this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                 })
             },
@@ -234,6 +247,7 @@
                     this.Toast("Lid succesvol gedelete", "success", 3000, "top");
                 })
                 .catch((error) => {
+                    console.log(error)
                     this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                 });
             },
@@ -330,7 +344,7 @@
             },
             
             async Toast(message, color, duration, position){
-                const toast = await this.toastController.create({
+                const toast = await toastController.create({
                     message: message,
                     color: color,
                     duration: duration,
@@ -346,6 +360,8 @@
             IonInput,
             IonItem,
             IonButton,
+            IonSelect,
+            IonSelectOption,
         },
 
         props: {

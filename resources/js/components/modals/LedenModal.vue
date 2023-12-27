@@ -164,7 +164,7 @@
                 const modal = await modalController.create({
                     component: FamilieVLModal,
                     componentProps: {
-                        pFamilie: this.familie,
+                        pNaam: this.familie,
                         pHuisnummer: this.huisnummer,
                         pBijvoeging: this.bijvoeging,
                         pStraat: this.straat,
@@ -178,8 +178,8 @@
                 const {data, role} = await modal.onWillDismiss();
 
                 if (role === "confirm") {
-                    this.familie = data.familie;
-                    this.huisnummer = data.huisnummer;
+                    this.familie = data.naam;
+                    this.huisnummer = parseInt(data.huisnummer);
                     this.bijvoeging = data.bijvoeging;
                     this.straat = data.straat;
                     this.stad = data.stad;

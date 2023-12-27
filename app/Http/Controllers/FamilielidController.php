@@ -9,6 +9,7 @@ use App\Models\Straat;
 use App\Models\Stad;
 use App\Models\Land;
 use App\Models\SoortLid;
+use App\Models\Contributie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
@@ -55,9 +56,9 @@ class FamilielidController extends Controller
             });
         });
         
-        if ($request["soortLid"]) {
-            $familieLeden = $familieLeden->whereHas("soortLid", function($query) use($request){
-                return $query->where("omschrijving", $request["soortLid"]);
+        if (SoortLid::where("omschrijving", $request['soortLid'])->count() > 0) {
+            $familieLeden = $familieLeden->whereHas("soortLid", function($query) use ($request){
+                return $query->where("omschrijving", $request['soortLid']);
             });
         }
 
@@ -88,9 +89,9 @@ class FamilielidController extends Controller
             "email" => "nullable|string",
         ]);
 
-        $emails = Familielid::select("email")->where("email", "like", $request["email"] . "%")->offset(0)->limit(10)->get();
+        $emails = Familielid::where("email", "like", $request["email"] . "%")->offset(0)->limit(10)->get();
 
-        return $emails;
+        return FamilielidFrontResource::collection($emails);
     }
 
     protected function checkFamily(Request $request)
@@ -132,8 +133,8 @@ class FamilielidController extends Controller
 
         if (Adres::where(function($query) use ($request){
             return $query->where(function($query) use($request){
-                return $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), $request["huisnummer"] . $request["bijvoeging"])
-                ->orWhere("huisnummer", $request["huisnummer"] . $request["bijvoeging"]);
+                return $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", $request["huisnummer"] . $request["bijvoeging"])
+                ->orWhere("huisnummer", "like", $request["huisnummer"] . $request["bijvoeging"]);
             });
         })->where("straat_id", "=", $straat->id)->count() === 0) {
             Adres::create([
@@ -144,8 +145,8 @@ class FamilielidController extends Controller
         }
 
         $adres = Adres::where(function(Builder $query) use($request){
-            return $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), $request["huisnummer"] . $request["bijvoeging"])
-            ->orWhere("huisnummer", $request["huisnummer"] . $request["bijvoeging"]);
+            return $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", $request["huisnummer"] . $request["bijvoeging"])
+            ->orWhere("huisnummer", "like", $request["huisnummer"] . $request["bijvoeging"]);
         })->where("straat_id", "=", $straat->id)->first();
 
         if (Familie::where("naam", "=", $request["familie"])->where("adres_id", "=", $adres->id)->count() === 0) {
@@ -178,7 +179,7 @@ class FamilielidController extends Controller
             "land" => "required|string",
         ]);
 
-        $family = $this->checkFamily($request);
+        $familie = $this->checkFamily($request);
         $soortLid = SoortLid::where("omschrijving", $request["soortLid"])->first();
 
         Familielid::create([
@@ -251,6 +252,8 @@ class FamilielidController extends Controller
         $validated = $request->validate([
             "id" => "required|numeric",
         ]);
+
+        Contributie::where("familie_lid_id", $request["id"])->update(["familie_lid_id" => null]);
         
         Familielid::where("id", $request["id"])->delete();
     }

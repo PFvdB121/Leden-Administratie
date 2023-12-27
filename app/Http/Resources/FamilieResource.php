@@ -15,6 +15,7 @@ class FamilieResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "id" => $this->id,
             "naam" => $this->naam,
             "huisnummer" => $this->adres->huisnummer,
             "bijvoeging" => $this->adres->bijvoeging,

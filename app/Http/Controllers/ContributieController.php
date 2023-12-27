@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use App\Models\Contributie;
+use App\Models\SoortLid;
 use App\Models\Boekjaar;
 use App\Models\Familielid;
 use Illuminate\Http\Request;
@@ -15,33 +17,81 @@ class ContributieController extends Controller
      */
     public function index(Request $request)
     {
+        if (!is_null($request["checkEmailNot"])) {
+            if ($request["checkEmailNot"] === "true") {
+                $request["checkEmailNot"] = true;
+            }
+            elseif ($request["checkEmailNot"] === "false") {
+                $request["checkEmailNot"] = false;
+            }
+        }
         $validate = $request->validate([
-            "page" => "nullable|numeric",
-            "minLeeftijd" => "nullable|numeric",
-            "maxLeeftijd" => "nullable|numeric",
-            "boekjaar" => "nullable|numeric",
+            "page" => "nullable|integer",
+            "checkEmailNot" => "nullable|boolean",
+            "minLeeftijd" => "nullable|integer",
+            "maxLeeftijd" => "nullable|integer",
+            "boekjaar" => "nullable|integer",
             "email" => "nullable|string",
             "soortLid" => "nullable|string",
             "minBedrag" => "nullable|decimal:0,2",
             "maxBedrag" => "nullable|decimal:0,2",
         ]);
 
-        $contributies = ContributieResource::collection(Contributie::where("leeftijd", ">=", $request["minLeeftijd"])
-        ->where("leeftijd", "<=", $request["maxLeeftijd"])
-        ->where("bedrag", ">=", $request["minBedrag"])
-        ->where("bedrag", "<=", $request["maxBedrag"])
-        ->whereHas("boekjaar", function($query) use ($request){
-            return $query->where("jaar", "like", "%" . $request['boekjaar'] . "%");
-        })
-        ->whereHas("familieLid", function($query) use ($request){
-            return $query->where("naam", "like", "%" . $request['naam'] . "%")
-            ->where("email", "like", "%" . $request['email'] . "%");
-        })
-        ->whereHas("soortLid", function($query) use ($request){
-            return $query->where("omschrijving", "like", "%" . $request['soortLid'] . "%");
-        })->paginate(20));
+        $check = array(
+            array(
+                "col" => "leeftijd",
+                "key" => "minLeeftijd",
+                "operator" => ">=",
+            ),
+            array(
+                "col" => "leeftijd",
+                "key" => "maxLeeftijd",
+                "operator" => "<=",
+            ),
+            array(
+                "col" => "bedrag",
+                "key" => "minBedrag",
+                "operator" => ">=",
+            ),
+            array(
+                "col" => "bedrag",
+                "key" => "maxBedrag",
+                "operator" => "<=",
+            ),
+        );
 
-        return $contributies;
+        $contributies = Contributie::whereHas("boekjaar", function($query) use ($request){
+            return $query->where("jaar", "like", "%" . $request['boekjaar'] . "%");
+        });
+        
+        if ($request["checkEmailNot"]) {
+            $contributies = $contributies->whereNull("familie_lid_id");
+        }
+        elseif ($request['email']){
+            $contributies = $contributies->whereHas("familieLid", function($query) use ($request){
+                return $query->where("email", "like", "%" . $request['email'] . "%");
+            });
+        }
+
+        if ($request['soortLid'] == "geen") {
+            $contributies = $contributies->whereNull("soort_lid_id");
+        }
+        elseif (SoortLid::where("omschrijving", $request['soortLid'])->count() > 0) {
+            $contributies = $contributies->whereHas("soortLid", function($query) use ($request){
+                return $query->where("omschrijving", $request['soortLid']);
+            });
+        }
+
+        foreach ($check as $value) {
+            if (!is_null($request[$value["key"]])) {
+                $contributies = $contributies->where($value["col"], $value["operator"], $request[$value["key"]]);
+            }
+        }
+
+
+        $contributies = $contributies->paginate(20);
+
+        return ContributieResource::collection($contributies);
     }
 
     /**
@@ -52,6 +102,22 @@ class ContributieController extends Controller
         //
     }
 
+    protected function boekjaar(Request $request){
+        $validate = $request->validate([
+            "boekjaar" => "required|numeric",
+        ]);
+
+        if (Boekjaar::where("jaar", $request["boekjaar"])->count() == 0) {
+            Boekjaar::create([
+                "jaar" => $request["boekjaar"],
+            ]);
+        }
+
+        $boekjaar = Boekjaar::where("jaar", $request["boekjaar"])->first();
+
+        return $boekjaar;
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -60,14 +126,14 @@ class ContributieController extends Controller
         $validate = $request->validate([
             "bedrag" => "required|decimal:0,2",
             "boekjaar" => "required|numeric",
-            "email" => "required|string",
-            "soortLid" => "required|string",
+            "email" => "nullable|string",
+            "soortLid" => "nullable|string",
         ]);
 
         $lid = Familielid::where("email", $request["email"])->first();
         $soortLid = SoortLid::where("omschrijving", $request["soortLid"])->first();
 
-        $boekjaar = Boekjaar::where("jaar", $request["boekjaar"])->first();
+        $boekjaar = $this->boekjaar($request);
 
         $datum = new DateTime($request["boekjaar"] . "-01-01");
         $birth = new DateTime($lid->geboortedatum);
@@ -76,6 +142,7 @@ class ContributieController extends Controller
         $jaar = $verschil->y;
 
         Contributie::create([
+            "leeftijd" => $jaar,
             "bedrag" => $request["bedrag"],
             "familie_lid_id" => $lid->id,
             "soort_lid_id" => $lid->soortLid->id,
@@ -89,7 +156,7 @@ class ContributieController extends Controller
     public function show(Request $request)
     {
         $validate = $request->validate([
-            "id" => "required|numeric",
+            "id" => "required|integer",
         ]);
 
         $contributie = Contributie::where("id", $request["id"])->first();
@@ -114,24 +181,30 @@ class ContributieController extends Controller
             "id" => "required|numeric",
             "bedrag" => "required|decimal:0,2",
             "boekjaar" => "required|numeric",
-            "soortLid" => "required|string",
-            "email" => "required|string",
+            "soortLid" => "nullable|string",
+            "email" => "nullable|string",
         ]);
 
         $lid = Familielid::where("email", $request["email"])->first();
         $soortLid = SoortLid::where("omschrijving", $request["soortLid"])->first();
-        $boekjaar = Boekjaar::where("jaar", $request["boekjaar"])->first();
+        $boekjaar = $this->boekjaar($request);
 
-        $datum = new DateTime($request["boekjaar"] . "-01-01");
-        $birth = new DateTime($lid->geboortedatum);
-
-        $verschil = $birth->diff($datum);
-        $jaar = $verschil->y;
+        if ($lid) {
+            $datum = new DateTime($request["boekjaar"] . "-01-01");
+            $birth = new DateTime($lid->geboortedatum);
+    
+            $verschil = $birth->diff($datum);
+            $jaar = $verschil->y;
+        }
+        else{
+            $jaar = null;
+        }
 
         Contributie::where("id", $request["id"])->update([
+            "leeftijd" => $jaar,
             "bedrag" => $request["bedrag"],
-            "familie_lid_id" => $lid->id,
-            "soort_lid_id" => $soortLid->id,
+            "familie_lid_id" => ($lid ? $lid->id : null),
+            "soort_lid_id" => ($soortLid ? $soortLid->id : null),
             "boekjaar_id" => $boekjaar->id,
         ]);
     }
@@ -142,9 +215,9 @@ class ContributieController extends Controller
     public function delete(Request $request)
     {
         $validate = $request->validate([
-            "id" => "required|numeric",
+            "id" => "required|integer",
         ]);
 
-        $contributie = Contributie::where("id", $request["id"])->destroy();
+        $contributie = Contributie::where("id", $request["id"])->delete();
     }
 }

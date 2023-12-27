@@ -21,7 +21,7 @@ class BoekjaarController extends Controller
             "jaar" => "nullable|numeric",
         ]);
 
-        $boekenjaren = Boekjaar::select("jaar")->where("jaar", "like", $request . "%");
+        $boekenjaren = Boekjaar::select("jaar")->where("jaar", "like", $request["jaar"] . "%")->offset(0)->limit(10)->get();
 
         return $boekenjaren;
     }

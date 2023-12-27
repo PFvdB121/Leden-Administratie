@@ -13,7 +13,7 @@ class BoekjaarSeeder extends Seeder
      */
     public static function run(): void
     {
-        for ($i=2010; $i < date("Y"); $i++) { 
+        for ($i=(date("Y") - 3); $i < date("Y"); $i++) { 
             Boekjaar::insert([
                 "jaar" => $i,
             ]);

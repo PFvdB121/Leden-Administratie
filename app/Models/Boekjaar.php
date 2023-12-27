@@ -10,6 +10,9 @@ class Boekjaar extends Model
 {
     use HasFactory;
     protected $table = "boekenjaren";
+    protected $fillable = [
+        "jaar"
+    ];
 
     public function contributies(): HasMany
     {

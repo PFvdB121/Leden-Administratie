@@ -102,11 +102,11 @@
                     <div class="d-flex justify-content-center">
                         <ion-button @click="toggleAccordion('huisnummer')">Terug</ion-button>
                         <ion-item class="border d-inline-block">
-                            <ion-input label="Familie" ref="FamilieIn" label-placement="floating" v-model="familie"></ion-input>
+                            <ion-input label="Familie" ref="FamilieIn" label-placement="floating" v-model="naam"></ion-input>
                         </ion-item>
-                        <ion-button :disabled="!familie" @click="bevestigen()">Bevestigen</ion-button>
+                        <ion-button :disabled="!naam" @click="bevestigen()">Bevestigen</ion-button>
                     </div>
-                    <ion-list v-if="voorLid">
+                    <ion-list v-if="voorLeden">
                         <ion-item v-for="familieItem in families" :button="true" @click="waardeAanpassen('familie', familieItem['naam'])">
                             {{ familieItem['naam'] }}
                         </ion-item>
@@ -139,12 +139,17 @@
 
     export default defineComponent({
         beforeMount(){
-            this.land = this.pLand;
-            this.stad = this.pStad;
-            this.straat = this.pStraat;
-            this.huisnummer = this.pHuisnummer;
-            this.bijvoeging = this.pBijvoeging;
-            this.familie = this.pFamilie;
+            if (this.id) {
+                this.familie(this.id)
+            }
+            else{
+                this.land = this.pLand;
+                this.stad = this.pStad;
+                this.straat = this.pStraat;
+                this.huisnummer = this.pHuisnummer;
+                this.bijvoeging = this.pBijvoeging;
+                this.naam = this.pNaam;
+            }
         },
         beforeRouteUpdate(to, from, next){
             next(false);
@@ -171,7 +176,7 @@
                 straat: "",
                 huisnummer: "",
                 bijvoeging: "",
-                familie: "",
+                naam: "",
                 landen: {},
                 steden: {},
                 straten: {},
@@ -190,10 +195,29 @@
                     straat: this.straat,
                     huisnummer: this.huisnummer,
                     bijvoeging: this.bijvoeging,
-                    familie: this.familie,
+                    naam: this.naam,
                 }
 
                 modalController.dismiss(data, "confirm");
+            },
+
+            familie: function(id){
+                if (id) {
+                    axios.post("families/show", {
+                        "id": id,
+                    })
+                    .then((response) => {
+                        this.land = response.data.data.land;
+                        this.stad = response.data.data.stad;
+                        this.straat = response.data.data.straat;
+                        this.huisnummer = response.data.data.huisnummer;
+                        this.bijvoeging = response.data.data.bijvoeging;
+                        this.naam = response.data.data.naam;
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                    })
+                }
             },
 
             landZoeken: function(){
@@ -213,9 +237,8 @@
                 }
             },
 
-
             stadZoeken: function(){
-                if (this.stad) {
+                if (this.stad && this.land) {
                     axios.post("steden", {
                         "naam": this.stad,
                         "land": this.land
@@ -232,9 +255,8 @@
                 }
             },
 
-
             straatZoeken: function(){
-                if (this.straat) {
+                if (this.straat && this.stad && this.land) {
                     axios.post("straten", {
                         "naam": this.straat,
                         "stad": this.stad,
@@ -252,9 +274,8 @@
                 }
             },
 
-
             adresZoeken: function(){
-                if (this.huisnummer || this.bijvoeging) {
+                if ((this.huisnummer || this.bijvoeging) && this.straat && this.stad && this.land) {
                     axios.post("adressen", {
                         "huisnummer": this.huisnummer,
                         "bijvoeging": this.bijvoeging,
@@ -274,11 +295,10 @@
                 }
             },
 
-
             familieZoeken: function(){
-                if (this.familie) {
-                    axios.post("families", {
-                        "naam": this.familie,
+                if (this.naam && this.huisnummer && this.straat && this.stad && this.land) {
+                    axios.post("families/search", {
+                        "naam": this.naam,
                         "huisnummer": this.huisnummer,
                         "bijvoeging": this.bijvoeging,
                         "straat": this.straat,
@@ -296,14 +316,10 @@
                     this.families = {};
                 }
             },
-
-            waardeAanpassen: function(index, waarde){
-                this[index] = waarde;
-            }
         },
 
         mounted(){
-            if (this.voorLid) {
+            if (this.voorLeden) {
                 this.$refs.FamilieIn.onIonChange = this.familieZoeken();
             }
         },
@@ -311,12 +327,14 @@
         name: "FamilieVLModal",
 
         props: {
-            pFamilie: String,
+            id: Number,
+            pNaam: String,
             pHuisnummer: Number,
             pBijvoeging: String,
             pStraat: String,
             pStad: String,
             pLand: String,
+            voorLeden: Boolean,
         },
 
         setup() {

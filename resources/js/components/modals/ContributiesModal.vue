@@ -9,11 +9,6 @@
             <ion-title>
                 {{ titel }}
             </ion-title>
-            <ion-buttons slot="end">
-                <ion-button :disabled="!(gekozenMail && bedrag && soortLid && boekjaar)" @click="bevestigen()">
-                    Bevestigen
-                </ion-button>
-            </ion-buttons>
         </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
@@ -51,12 +46,18 @@
                         <ion-item class="border d-inline-block">
                             <ion-input label="Email" label-placement="floating" v-model="email" :on-ion-change="zoekMails()"></ion-input>
                         </ion-item>
-                        <ion-button :disabled="!huisnummer" @click="toggleAccordion('soortLid')">Volgende</ion-button>
+                        <ion-button @click="toggleAccordion('soortLid')">Volgende</ion-button>
                     </div>
                     <ion-list>
+                        <ion-item color="danger" :button="true" @click="() => {
+                            waardeAanpassen('gekozenMail', null)
+                            waardeAanpassen('sl', null)
+                        }">
+                            Geen lid
+                        </ion-item>
                         <ion-item v-for="email in emails" :button="true" @click="() => {
                             waardeAanpassen('gekozenMail', email['email'])
-                            waardeAanpassen('soortLid', email['soort lid'])
+                            waardeAanpassen('sl', email['soort lid'])
                         }">
                             {{ email['email'] }}
                         </ion-item>
@@ -71,13 +72,16 @@
                     <div class="d-flex justify-content-center">
                         <ion-button @click="toggleAccordion('email')">Terug</ion-button>
                         <ion-item>
-                            <ion-select v-model="soortLid" :on-ion-change="minBedragBepalen()">
-                                <ion-select-option v-for="soortLid in soortenLeden" :value="soortLid.omschrijving">
-                                    {{ soortLid.omschrijving }}
+                            <ion-select v-model="sl" :on-ion-change="minBedragBepalen()">
+                                <ion-select-option :value="false">
+                                    Geen soort
+                                </ion-select-option>
+                                <ion-select-option v-for="SL in soortenLeden" :value="SL.omschrijving">
+                                    {{ SL.omschrijving }}
                                 </ion-select-option>
                             </ion-select>
                         </ion-item>
-                        <ion-button :disabled="!soortLid" @click="toggleAccordion('bedrag')">Volgende</ion-button>
+                        <ion-button @click="toggleAccordion('bedrag')">Volgende</ion-button>
                     </div>
                 </div>
             </ion-accordion>
@@ -87,9 +91,9 @@
                 </ion-item>
                 <div slot="content">
                     <div class="d-flex justify-content-center">
-                        <ion-button @click="toggleAccordion('email')">Terug</ion-button>
+                        <ion-button @click="toggleAccordion('soortLid')">Terug</ion-button>
                         <ion-item>
-                            <ion-input label="Bedrag" type="number" :min="minBedrag" step=".01" label-placement="floating" v-model="bedrag"></ion-input>
+                            <ion-input label="Bedrag" :on-ion-change="resDec('bedrag')" type="number" :min="minBedrag" :step=".01" label-placement="floating" v-model="bedrag"></ion-input>
                         </ion-item>
                         <ion-button :disabled="!(bedrag >= minBedrag)" @click="bevestigen()">
                             Bevestigen
@@ -120,7 +124,9 @@
         IonAccordionGroup,
     } from '@ionic/vue';
 
-    export default({
+    import { defineComponent, ref } from 'vue';
+
+    export default defineComponent({
         name: "ContributiesModal",
 
         beforeRouteUpdate(to, from, next) {
@@ -131,7 +137,7 @@
         beforeMount(){
             this.soortenLedenOphalen();
             if (this.id) {
-                this.contributieOphalen()
+                this.contributieOphalen(this.id)
             }
         },
 
@@ -144,7 +150,7 @@
             return{
                 bedrag: 0,
                 email: "",
-                soortLid: "",
+                sl: null,
                 boekjaar: "",
                 emails: [],
                 gekozenMail: "",
@@ -152,7 +158,7 @@
                 lid: {},
                 boekenjaren: [],
                 basisBedrag: 100,
-                korting: 0,
+                korting: 100,
                 minBedrag: "",
             }
         },
@@ -169,17 +175,20 @@
             },
 
             minBedragBepalen: function(){
-                if (this.soortLid) {
-                    soortLid = this.soortenLeden.filter((s) => {
-                        return s.omschrijving === this.soortLid;
+                if (this.sl) {
+                    var soortLid = this.soortenLeden.filter((s) => {
+                        return s.omschrijving === this.sl;
                     });
 
                     this.korting = soortLid[0]["korting"];
-                    this.minBedrag = this.basisBedrag - this.basisBedrag / this.korting;
+                    this.minBedrag = parseFloat((this.basisBedrag * (1 - this.korting / 100)).toFixed(2));
+                    if (this.minBedrag > this.bedrag) {
+                        this.bedrag = this.minBedrag;
+                    }
                 }
                 else{
-                    this.korting = 0;
-                    this.minBedrag = "";
+                    this.korting = 100;
+                    this.minBedrag = 0;
                 }
             },
 
@@ -189,8 +198,9 @@
                         id: id,
                     })
                     .then((response) => {
-                        this.soortLid = response.data.data["soort lid"];
+                        this.sl = response.data.data["soort lid"];
                         this.email = response.data.data.email;
+                        this.gekozenMail = response.data.data.email;
                         this.bedrag = response.data.data.bedrag;
                         this.boekjaar = response.data.data.boekjaar;
                     })
@@ -210,34 +220,18 @@
                         email: this.email,
                     })
                     .then((response) => {
-                        this.gekozenMail = response.data.email;
+                        this.emails = response.data.data;
                     })
                     .catch((error) => {
                         console.log(error)
                         this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                     })
                 }
-                else{
-                    console.error("Geen id toegevoegd");
-                }
-            },
-
-            LidOphalen: function(id){
-                axios.post("leden/show", {
-                    id: id,
-                })
-                .then((response) => {
-                    this.gekozenMail = response.data.data.email;
-                    this.soortLid = response.data.data["soort lid"];
-                })
-                .catch((error) => {
-                    console.log(error)
-                    this.Toast("Er is iets misgegaan", "danger", 3000, "top");
-                })
             },
 
             zoekjaar: function(){
                 if (this.boekjaar) {
+                    this.noDec('boekjaar');
                     axios.post("boekenjaren/zoek_jaar", {
                         jaar: this.boekjaar,
                     })
@@ -249,9 +243,6 @@
                         this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                     })
                 }
-                else{
-                    console.error("Geen id toegevoegd");
-                }
             },
 
             annuleren: function(){
@@ -260,9 +251,9 @@
 
             bevestigen: function(){
                 const data = {
-                    "soortLid": this.soortLid,
+                    "soortLid": this.sl,
                     "email": this.gekozenMail,
-                    "bedrag": this.bedrag,
+                    "bedrag": parseFloat(this.bedrag),
                     "boekjaar": this.boekjaar,
                 };
 

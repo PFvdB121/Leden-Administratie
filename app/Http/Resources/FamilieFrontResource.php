@@ -15,8 +15,9 @@ class FamilieFrontResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "id" => $this->id,
             "naam" => $this->naam,
-            "hoeveelheid leden" => $this->leden->count(),
+            "hoeveelheid leden" => $this->familieleden->count(),
             "adres" => $this->adres->straat->naam . 
                 " " . $this->adres->huisnummer . 
                 $this->adres->bijvoeging . " " .

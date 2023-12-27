@@ -10,7 +10,7 @@
                 {{ titel }}
             </ion-title>
             <ion-buttons slot="end">
-                <ion-button :disabled="!(omschrijving && korting && minLeeftijd && maxLeeftijd && maxLeeftijd >= minLeeftijd)" @click="bevestigen()">
+                <ion-button :disabled="!(omschrijving && korting && (!minLeeftijd || !maxLeeftijd || parseInt(maxLeeftijd) >= parseInt(minLeeftijd)))" @click="bevestigen()">
                     Bevestigen
                 </ion-button>
             </ion-buttons>
@@ -22,13 +22,13 @@
                 <ion-input label-placement="floating" label="omschrijving" v-model="omschrijving"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-input label-placement="floating" type="number" min="0" label="korting" v-model="korting"></ion-input>
+                <ion-input label-placement="floating" type="number" min="0" max="100" label="korting" v-model="korting"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-input label-placement="floating" type="number" min="0" :max="maxLeeftijd ? maxLeeftijd : ''" label="geboortedatum" v-model="minLeeftijd"></ion-input>
+                <ion-input label-placement="floating" type="number" min="0" :max="maxLeeftijd ? maxLeeftijd : ''" label="min leeftijd" v-model="minLeeftijd"></ion-input>
             </ion-item>
             <ion-item>
-                <ion-input label-placement="floating" type="number" :min="minLeeftijd ? minLeeftijd : ''" label="geboortedatum" v-model="maxLeeftijd"></ion-input>
+                <ion-input label-placement="floating" type="number" :min="minLeeftijd ? minLeeftijd : ''" label="max leeftijd" v-model="maxLeeftijd"></ion-input>
             </ion-item>
         </ion-list>
     </ion-content>
@@ -46,7 +46,9 @@
         IonContent,
         IonInput,
         modalController,
+        toastController,
     } from "@ionic/vue";
+    
     export default({
         beforeMount(){
             if(this.id){
@@ -74,9 +76,9 @@
         data(){
             return {
                 omschrijving: "",
-                minLeeftijd: 0,
-                maxLeeftijd: 0,
-                korting: 0,
+                minLeeftijd: "",
+                maxLeeftijd: "",
+                korting: "",
             };
         },
 
@@ -87,10 +89,11 @@
                         id: id,
                     })
                     .then((response) => {
-                        this.omschrijving = response.data.data.omschrijving;
-                        this.korting = response.data.data.korting;
-                        this.minLeeftijd = response.data.data.minLeeftijd;
-                        this.maxLeeftijd = response.data.data.maxLeeftijd;
+                        console.log(response)
+                        this.omschrijving = response.data.omschrijving;
+                        this.korting = String( response.data.korting);
+                        this.minLeeftijd = String(response.data.min_leeftijd);
+                        this.maxLeeftijd = String(response.data.max_leeftijd);
                     })
                     .catch((error) => {
                         console.log(error)
@@ -115,6 +118,17 @@
                 };
 
                 modalController.dismiss(data, "confirm");
+            },
+
+            async Toast(message, color, duration, position){
+                const toast = await toastController.create({
+                    message: message,
+                    color: color,
+                    duration: duration,
+                    position: position,
+                });
+
+                toast.present();
             },
         },
 

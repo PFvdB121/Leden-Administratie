@@ -19,12 +19,16 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,vue__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
   beforeMount: function beforeMount() {
-    this.land = this.pLand;
-    this.stad = this.pStad;
-    this.straat = this.pStraat;
-    this.huisnummer = this.pHuisnummer;
-    this.bijvoeging = this.pBijvoeging;
-    this.familie = this.pFamilie;
+    if (this.id) {
+      this.familie(this.id);
+    } else {
+      this.land = this.pLand;
+      this.stad = this.pStad;
+      this.straat = this.pStraat;
+      this.huisnummer = this.pHuisnummer;
+      this.bijvoeging = this.pBijvoeging;
+      this.naam = this.pNaam;
+    }
   },
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
     next(false);
@@ -51,7 +55,7 @@ __webpack_require__.r(__webpack_exports__);
       straat: "",
       huisnummer: "",
       bijvoeging: "",
-      familie: "",
+      naam: "",
       landen: {},
       steden: {},
       straten: {},
@@ -70,17 +74,34 @@ __webpack_require__.r(__webpack_exports__);
         straat: this.straat,
         huisnummer: this.huisnummer,
         bijvoeging: this.bijvoeging,
-        familie: this.familie
+        naam: this.naam
       };
       _ionic_vue__WEBPACK_IMPORTED_MODULE_1__.modalController.dismiss(data, "confirm");
     },
-    landZoeken: function landZoeken() {
+    familie: function familie(id) {
       var _this = this;
+      if (id) {
+        axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("families/show", {
+          "id": id
+        }).then(function (response) {
+          _this.land = response.data.data.land;
+          _this.stad = response.data.data.stad;
+          _this.straat = response.data.data.straat;
+          _this.huisnummer = response.data.data.huisnummer;
+          _this.bijvoeging = response.data.data.bijvoeging;
+          _this.naam = response.data.data.naam;
+        })["catch"](function (error) {
+          console.error(error);
+        });
+      }
+    },
+    landZoeken: function landZoeken() {
+      var _this2 = this;
       if (this.land) {
         axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("landen", {
           "naam": this.land
         }).then(function (response) {
-          _this.landen = response.data;
+          _this2.landen = response.data;
         })["catch"](function (error) {
           console.error(error);
         });
@@ -89,13 +110,13 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     stadZoeken: function stadZoeken() {
-      var _this2 = this;
-      if (this.stad) {
+      var _this3 = this;
+      if (this.stad && this.land) {
         axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("steden", {
           "naam": this.stad,
           "land": this.land
         }).then(function (response) {
-          _this2.steden = response.data;
+          _this3.steden = response.data;
         })["catch"](function (error) {
           console.error(error);
         });
@@ -104,14 +125,14 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     straatZoeken: function straatZoeken() {
-      var _this3 = this;
-      if (this.straat) {
+      var _this4 = this;
+      if (this.straat && this.stad && this.land) {
         axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("straten", {
           "naam": this.straat,
           "stad": this.stad,
           "land": this.land
         }).then(function (response) {
-          _this3.straten = response.data;
+          _this4.straten = response.data;
         })["catch"](function (error) {
           console.error(error);
         });
@@ -120,8 +141,8 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     adresZoeken: function adresZoeken() {
-      var _this4 = this;
-      if (this.huisnummer || this.bijvoeging) {
+      var _this5 = this;
+      if ((this.huisnummer || this.bijvoeging) && this.straat && this.stad && this.land) {
         axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("adressen", {
           "huisnummer": this.huisnummer,
           "bijvoeging": this.bijvoeging,
@@ -129,7 +150,7 @@ __webpack_require__.r(__webpack_exports__);
           "stad": this.stad,
           "land": this.land
         }).then(function (response) {
-          _this4.huisnummers = response.data;
+          _this5.huisnummers = response.data;
         })["catch"](function (error) {
           console.error(error);
         });
@@ -138,41 +159,40 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     familieZoeken: function familieZoeken() {
-      var _this5 = this;
-      if (this.familie) {
-        axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("families", {
-          "naam": this.familie,
+      var _this6 = this;
+      if (this.naam && this.huisnummer && this.straat && this.stad && this.land) {
+        axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("families/search", {
+          "naam": this.naam,
           "huisnummer": this.huisnummer,
           "bijvoeging": this.bijvoeging,
           "straat": this.straat,
           "stad": this.stad,
           "land": this.land
         }).then(function (response) {
-          _this5.families = response.data;
+          _this6.families = response.data;
         })["catch"](function (error) {
           console.error(error);
         });
       } else {
         this.families = {};
       }
-    },
-    waardeAanpassen: function waardeAanpassen(index, waarde) {
-      this[index] = waarde;
     }
   },
   mounted: function mounted() {
-    if (this.voorLid) {
+    if (this.voorLeden) {
       this.$refs.FamilieIn.onIonChange = this.familieZoeken();
     }
   },
   name: "FamilieVLModal",
   props: {
-    pFamilie: String,
+    id: Number,
+    pNaam: String,
     pHuisnummer: Number,
     pBijvoeging: String,
     pStraat: String,
     pStad: String,
-    pLand: String
+    pLand: String,
+    voorLeden: Boolean
   },
   setup: function setup() {
     var accordionGroup = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
@@ -312,7 +332,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.create({
                 component: _FamilieVLModal_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
                 componentProps: {
-                  pFamilie: _this3.familie,
+                  pNaam: _this3.familie,
                   pHuisnummer: _this3.huisnummer,
                   pBijvoeging: _this3.bijvoeging,
                   pStraat: _this3.straat,
@@ -330,8 +350,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               data = _yield$modal$onWillDi.data;
               role = _yield$modal$onWillDi.role;
               if (role === "confirm") {
-                _this3.familie = data.familie;
-                _this3.huisnummer = data.huisnummer;
+                _this3.familie = data.naam;
+                _this3.huisnummer = parseInt(data.huisnummer);
                 _this3.bijvoeging = data.bijvoeging;
                 _this3.straat = data.straat;
                 _this3.stad = data.stad;
@@ -501,6 +521,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this3.leden(_this3.get.page, _this3.get.naam, _this3.get.email, _this3.get.minGeboortedatum, _this3.get.maxGeboortedatum, _this3.get.soortLid, _this3.get.familie, _this3.get.adres, _this3.get.straat, _this3.get.stad, _this3.get.land);
         _this3.Toast("Lid succesvol toegevoegd", "success", 3000, "top");
       })["catch"](function (error) {
+        console.error(error);
         _this3.Toast("Er is iets misgegaan", "danger", 3000, "top");
       });
     },
@@ -545,6 +566,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this5.leden(_this5.get.page, _this5.get.naam, _this5.get.email, _this5.get.minGeboortedatum, _this5.get.maxGeboortedatum, _this5.get.soortLid, _this5.get.familie, _this5.get.adres, _this5.get.straat, _this5.get.stad, _this5.get.land);
         _this5.Toast("Lid succesvol gedelete", "success", 3000, "top");
       })["catch"](function (error) {
+        console.log(error);
         _this5.Toast("Er is iets misgegaan", "danger", 3000, "top");
       });
     },
@@ -641,14 +663,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     Toast: function Toast(message, color, duration, position) {
-      var _this9 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         var toast;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
               _context4.next = 2;
-              return _this9.toastController.create({
+              return _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.toastController.create({
                 message: message,
                 color: color,
                 duration: duration,
@@ -669,7 +690,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     IonCol: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonCol,
     IonInput: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonInput,
     IonItem: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonItem,
-    IonButton: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonButton
+    IonButton: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonButton,
+    IonSelect: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonSelect,
+    IonSelectOption: _ionic_vue__WEBPACK_IMPORTED_MODULE_2__.IonSelectOption
   },
   props: {
     "get": Object
@@ -1147,15 +1170,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                     label: "Familie",
                     ref: "FamilieIn",
                     "label-placement": "floating",
-                    modelValue: _ctx.familie,
+                    modelValue: _ctx.naam,
                     "onUpdate:modelValue": _cache[19] || (_cache[19] = function ($event) {
-                      return _ctx.familie = $event;
+                      return _ctx.naam = $event;
                     })
                   }, null, 8 /* PROPS */, ["modelValue"])];
                 }),
                 _: 1 /* STABLE */
               }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-                disabled: !_ctx.familie,
+                disabled: !_ctx.naam,
                 onClick: _cache[20] || (_cache[20] = function ($event) {
                   return _ctx.bevestigen();
                 })
@@ -1164,7 +1187,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                   return [_hoisted_26];
                 }),
                 _: 1 /* STABLE */
-              }, 8 /* PROPS */, ["disabled"])]), _ctx.voorLid ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ion_list, {
+              }, 8 /* PROPS */, ["disabled"])]), _ctx.voorLeden ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ion_list, {
                 key: 0
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -1410,8 +1433,9 @@ __webpack_require__.r(__webpack_exports__);
 var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
   "class": "d-flex justify-content-center"
 }, "Leden", -1 /* HOISTED */);
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("aanpassen");
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("deleten");
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Alle ");
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("aanpassen");
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("deleten");
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_ion_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-input");
   var _component_ion_item = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-item");
@@ -1508,7 +1532,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             "label-placement": "floating"
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.soortenLeden, function (s) {
+              return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_select_option, {
+                value: "Alle"
+              }, {
+                "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+                  return [_hoisted_2];
+                }),
+                _: 1 /* STABLE */
+              }), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.soortenLeden, function (s) {
                 return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ion_select_option, {
                   value: s.omschrijving
                 }, {
@@ -1621,7 +1652,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             }
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_2];
+              return [_hoisted_3];
             }),
             _: 2 /* DYNAMIC */
           }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])];
@@ -1639,7 +1670,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             color: "danger"
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_3];
+              return [_hoisted_4];
             }),
             _: 2 /* DYNAMIC */
           }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])];

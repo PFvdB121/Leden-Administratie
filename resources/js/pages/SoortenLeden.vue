@@ -1,13 +1,19 @@
 <template>
     <zoek-container :toevoegen="soortLidToevoegenModal" toevoegenTitel="Leden Toevoegen"></zoek-container>
     <grid-container :items="items" :colomnBreedte="colomnBreedte" :gridCols="grid" v-slot="slotProps">
+        <ion-col :size="grid['leden zoeken']" class="d-flex justify-content-center">
+            <form :action="this.ledUrl">
+                <input type="hidden" name="soortLid" :value="slotProps.item.omschrijving"/>
+                <input type="submit" value="soort leden zoeken"/>
+            </form>
+        </ion-col>
         <ion-col :size="grid.aanpassen" class="d-flex justify-content-center">
-            <ion-button @click="FamilieUpdatenModal(slotProps.item)">
+            <ion-button @click="updateSoortLidModal(slotProps.item.id)">
                 aanpassen
             </ion-button>
         </ion-col>
         <ion-col :size="grid.deleten" class="d-flex justify-content-center">
-            <ion-button @click="deleteAlert(slotProps.item.id)" color="danger">
+            <ion-button @click="deleteAlert(slotProps.item.id)" :disabled="slotProps.item['hoeveelheid leden'] > 0" color="danger">
                 deleten
             </ion-button>
         </ion-col>
@@ -21,6 +27,7 @@
         IonButton,
         modalController,
         alertController,
+        toastController,
     } from "@ionic/vue";
 
     import axios from "axios";
@@ -37,17 +44,19 @@
                     "min leeftijd": 2,
                     "max leeftijd": 2,
                     "hoeveelheid leden": 3,
-                    "aanpassen": 1,
-                    "deleten": 1,
+                    "leden zoeken": 2,
+                    "aanpassen": 2,
+                    "deleten": 2,
                 },
                 laatstePagina: 1,
+                ledUrl: "",
             }
         },
         methods: {
             soortenLeden: function(){
                 axios.post("soorten_leden")
                 .then((response) => {
-                    this.items = response.data;
+                    this.items = response.data.data;
                 })
                 .catch((error) => {
                     console.error(error);
@@ -56,7 +65,7 @@
             },
             
             soortLidToevoegen: function(omschrijving, minLeeftijd, maxLeeftijd, korting){
-                axios.post("conntributies/store", {
+                axios.post("soorten_leden/store", {
                     "omschrijving": omschrijving,
                     "minLeeftijd": minLeeftijd,
                     "maxLeeftijd": maxLeeftijd,
@@ -67,6 +76,7 @@
                     this.Toast("Soort lid succesvol toegevoegd", "success", 3000, "top");
                 })
                 .catch((error) => {
+                    console.log(error);
                     this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                 })
             },
@@ -113,7 +123,7 @@
 
             async updateSoortLidModal(id){
                 const modal = await modalController.create({
-                    component: ContributiesModal,
+                    component: SoortenLedenModal,
                     componentProps: {
                         titel: "updaten",
                         id: id,
@@ -148,7 +158,7 @@
                 });
             },
 
-            async deleteSoortLidALert(id){
+            async deleteAlert(id){
                 var soortLid = this.items.filter((item) => {
                     return item.id == id;
                 });
@@ -171,7 +181,26 @@
                 });
 
                 await alert.present();
-            }
+            },
+
+            async Toast(message, color, duration, position){
+                const toast = await toastController.create({
+                    message: message,
+                    color: color,
+                    duration: duration,
+                    position: position,
+                });
+
+                toast.present();
+            },
+        },
+
+        beforeMount(){
+            this.ledUrl = window.location.protocol + '//' + window.location.host + '/app/leden';
+        },
+
+        mounted(){
+            this.soortenLeden();
         },
 
         props: {

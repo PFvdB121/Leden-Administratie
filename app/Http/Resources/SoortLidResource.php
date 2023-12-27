@@ -15,11 +15,12 @@ class SoortLidResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "id" => $this->id,
             "omschrijving" => $this->omschrijving,
             "korting" => $this->korting . "%",
-            "min leeftijd" => $this->minLeeftijd,
-            "max leeftijd" => $this->maxLeeftijd,
-            "hoeveelheid leden" => $this->leden->count(),
+            "min leeftijd" => $this->min_leeftijd,
+            "max leeftijd" => $this->max_leeftijd,
+            "hoeveelheid leden" => $this->familieLeden->count(),
         ];
     }
 }

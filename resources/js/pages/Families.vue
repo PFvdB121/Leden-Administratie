@@ -1,7 +1,7 @@
 <template>
     <zoek-container :zoeken="zoeken">
         <ion-item class="border mx-1 d-inline-block">
-            <ion-input v-model="land" class="d-inline-block" label="land" label-placement="floating"></ion-input>
+            <ion-input v-model="naam" class="d-inline-block" label="naam" label-placement="floating"></ion-input>
         </ion-item>
         <ion-item class="border mx-1 d-inline-block">
             <ion-input v-model="huisnummer" class="d-inline-block" label="huisnummer" label-placement="floating"></ion-input>
@@ -17,8 +17,18 @@
         </ion-item>
     </zoek-container>
     <grid-container :items="items" :colomnBreedte="colomnBreedte" :gridCols="grid" v-slot="slotProps">
-        <ion-col :size="grid.aanpassen" class="d-flex justify-content-center"><ion-button @click="FamilieUpdatenModal(slotProps.item)">aanpassen</ion-button></ion-col>
-        <ion-col :size="grid.deleten" class="d-flex justify-content-center"><ion-button @click="deleteAlert(slotProps.item.id)" color="danger">deleten</ion-button></ion-col>
+        <ion-col :size="grid['leden zoeken']" class="d-flex justify-content-center">
+            <form :action="this.ledUrl">
+                <input type="hidden" name="familie" :value="slotProps.item.naam"/>
+                <input type="submit" value="familie leden zoeken"/>
+            </form>
+        </ion-col>
+        <ion-col :size="grid.aanpassen" class="d-flex justify-content-center">
+            <ion-button @click="FamilieUpdatenModal(slotProps.item.id)">aanpassen</ion-button>
+        </ion-col>
+        <ion-col :size="grid.deleten" :disabled="slotProps.item['hoeveelheid leden'] > 0" class="d-flex justify-content-center">
+            <ion-button :disabled="slotProps.item['hoeveelheid leden']" @click="deleteAlert(slotProps.item.id)" color="danger">deleten</ion-button>
+        </ion-col>
     </grid-container>
     <pagination :get="this.get" :laatstePagina="this.laatstePagina"></pagination>
 </template>
@@ -31,6 +41,7 @@
         IonInput,
         modalController,
         alertController,
+        toastController,
     } from "@ionic/vue";
 
     import axios from "axios";
@@ -39,6 +50,7 @@
     
     export default({
         beforeMount(){
+            this.families(this.get);
             this.naam = this.get.naam;
             this.huisnummer = this.get.huisnummer;
             this.straat = this.get.straat;
@@ -46,6 +58,7 @@
             this.land = this.get.land;
             this.minLeden = this.get.minLeden;
             this.maxLeden = this.get.maxLeden;
+            this.ledUrl = window.location.protocol + '//' + window.location.host + '/app/leden';
         },
 
         props: {
@@ -54,6 +67,7 @@
 
         data(){
             return{
+                ledUrl: "",
                 naam: "",
                 huisnummer: "",
                 straat: "",
@@ -67,9 +81,10 @@
                 grid: {
                     "naam": 2,
                     "adres": 3,
+                    "leden zoeken": 2,
                     "hoeveelheid leden": 2,
-                    "aanpassen": 1,
-                    "deleten": 1,
+                    "aanpassen": 2,
+                    "deleten": 2,
                 }
             }
         },
@@ -78,6 +93,7 @@
             families: function(get){
                 axios.post("families", get)
                 .then((response) => {
+                    this.laatstePagina = response.data.meta.last_page;
                     this.items = response.data.data;
                 })
                 .catch((error) => {
@@ -99,7 +115,7 @@
             },
 
             familieUpdaten: function(id, naam, huisnummer, bijvoeging, straat, stad, land){
-                axios.post("leden/update", {
+                axios.post("families/update", {
                     "id": id,
                     "naam": naam,
                     "huisnummer": huisnummer,
@@ -108,7 +124,7 @@
                     "stad": stad,
                     "land": land,
                 })
-                .then(() => {
+                .then((response) => {
                     this.families(this.get);
                     this.Toast("Lid succesvol aangepast", "success", 3000, "top");
                 })
@@ -118,16 +134,11 @@
                 });
             },
 
-            async FamilieUpdatenModal(item){
+            async FamilieUpdatenModal(id){
                 const modal = await modalController.create({
                     component: FamilieVLModal,
                     componentProps: {
-                        pFamilie: item.familie,
-                        pHuisnummer: item.huisnummer,
-                        pBijvoeging: item.bijvoeging,
-                        pStraat: item.straat,
-                        pStad: item.stad,
-                        pLand: item.land,
+                        id: id
                     }
                 });
 
@@ -188,7 +199,7 @@
             },
 
             async Toast(message, color, duration, position){
-                const toast = await this.toastController.create({
+                const toast = await toastController.create({
                     message: message,
                     color: color,
                     duration: duration,

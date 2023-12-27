@@ -15,10 +15,11 @@ class ContributieResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "id" => $this->id,
             "bedrag" => $this->bedrag,
             "leeftijd" => $this->leeftijd,
-            "email" => $this->familieLid->email,
-            "soort lid" => $this->soortLid->omschrijving,
+            "email" => ($this->familieLid ? $this->familieLid->email : null),
+            "soort lid" => ($this->soortLid ? $this->soortLid->omschrijving : null),
             "boekjaar" => $this->boekjaar->jaar,
         ];
     }

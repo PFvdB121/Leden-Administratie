@@ -35,12 +35,12 @@ Route::group(["middleware" => "auth:web"], function(){
             Route::post("/delete", "App\Http\Controllers\FamilielidController@delete");
             Route::post("/update", "App\Http\Controllers\FamilielidController@update");
             Route::post("/create", "App\Http\Controllers\FamilielidController@store");
-            Route::post("/zoek_mail", "App\Http\Controllers\FamilielidController@searchEmail");
+            Route::post("/zoek_mails", "App\Http\Controllers\FamilielidController@searchEmail");
         });
 
         Route::prefix("soorten_leden")->group(function(){
             Route::post("/", "App\Http\Controllers\SoortLidController@index");
-            Route::post("/get", "App\Http\Controllers\SoortLidController@gets");
+            Route::post("/get", "App\Http\Controllers\SoortLidController@get");
             Route::post("/show", "App\Http\Controllers\SoortLidController@show");
             Route::post("/delete", "App\Http\Controllers\SoortLidController@delete");
             Route::post("/update", "App\Http\Controllers\SoortLidController@update");
@@ -60,6 +60,7 @@ Route::group(["middleware" => "auth:web"], function(){
             Route::post("/delete", "App\Http\Controllers\FamilieController@delete");
             Route::post("/update", "App\Http\Controllers\FamilieController@update");
             Route::post("/show", "App\Http\Controllers\FamilieController@show");
+            Route::post("/search", "App\Http\Controllers\FamilieController@search");
         });
 
         Route::prefix("boekenjaren")->group(function(){
