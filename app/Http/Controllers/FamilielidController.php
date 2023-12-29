@@ -75,6 +75,17 @@ class FamilielidController extends Controller
         return FamilielidFrontResource::collection($familieLeden);
     }
 
+    public function check(Request $request){
+        $validate = $request->validate([
+            "email" => "required|email",
+            "id" => "nullable|integer",
+        ]);
+
+        $check = Familielid::where("email", "like", $request["email"]);
+        
+        return (!!$check->count() == 0 || $check->first()->id == $request["id"]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

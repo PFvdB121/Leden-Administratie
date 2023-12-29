@@ -36,14 +36,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     IonTitle: _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.IonTitle,
     IonHeader: _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.IonHeader,
     IonContent: _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.IonContent,
-    IonInput: _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.IonInput
+    IonInput: _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.IonInput,
+    IonText: _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.IonText
   },
   data: function data() {
     return {
       omschrijving: "",
       minLeeftijd: "",
       maxLeeftijd: "",
-      korting: ""
+      korting: "",
+      checkOm: true,
+      error: ""
     };
   },
   methods: {
@@ -53,7 +56,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         axios.post("soorten_leden/show", {
           id: id
         }).then(function (response) {
-          console.log(response);
           _this.omschrijving = response.data.omschrijving;
           _this.korting = String(response.data.korting);
           _this.minLeeftijd = String(response.data.min_leeftijd);
@@ -66,25 +68,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.error("Geen id toegevoegd");
       }
     },
-    annuleren: function annuleren() {
-      _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.modalController.dismiss(null, "cancel");
-    },
-    bevestigen: function bevestigen() {
-      var data = {
-        "omschrijving": this.omschrijving,
-        "korting": this.korting,
-        "minLeeftijd": this.minLeeftijd,
-        "maxLeeftijd": this.maxLeeftijd
-      };
-      _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.modalController.dismiss(data, "confirm");
-    },
-    Toast: function Toast(message, color, duration, position) {
+    check: function check(id, omschrijving) {
+      var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var toast;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
+              return axios.post("soorten_leden/check", {
+                omschrijving: omschrijving,
+                id: id
+              }).then(function (response) {
+                _this2.checkOm = Boolean(response.data);
+              })["catch"](function (error) {
+                console.log(error);
+                _this2.Toast("Er is iets misgegaan", "danger", 3000, "top");
+              });
+            case 2:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }))();
+    },
+    annuleren: function annuleren() {
+      _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.modalController.dismiss(null, "cancel");
+    },
+    bevestigen: function bevestigen() {
+      var _this3 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var data;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              data = {
+                "omschrijving": _this3.omschrijving,
+                "korting": _this3.korting,
+                "minLeeftijd": _this3.minLeeftijd,
+                "maxLeeftijd": _this3.maxLeeftijd
+              };
+              _context2.next = 3;
+              return _this3.check(_this3.id, _this3.omschrijving);
+            case 3:
+              if (_this3.checkOm) {
+                _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.modalController.dismiss(data, "confirm");
+              } else {
+                _this3.error = "omschrijving bestaat al";
+              }
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2);
+      }))();
+    },
+    Toast: function Toast(message, color, duration, position) {
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var toast;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
               return _ionic_vue__WEBPACK_IMPORTED_MODULE_0__.toastController.create({
                 message: message,
                 color: color,
@@ -92,13 +136,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 position: position
               });
             case 2:
-              toast = _context.sent;
+              toast = _context3.sent;
               toast.present();
             case 4:
             case "end":
-              return _context.stop();
+              return _context3.stop();
           }
-        }, _callee);
+        }, _callee3);
       }))();
     }
   },
@@ -366,6 +410,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_ion_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-title");
   var _component_ion_toolbar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-toolbar");
   var _component_ion_header = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-header");
+  var _component_ion_text = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-text");
   var _component_ion_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-input");
   var _component_ion_item = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-item");
   var _component_ion_list = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-list");
@@ -426,7 +471,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "ion-padding"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_list, null, {
+      return [!$data.checkOm ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ion_text, {
+        key: 0,
+        color: "danger"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.error), 1 /* TEXT */)];
+        }),
+
+        _: 1 /* STABLE */
+      })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_list, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, null, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {

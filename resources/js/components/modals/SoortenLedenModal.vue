@@ -17,6 +17,7 @@
         </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
+        <ion-text color="danger" v-if="!checkOm">{{ error }}</ion-text>
         <ion-list>
             <ion-item>
                 <ion-input label-placement="floating" label="omschrijving" v-model="omschrijving"></ion-input>
@@ -45,6 +46,7 @@
         IonHeader,
         IonContent,
         IonInput,
+        IonText,
         modalController,
         toastController,
     } from "@ionic/vue";
@@ -71,6 +73,7 @@
             IonHeader,
             IonContent,
             IonInput,
+            IonText,
         },
 
         data(){
@@ -79,6 +82,8 @@
                 minLeeftijd: "",
                 maxLeeftijd: "",
                 korting: "",
+                checkOm: true,
+                error: "",
             };
         },
 
@@ -89,7 +94,6 @@
                         id: id,
                     })
                     .then((response) => {
-                        console.log(response)
                         this.omschrijving = response.data.omschrijving;
                         this.korting = String( response.data.korting);
                         this.minLeeftijd = String(response.data.min_leeftijd);
@@ -105,11 +109,25 @@
                 }
             },
 
+            async check(id, omschrijving){
+                await axios.post("soorten_leden/check", {
+                    omschrijving: omschrijving,
+                    id: id,
+                })
+                .then((response) => {
+                    this.checkOm = Boolean(response.data);
+                })
+                .catch((error) => {
+                    console.log(error)
+                    this.Toast("Er is iets misgegaan", "danger", 3000, "top");
+                })
+            },
+
             annuleren: function(){
                 modalController.dismiss(null, "cancel");
             },
 
-            bevestigen: function(){
+            async bevestigen(){
                 const data = {
                     "omschrijving": this.omschrijving,
                     "korting": this.korting,
@@ -117,7 +135,14 @@
                     "maxLeeftijd": this.maxLeeftijd,
                 };
 
-                modalController.dismiss(data, "confirm");
+                await this.check(this.id, this.omschrijving);
+
+                if (this.checkOm) {
+                    modalController.dismiss(data, "confirm");
+                }
+                else{
+                    this.error = "omschrijving bestaat al";
+                }
             },
 
             async Toast(message, color, duration, position){

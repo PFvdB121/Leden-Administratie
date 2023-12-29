@@ -58,6 +58,17 @@ class SoortLidController extends Controller
         ]);
     }
 
+    public function check(Request $request){
+        $validate = $request->validate([
+            "omschrijving" => "required|string",
+            "id" => "nullable|integer",
+        ]);
+
+        $check = SoortLid::where("omschrijving", "like", $request["omschrijving"]);
+        
+        return (!!$check->count() == 0 || $check->first()->id == $request["id"]);
+    }
+
     /**
      * Display the specified resource.
      */

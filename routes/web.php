@@ -21,6 +21,7 @@ Route::group(["middleware" => "guest:web"], function(){
     Route::post("/", "App\Http\Controllers\LoginController@login");
 });
 
+// With auth:web, only users who have logged in can access these apis
 Route::group(["middleware" => "auth:web"], function(){
     Route::prefix("app")->group(function(){
         Route::get("{app?}", function() {
@@ -36,6 +37,7 @@ Route::group(["middleware" => "auth:web"], function(){
             Route::post("/update", "App\Http\Controllers\FamilielidController@update");
             Route::post("/create", "App\Http\Controllers\FamilielidController@store");
             Route::post("/zoek_mails", "App\Http\Controllers\FamilielidController@searchEmail");
+            Route::post("/check", "App\Http\Controllers\FamilielidController@check");
         });
 
         Route::prefix("soorten_leden")->group(function(){
@@ -45,6 +47,7 @@ Route::group(["middleware" => "auth:web"], function(){
             Route::post("/delete", "App\Http\Controllers\SoortLidController@delete");
             Route::post("/update", "App\Http\Controllers\SoortLidController@update");
             Route::post("/store", "App\Http\Controllers\SoortLidController@store");
+            Route::post("/check", "App\Http\Controllers\SoortLidController@check");
         });
 
         Route::prefix("contributies")->group(function(){

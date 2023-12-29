@@ -250,6 +250,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       stad: "",
       land: "",
       adres: "",
+      error: "",
+      checkEm: true,
       isEmail: false,
       huidigeDatum: "",
       date: new Date()
@@ -279,25 +281,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(error);
       });
     },
-    lidOphalen: function lidOphalen(id) {
+    check: function check(id, email) {
       var _this2 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/check", {
+                email: email,
+                id: id
+              }).then(function (response) {
+                _this2.checkEm = Boolean(response.data);
+              })["catch"](function (error) {
+                console.log(error);
+                _this2.Toast("Er is iets misgegaan", "danger", 3000, "top");
+              });
+            case 2:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }))();
+    },
+    lidOphalen: function lidOphalen(id) {
+      var _this3 = this;
       if (id) {
         axios__WEBPACK_IMPORTED_MODULE_2__["default"].post("leden/show", {
           id: id
         }).then(function (response) {
-          _this2.naam = response.data.data.naam;
-          _this2.soortLid = response.data.data["soort lid"];
-          _this2.email = response.data.data.email;
-          _this2.geboortedatum = response.data.data.geboortedatum;
-          _this2.familie = response.data.data.familie;
-          _this2.huisnummer = response.data.data.huisnummer;
-          _this2.bijvoeging = response.data.data.bijvoeging;
-          _this2.straat = response.data.data.straat;
-          _this2.stad = response.data.data.stad;
-          _this2.land = response.data.data.land;
+          _this3.naam = response.data.data.naam;
+          _this3.soortLid = response.data.data["soort lid"];
+          _this3.email = response.data.data.email;
+          _this3.geboortedatum = response.data.data.geboortedatum;
+          _this3.familie = response.data.data.familie;
+          _this3.huisnummer = response.data.data.huisnummer;
+          _this3.bijvoeging = response.data.data.bijvoeging;
+          _this3.straat = response.data.data.straat;
+          _this3.stad = response.data.data.stad;
+          _this3.land = response.data.data.land;
         })["catch"](function (error) {
           console.log(error);
-          _this2.Toast("Er is iets misgegaan", "danger", 3000, "top");
+          _this3.Toast("Er is iets misgegaan", "danger", 3000, "top");
         });
       } else {
         console.error("Geen id toegevoegd");
@@ -307,61 +332,80 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.dismiss(null, "cancel");
     },
     bevestigen: function bevestigen() {
-      var data = {
-        "naam": this.naam,
-        "email": this.email,
-        "geboortedatum": this.geboortedatum,
-        "soortLid": this.soortLid,
-        "familie": this.familie,
-        "huisnummer": this.huisnummer,
-        "bijvoeging": this.bijvoeging,
-        "straat": this.straat,
-        "stad": this.stad,
-        "land": this.land
-      };
-      _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.dismiss(data, "confirm");
+      var _this4 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var data;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              data = {
+                "naam": _this4.naam,
+                "email": _this4.email,
+                "geboortedatum": _this4.geboortedatum,
+                "soortLid": _this4.soortLid,
+                "familie": _this4.familie,
+                "huisnummer": _this4.huisnummer,
+                "bijvoeging": _this4.bijvoeging,
+                "straat": _this4.straat,
+                "stad": _this4.stad,
+                "land": _this4.land
+              };
+              _context2.next = 3;
+              return _this4.check(_this4.id, _this4.email);
+            case 3:
+              if (_this4.checkEm) {
+                _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.dismiss(data, "confirm");
+              } else {
+                _this4.error = "Email bestaat al";
+              }
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2);
+      }))();
     },
     familieToevoegen: function familieToevoegen() {
-      var _this3 = this;
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var _this5 = this;
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var modal, _yield$modal$onWillDi, data, role;
-        return _regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              _context.next = 2;
+              _context3.next = 2;
               return _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.modalController.create({
                 component: _FamilieVLModal_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
                 componentProps: {
-                  pNaam: _this3.familie,
-                  pHuisnummer: _this3.huisnummer,
-                  pBijvoeging: _this3.bijvoeging,
-                  pStraat: _this3.straat,
-                  pStad: _this3.stad,
-                  pLand: _this3.land
+                  pNaam: _this5.familie,
+                  pHuisnummer: _this5.huisnummer,
+                  pBijvoeging: _this5.bijvoeging,
+                  pStraat: _this5.straat,
+                  pStad: _this5.stad,
+                  pLand: _this5.land
                 }
               });
             case 2:
-              modal = _context.sent;
+              modal = _context3.sent;
               modal.present();
-              _context.next = 6;
+              _context3.next = 6;
               return modal.onWillDismiss();
             case 6:
-              _yield$modal$onWillDi = _context.sent;
+              _yield$modal$onWillDi = _context3.sent;
               data = _yield$modal$onWillDi.data;
               role = _yield$modal$onWillDi.role;
               if (role === "confirm") {
-                _this3.familie = data.naam;
-                _this3.huisnummer = parseInt(data.huisnummer);
-                _this3.bijvoeging = data.bijvoeging;
-                _this3.straat = data.straat;
-                _this3.stad = data.stad;
-                _this3.land = data.land;
+                _this5.familie = data.naam;
+                _this5.huisnummer = parseInt(data.huisnummer);
+                _this5.bijvoeging = data.bijvoeging;
+                _this5.straat = data.straat;
+                _this5.stad = data.stad;
+                _this5.land = data.land;
               }
             case 10:
             case "end":
-              return _context.stop();
+              return _context3.stop();
           }
-        }, _callee);
+        }, _callee3);
       }))();
     }
   },
@@ -376,7 +420,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     IonContent: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonContent,
     IonSelect: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonSelect,
     IonSelectOption: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonSelectOption,
-    IonInput: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonInput
+    IonInput: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonInput,
+    IonText: _ionic_vue__WEBPACK_IMPORTED_MODULE_3__.IonText
   },
   props: {
     titel: String,
@@ -1245,6 +1290,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_ion_title = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-title");
   var _component_ion_toolbar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-toolbar");
   var _component_ion_header = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-header");
+  var _component_ion_text = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-text");
   var _component_ion_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-input");
   var _component_ion_item = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-item");
   var _component_ion_select_option = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-select-option");
@@ -1307,7 +1353,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "ion-padding"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_list, null, {
+      return [!_ctx.checkEm ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_ion_text, {
+        key: 0,
+        color: "danger"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.error), 1 /* TEXT */)];
+        }),
+
+        _: 1 /* STABLE */
+      })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_list, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_item, null, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {

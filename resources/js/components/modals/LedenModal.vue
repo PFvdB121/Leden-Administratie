@@ -17,6 +17,7 @@
         </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
+        <ion-text color="danger" v-if="!checkEm">{{ error }}</ion-text>
         <ion-list>
             <ion-item>
                 <ion-input label-placement="floating" label="naam" v-model="naam"></ion-input>
@@ -59,6 +60,7 @@
         IonSelect,
         IonInput,
         IonSelectOption,
+        IonText,
         modalController,
     } from '@ionic/vue';
     import axios from 'axios';
@@ -81,6 +83,8 @@
                 stad: "",
                 land: "",
                 adres: "",
+                error: "",
+                checkEm: true,
                 isEmail: false,
                 huidigeDatum: "",
                 date: new Date,
@@ -109,6 +113,20 @@
                 })
                 .catch((error) => {
                     console.log(error);
+                })
+            },
+
+            async check(id, email){
+                await axios.post("leden/check", {
+                    email: email,
+                    id: id,
+                })
+                .then((response) => {
+                    this.checkEm = Boolean(response.data);
+                })
+                .catch((error) => {
+                    console.log(error)
+                    this.Toast("Er is iets misgegaan", "danger", 3000, "top");
                 })
             },
 
@@ -143,7 +161,7 @@
                 modalController.dismiss(null, "cancel");
             },
 
-            bevestigen: function(){
+            async bevestigen(){
                 const data = {
                     "naam": this.naam,
                     "email": this.email,
@@ -157,7 +175,14 @@
                     "land": this.land,
                 };
 
-                modalController.dismiss(data, "confirm");
+                await this.check(this.id, this.email);
+
+                if (this.checkEm) {
+                    modalController.dismiss(data, "confirm");
+                }
+                else{
+                    this.error = "Email bestaat al";
+                }
             },
 
             async familieToevoegen(){
@@ -199,6 +224,7 @@
             IonSelect,
             IonSelectOption,
             IonInput,
+            IonText,
         },
 
         props: {
