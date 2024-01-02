@@ -23,6 +23,7 @@ class FamilielidController extends Controller
      */
     public function index(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "page" => "nullable|numeric",
             "naam" => "nullable|string",
@@ -36,6 +37,7 @@ class FamilielidController extends Controller
             "minGeboortedatum" => "nullable|date",
             "maxGeboortedatum" => "nullable|date",
         ]);
+        // whereHas accesses foreign table through method of class
         $familieLeden = Familielid::where("naam", "like", "%" . $request["naam"] . "%")
         ->where("email", "like", "%" . $request["email"] . "%")->whereHas("familie", function($query) use($request){
             return $query->where("naam", "like", "%" . $request["familie"] . "%")
@@ -70,11 +72,14 @@ class FamilielidController extends Controller
             $familieLeden = $familieLeden->where("geboortedatum", "<=", $request["maxGeboortedatum"]);
         }
 
+        // paginate returns rows based on page request and on how many I requested, in this case 20
         $familieLeden = $familieLeden->paginate(20);
 
+        // Returns Families in collection of custom objects
         return FamilielidFrontResource::collection($familieLeden);
     }
 
+    // Checks if email already exists, and if it belongs to the familielid
     public function check(Request $request){
         $validate = $request->validate([
             "email" => "required|email",
@@ -94,19 +99,25 @@ class FamilielidController extends Controller
         //
     }
 
+    // Searches user emails
     public function searchEmail(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "email" => "nullable|string",
         ]);
 
+        // Returns first 10 familieleden based on email
         $emails = Familielid::where("email", "like", $request["email"] . "%")->offset(0)->limit(10)->get();
 
+        // Returns Families in collection of custom objects
         return FamilielidFrontResource::collection($emails);
     }
 
+    // Checks if familie already exists and returns them, and if not, creates them first
     protected function checkFamily(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "familie" => "required|string", 
             "huisnummer" => "required|integer", 
@@ -142,6 +153,7 @@ class FamilielidController extends Controller
 
         $straat = Straat::where("naam", "=", $request["straat"])->where("stad_id", "=", $stad->id)->first();
 
+        // whereHas accesses foreign table through method of class
         if (Adres::where(function($query) use ($request){
             return $query->where(function($query) use($request){
                 return $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", $request["huisnummer"] . $request["bijvoeging"])
@@ -177,6 +189,7 @@ class FamilielidController extends Controller
      */
     public function store(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "naam" => "required|string", 
             "email" => "required|email", 
@@ -207,12 +220,14 @@ class FamilielidController extends Controller
      */
     public function show(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "id" => "required|integer",
         ]);
 
         $lid = Familielid::where("id", $request["id"])->first();
 
+        // Returns Families in custom object
         return new FamilielidResource($lid);
     }
 
@@ -229,6 +244,7 @@ class FamilielidController extends Controller
      */
     public function update(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "id" => "required|integer",
             "naam" => "required|string", 
@@ -260,12 +276,14 @@ class FamilielidController extends Controller
      */
     public function delete(Request $request)
     {
+        // Validates user input
         $validated = $request->validate([
             "id" => "required|numeric",
         ]);
 
+        // Removes familielid from contributies
         Contributie::where("familie_lid_id", $request["id"])->update(["familie_lid_id" => null]);
-        
+
         Familielid::where("id", $request["id"])->delete();
     }
 }

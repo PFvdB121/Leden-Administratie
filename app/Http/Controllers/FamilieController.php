@@ -20,6 +20,7 @@ class FamilieController extends Controller
      */
     public function index(Request $request)
     {
+        // Validates user input, which is used to search for rows
         $validate = $request->validate([
             "page" => "nullable|numeric",
             "naam" => "nullable|string",
@@ -30,6 +31,8 @@ class FamilieController extends Controller
         ]);
 
         $families = Familie::where("naam", "like", "%" . $request["naam"] . "%")
+        // whereHas accesses foreign table through method of class
+        // paginate returns rows based on page request and on how many I requested, in this case 20
         ->whereHas("adres", function(Builder $query) use($request){
             return $query->where(function(Builder $query) use($request){
                 $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", "%" . $request["huisnummer"] . "%")
@@ -46,6 +49,7 @@ class FamilieController extends Controller
             });
         })->paginate(20);
 
+        // Returns Families in collection of custom objects
         return FamilieFrontResource::collection($families);
     }
 
@@ -54,6 +58,7 @@ class FamilieController extends Controller
      */
     public function search(Request $request)
     {
+        // Validates user input, which is used to search for rows
         $validate = $request->validate([
             "naam" => "nullable|string",
             "huisnummer" => "required|integer",
@@ -63,6 +68,7 @@ class FamilieController extends Controller
             "land" => "required|string"
         ]);
 
+        // Returns first 10 families based on user input
         $families = Familie::select("naam")
         ->where("naam", "like", $request["naam"] . "%")
         ->whereHas("adres", function($query) use($request){
@@ -106,12 +112,14 @@ class FamilieController extends Controller
      */
     public function show(Request $request)
     {
+        // validates user input
         $validate = $request->validate([
             "id" => "required|numeric",
         ]);
 
         $familie = Familie::where("id", $request["id"])->first();
 
+        // returns familie in custom objects
         return new FamilieResource($familie);
     }
 
@@ -123,7 +131,9 @@ class FamilieController extends Controller
         //
     }
 
+    // Checks if adres already exists and returns it. If it does not exist, it will be added
     protected function searchAdres(Request $request){
+        // Validates user input
         $validate = $request->validate([
             "huisnummer" => "required|integer", 
             "bijvoeging" => "nullable|string|max:3", 
@@ -158,6 +168,7 @@ class FamilieController extends Controller
 
         $straat = Straat::where("naam", "=", $request["straat"])->where("stad_id", "=", $stad->id)->first();
 
+        // whereHas accesses foreign table through method of class
         if (Adres::where(function($query) use ($request){
             return $query->where(function($query) use($request){
                 return $query->where(DB::raw("CONCAT(huisnummer, bijvoeging)"), "like", $request["huisnummer"] . $request["bijvoeging"])
@@ -184,6 +195,7 @@ class FamilieController extends Controller
      */
     public function update(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "id" => "required|integer",
             "naam" => "required|string", 
@@ -207,6 +219,7 @@ class FamilieController extends Controller
      */
     public function delete(Request $request)
     {
+        // Validates user input
         $validated = $request->validate([
             "id" => "required|numeric",
         ]);

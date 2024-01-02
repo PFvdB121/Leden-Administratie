@@ -17,6 +17,7 @@ class ContributieController extends Controller
      */
     public function index(Request $request)
     {
+        // Put in here because get records it as string
         if (!is_null($request["checkEmailNot"])) {
             if ($request["checkEmailNot"] === "true") {
                 $request["checkEmailNot"] = true;
@@ -25,6 +26,8 @@ class ContributieController extends Controller
                 $request["checkEmailNot"] = false;
             }
         }
+
+        // Validates user input, which is used to search for rows
         $validate = $request->validate([
             "page" => "nullable|integer",
             "checkEmailNot" => "nullable|boolean",
@@ -37,6 +40,7 @@ class ContributieController extends Controller
             "maxBedrag" => "nullable|decimal:0,2",
         ]);
 
+        // uses array so I don't have to write if statement over and over again
         $check = array(
             array(
                 "col" => "leeftijd",
@@ -60,22 +64,27 @@ class ContributieController extends Controller
             ),
         );
 
+        // whereHas accesses foreign table through method of class
         $contributies = Contributie::whereHas("boekjaar", function($query) use ($request){
             return $query->where("jaar", "like", "%" . $request['boekjaar'] . "%");
         });
         
+        // Checks if contributie is added by deleted familielid
         if ($request["checkEmailNot"]) {
             $contributies = $contributies->whereNull("familie_lid_id");
         }
+        // Checks by email of familielid. Checks if email request is filled so it would also search for contributies where familielid was deleted
         elseif ($request['email']){
             $contributies = $contributies->whereHas("familieLid", function($query) use ($request){
                 return $query->where("email", "like", "%" . $request['email'] . "%");
             });
         }
 
+        // Checks if contributie is added by deleted soort lid
         if ($request['soortLid'] == "geen") {
             $contributies = $contributies->whereNull("soort_lid_id");
         }
+        // Checks by soort lid. Checks if soortLid request is filled so it would also search for contributies where soort lid was deleted 
         elseif (SoortLid::where("omschrijving", $request['soortLid'])->count() > 0) {
             $contributies = $contributies->whereHas("soortLid", function($query) use ($request){
                 return $query->where("omschrijving", $request['soortLid']);
@@ -88,9 +97,10 @@ class ContributieController extends Controller
             }
         }
 
-
+        // paginate returns rows based on page request and on how many I requested, in this case 20
         $contributies = $contributies->paginate(20);
 
+        // Returns contributies in collection of custom objects
         return ContributieResource::collection($contributies);
     }
 
@@ -102,6 +112,7 @@ class ContributieController extends Controller
         //
     }
 
+    // Checks if boekjaar exists. If not, creates a new one
     protected function boekjaar(Request $request){
         $validate = $request->validate([
             "boekjaar" => "required|numeric",
@@ -123,6 +134,7 @@ class ContributieController extends Controller
      */
     public function store(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "bedrag" => "required|decimal:0,2",
             "boekjaar" => "required|numeric",
@@ -135,11 +147,16 @@ class ContributieController extends Controller
 
         $boekjaar = $this->boekjaar($request);
 
-        $datum = new DateTime($request["boekjaar"] . "-01-01");
-        $birth = new DateTime($lid->geboortedatum);
-
-        $verschil = $birth->diff($datum);
-        $jaar = $verschil->y;
+        if ($lid) {
+            $datum = new DateTime($request["boekjaar"] . "-01-01");
+            $birth = new DateTime($lid->geboortedatum);
+    
+            $verschil = $birth->diff($datum);
+            $jaar = $verschil->y;
+        }
+        else{
+            $jaar = null;
+        }
 
         Contributie::create([
             "leeftijd" => $jaar,
@@ -155,12 +172,14 @@ class ContributieController extends Controller
      */
     public function show(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "id" => "required|integer",
         ]);
 
         $contributie = Contributie::where("id", $request["id"])->first();
 
+        // Returns contributie in custom row
         return new ContributieResource($contributie);
     }
 
@@ -177,6 +196,7 @@ class ContributieController extends Controller
      */
     public function update(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "id" => "required|numeric",
             "bedrag" => "required|decimal:0,2",
@@ -214,6 +234,7 @@ class ContributieController extends Controller
      */
     public function delete(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "id" => "required|integer",
         ]);

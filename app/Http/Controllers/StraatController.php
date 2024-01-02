@@ -12,6 +12,7 @@ class StraatController extends Controller
      */
     public function index(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "naam" => "nullable|string",
             "stad" => "required|string",

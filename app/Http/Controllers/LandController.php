@@ -12,10 +12,12 @@ class LandController extends Controller
      */
     public function index(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "naam" => "nullable|string",
         ]);
 
+        // Returns first 10 landen based on user input
         $landen = Land::select("naam")->where("naam", "like", $request["naam"] . "%")->offset(0)->limit(10)->get();
 
         return $landen;

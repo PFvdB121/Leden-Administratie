@@ -11,7 +11,7 @@ use App\Http\Resources\SoortLidResource;
 class SoortLidController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource in a custom made collection of objects.
      */
     public function index()
     {
@@ -43,6 +43,7 @@ class SoortLidController extends Controller
      */
     public function store(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "omschrijving" => "required|string",
             "korting" => "required|numeric",
@@ -58,7 +59,9 @@ class SoortLidController extends Controller
         ]);
     }
 
+    // Checks if omschrijving is already used for other soort lid
     public function check(Request $request){
+        // Validates user input
         $validate = $request->validate([
             "omschrijving" => "required|string",
             "id" => "nullable|integer",
@@ -74,6 +77,7 @@ class SoortLidController extends Controller
      */
     public function show(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "id" => "required|integer",
         ]);
@@ -96,6 +100,7 @@ class SoortLidController extends Controller
      */
     public function update(Request $request, SoortLid $soortLid)
     {
+        // Validates user input
         $validate = $request->validate([
             "id" => "required|integer",
             "omschrijving" => "required|string",
@@ -117,10 +122,12 @@ class SoortLidController extends Controller
      */
     public function delete(Request $request)
     {
+        // Validates user input
         $validate = $request->validate([
             "id" => "required|integer",
         ]);
 
+        // Removes soort lid from contributies
         Contributie::where("soort_lid_id", $request["id"])->update(["soort_lid_id" => null]);
 
         SoortLid::where("id", $request["id"])->delete();

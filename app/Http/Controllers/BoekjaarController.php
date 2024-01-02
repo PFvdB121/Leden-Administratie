@@ -15,12 +15,15 @@ class BoekjaarController extends Controller
         //
     }
 
+    // Displayes boekenjaren based on search information
     public function searchYears(Request $request)
     {
+        // Validates input
         $validate = $request->validate([
             "jaar" => "nullable|numeric",
         ]);
 
+        // returns first 10 boekenjaren based on search request
         $boekenjaren = Boekjaar::select("jaar")->where("jaar", "like", $request["jaar"] . "%")->offset(0)->limit(10)->get();
 
         return $boekenjaren;

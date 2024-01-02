@@ -13,6 +13,7 @@ class AdresController extends Controller
      */
     public function index(Request $request)
     {
+        // Validates request information
         $validate = $request->validate([
             "huisnummer" => "nullable|integer",
             "bijvoeging" => "nullable|string",
@@ -21,6 +22,7 @@ class AdresController extends Controller
             "land" => "required|string"
         ]);
 
+        // returns first 10 Adressen, based on search request
         $adressen = Adres::select("huisnummer", "bijvoeging")
         ->where(function($query) use ($request){
             return $query->where(function($query) use($request){

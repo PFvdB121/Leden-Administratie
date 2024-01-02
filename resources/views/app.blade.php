@@ -20,7 +20,7 @@
         <ion-app>
             <!-- The user info is saved inside session and accessed with Auth, which, to prevent cross site scripting, is escaped with double brackets -->
             <ionic-menu :user="{{ Auth::user()->first() }}">
-                <!-- json_encode turns the $_GET into a json format, and double brackets escapes the result to prevent -->
+                <!-- json_encode turns the $_GET into a json format, and double brackets escapes the result to prevent cross site scripting-->
                 <router-view :get="{{ json_encode($_GET) }}"></router-view>
             </ionic-menu>
         </ion-app>
