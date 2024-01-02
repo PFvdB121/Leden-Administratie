@@ -284,6 +284,17 @@ class FamilielidController extends Controller
         // Removes familielid from contributies
         Contributie::where("familie_lid_id", $request["id"])->update(["familie_lid_id" => null]);
 
-        Familielid::where("id", $request["id"])->delete();
+        $familielid = Familielid::where("id", $request["id"]);
+
+        $familieID = $familielid->first()->familie_id;
+        
+        $familielid->delete();
+
+        $familie = Familie::where("id", $familieID);
+
+        // Deletes familie if it has no members
+        if ($familie->first()->familieleden->count() == 0) {
+            $familie->delete();
+        }
     }
 }

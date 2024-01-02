@@ -129,6 +129,23 @@ class ContributieController extends Controller
         return $boekjaar;
     }
 
+    // Calculates familielid age if added
+    protected function lidLeeftijd($lid, $boekjaar)
+    {
+        if ($lid) {
+            $datum = new DateTime($boekjaar . "-01-01");
+            $birth = new DateTime($lid->geboortedatum);
+    
+            $verschil = $birth->diff($datum);
+            $jaar = $verschil->y;
+        }
+        else{
+            $jaar = null;
+        }
+
+        return $jaar;
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -147,16 +164,7 @@ class ContributieController extends Controller
 
         $boekjaar = $this->boekjaar($request);
 
-        if ($lid) {
-            $datum = new DateTime($request["boekjaar"] . "-01-01");
-            $birth = new DateTime($lid->geboortedatum);
-    
-            $verschil = $birth->diff($datum);
-            $jaar = $verschil->y;
-        }
-        else{
-            $jaar = null;
-        }
+        $jaar = $this->lidLeeftijd($lid, $request["boekjaar"]);
 
         Contributie::create([
             "leeftijd" => $jaar,
@@ -209,24 +217,20 @@ class ContributieController extends Controller
         $soortLid = SoortLid::where("omschrijving", $request["soortLid"])->first();
         $boekjaar = $this->boekjaar($request);
 
-        if ($lid) {
-            $datum = new DateTime($request["boekjaar"] . "-01-01");
-            $birth = new DateTime($lid->geboortedatum);
-    
-            $verschil = $birth->diff($datum);
-            $jaar = $verschil->y;
-        }
-        else{
-            $jaar = null;
-        }
-
-        Contributie::where("id", $request["id"])->update([
-            "leeftijd" => $jaar,
+        $array = [
             "bedrag" => $request["bedrag"],
             "familie_lid_id" => ($lid ? $lid->id : null),
             "soort_lid_id" => ($soortLid ? $soortLid->id : null),
             "boekjaar_id" => $boekjaar->id,
-        ]);
+        ];
+
+        $jaar = $this->lidLeeftijd($lid, $request["boekjaar"]);
+
+        if ($jaar) {
+            $array["leeftijd"] = $jaar;
+        }
+
+        Contributie::where("id", $request["id"])->update($array);
     }
 
     /**

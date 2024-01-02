@@ -16,7 +16,6 @@ import "@ionic/vue/css/text-alignment.css";
 import "@ionic/vue/css/text-transformation.css";
 import "@ionic/vue/css/flex-utils.css";
 import "@ionic/vue/css/display.css";
-import { toastController } from "@ionic/vue";
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHistory(),
@@ -24,9 +23,7 @@ const router = VueRouter.createRouter({
 })
 
 export default router;
-const app = Vue.createApp({
-    
-});
+const app = Vue.createApp();
 app.use(router);
 app.use(VueAxios, axios);
 app.use(IonicVue);
