@@ -26,9 +26,6 @@
         <ion-col :size="grid.aanpassen" class="d-flex justify-content-center">
             <ion-button @click="FamilieUpdatenModal(slotProps.item.id)">aanpassen</ion-button>
         </ion-col>
-        <ion-col :size="grid.deleten" :disabled="slotProps.item['hoeveelheid leden'] > 0" class="d-flex justify-content-center">
-            <ion-button :disabled="slotProps.item['hoeveelheid leden']" @click="deleteAlert(slotProps.item.id)" color="danger">deleten</ion-button>
-        </ion-col>
     </grid-container>
     <pagination :get="this.get" :laatstePagina="this.laatstePagina"></pagination>
 </template>
@@ -84,7 +81,6 @@
                     "leden zoeken": 2,
                     "hoeveelheid leden": 2,
                     "aanpassen": 2,
-                    "deleten": 2,
                 }
             }
         },

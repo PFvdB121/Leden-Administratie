@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal("bedrag", 5, 2);
             $table->foreignId("boekjaar_id")->constrained("boekenjaren");
             $table->foreignId("familie_lid_id")->nullable()->constrained("familie_leden");
-            $table->unique(["boekjaar_id", "familie_lid_id"]);
             $table->timestamps();
         });
     }

@@ -265,8 +265,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         "adres": 3,
         "leden zoeken": 2,
         "hoeveelheid leden": 2,
-        "aanpassen": 2,
-        "deleten": 2
+        "aanpassen": 2
       }
     };
   },
@@ -967,7 +966,6 @@ var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
   value: "familie leden zoeken"
 }, null, -1 /* HOISTED */);
 var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("aanpassen");
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("deleten");
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _this = this;
   var _component_ion_input = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-input");
@@ -1097,27 +1095,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["onClick"])];
         }),
         _: 2 /* DYNAMIC */
-      }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_col, {
-        size: $data.grid.deleten,
-        disabled: slotProps.item['hoeveelheid leden'] > 0,
-        "class": "d-flex justify-content-center"
-      }, {
-        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-            disabled: slotProps.item['hoeveelheid leden'],
-            onClick: function onClick($event) {
-              return $options.deleteAlert(slotProps.item.id);
-            },
-            color: "danger"
-          }, {
-            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-              return [_hoisted_5];
-            }),
-            _: 2 /* DYNAMIC */
-          }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["disabled", "onClick"])];
-        }),
-        _: 2 /* DYNAMIC */
-      }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size", "disabled"])];
+      }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"])];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["items", "colomnBreedte", "gridCols"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
