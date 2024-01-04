@@ -29,11 +29,11 @@
                         @csrf
                         <div>
                             <label for="name">Gebruikersnaam</label>
-                            <input id="name" class="d-block" type="text" placeholder="Gebruikersnaam" name="name">
+                            <input id="name" required class="d-block" type="text" placeholder="Gebruikersnaam" name="name">
                         </div>
                         <div>
                             <label for="password">Wachtwoord</label>
-                            <input id="password" class="d-block" type="password" placeholder="Gebruikersnaam" name="password">
+                            <input id="password" required class="d-block" type="password" placeholder="Gebruikersnaam" name="password">
                         </div>
                         <div>
                             <input type="submit">
