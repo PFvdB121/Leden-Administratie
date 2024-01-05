@@ -60,7 +60,6 @@ Route::group(["middleware" => "auth:web"], function(){
 
         Route::prefix("families")->group(function(){
             Route::post("/", "App\Http\Controllers\FamilieController@index");
-            Route::post("/delete", "App\Http\Controllers\FamilieController@delete");
             Route::post("/update", "App\Http\Controllers\FamilieController@update");
             Route::post("/show", "App\Http\Controllers\FamilieController@show");
             Route::post("/search", "App\Http\Controllers\FamilieController@search");
