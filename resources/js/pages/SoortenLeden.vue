@@ -18,7 +18,6 @@
             </ion-button>
         </ion-col>
     </grid-container>
-    <pagination :get="this.get" :laatstePagina="this.laatstePagina"/>
 </template>
 
 <script>
@@ -48,7 +47,6 @@
                     "aanpassen": 2,
                     "deleten": 2,
                 },
-                laatstePagina: 1,
                 ledUrl: "",
             }
         },

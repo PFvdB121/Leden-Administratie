@@ -751,8 +751,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                     modelValue: _ctx.sl,
                     "onUpdate:modelValue": _cache[12] || (_cache[12] = function ($event) {
                       return _ctx.sl = $event;
-                    }),
-                    "on-ion-change": _ctx.minBedragBepalen()
+                    })
                   }, {
                     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
                       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_select_option, {
@@ -776,12 +775,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                     }),
 
                     _: 1 /* STABLE */
-                  }, 8 /* PROPS */, ["modelValue", "on-ion-change"])];
+                  }, 8 /* PROPS */, ["modelValue"])];
                 }),
                 _: 1 /* STABLE */
               }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-                onClick: _cache[13] || (_cache[13] = function ($event) {
-                  return _ctx.toggleAccordion('bedrag');
+                onClick: _cache[13] || (_cache[13] = function () {
+                  _ctx.toggleAccordion('bedrag');
+                  _ctx.minBedragBepalen();
                 })
               }, {
                 "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -827,14 +827,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
                     label: "Bedrag",
                     "on-ion-change": _ctx.resDec('bedrag'),
                     type: "number",
-                    min: _ctx.minBedrag,
                     step: .01,
                     "label-placement": "floating",
                     modelValue: _ctx.bedrag,
                     "onUpdate:modelValue": _cache[16] || (_cache[16] = function ($event) {
                       return _ctx.bedrag = $event;
                     })
-                  }, null, 8 /* PROPS */, ["on-ion-change", "min", "modelValue"])];
+                  }, null, 8 /* PROPS */, ["on-ion-change", "modelValue"])];
                 }),
                 _: 1 /* STABLE */
               }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {

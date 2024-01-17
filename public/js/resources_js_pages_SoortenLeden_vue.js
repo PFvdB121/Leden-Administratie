@@ -190,7 +190,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         "aanpassen": 2,
         "deleten": 2
       },
-      laatstePagina: 1,
       ledUrl: ""
     };
   },
@@ -447,7 +446,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
               return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_ion_button, {
-                disabled: !($data.omschrijving && $data.korting && (!$data.minLeeftijd || !$data.maxLeeftijd || parseInt($data.maxLeeftijd) >= parseInt($data.minLeeftijd))),
+                disabled: !($data.omschrijving && $data.korting && ($data.minLeeftijd == 'null' || !$data.minLeeftijd || $data.maxLeeftijd == 'null' || !$data.maxLeeftijd || parseInt($data.maxLeeftijd) >= parseInt($data.minLeeftijd))),
                 onClick: _cache[1] || (_cache[1] = function ($event) {
                   return $options.bevestigen();
                 })
@@ -577,7 +576,6 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_ion_col = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-col");
   var _component_ion_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("ion-button");
   var _component_grid_container = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("grid-container");
-  var _component_pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("pagination");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_zoek_container, {
     toevoegen: $options.soortLidToevoegenModal,
     toevoegenTitel: "Leden Toevoegen"
@@ -640,10 +638,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["size"])];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["items", "colomnBreedte", "gridCols"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_pagination, {
-    get: this.get,
-    laatstePagina: this.laatstePagina
-  }, null, 8 /* PROPS */, ["get", "laatstePagina"])], 64 /* STABLE_FRAGMENT */);
+  }, 8 /* PROPS */, ["items", "colomnBreedte", "gridCols"])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),

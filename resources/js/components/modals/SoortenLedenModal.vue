@@ -10,7 +10,7 @@
                 {{ titel }}
             </ion-title>
             <ion-buttons slot="end">
-                <ion-button :disabled="!(omschrijving && korting && (!minLeeftijd || !maxLeeftijd || parseInt(maxLeeftijd) >= parseInt(minLeeftijd)))" @click="bevestigen()">
+                <ion-button :disabled="!(omschrijving && korting && ((minLeeftijd == 'null' || !minLeeftijd) || (maxLeeftijd == 'null' || !maxLeeftijd) || parseInt(maxLeeftijd) >= parseInt(minLeeftijd)))" @click="bevestigen()">
                     Bevestigen
                 </ion-button>
             </ion-buttons>

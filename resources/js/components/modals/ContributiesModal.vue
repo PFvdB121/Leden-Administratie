@@ -72,7 +72,7 @@
                     <div class="d-flex justify-content-center">
                         <ion-button @click="toggleAccordion('email')">Terug</ion-button>
                         <ion-item>
-                            <ion-select v-model="sl" :on-ion-change="minBedragBepalen()">
+                            <ion-select v-model="sl">
                                 <ion-select-option :value="false">
                                     Geen soort
                                 </ion-select-option>
@@ -81,7 +81,10 @@
                                 </ion-select-option>
                             </ion-select>
                         </ion-item>
-                        <ion-button @click="toggleAccordion('bedrag')">Volgende</ion-button>
+                        <ion-button @click="() => {
+                            toggleAccordion('bedrag')
+                            minBedragBepalen()
+                        }">Volgende</ion-button>
                     </div>
                 </div>
             </ion-accordion>
@@ -93,7 +96,7 @@
                     <div class="d-flex justify-content-center">
                         <ion-button @click="toggleAccordion('soortLid')">Terug</ion-button>
                         <ion-item>
-                            <ion-input label="Bedrag" :on-ion-change="resDec('bedrag')" type="number" :min="minBedrag" :step=".01" label-placement="floating" v-model="bedrag"></ion-input>
+                            <ion-input label="Bedrag" :on-ion-change="resDec('bedrag')" type="number" :step=".01" label-placement="floating" v-model="bedrag"></ion-input>
                         </ion-item>
                         <ion-button :disabled="!(bedrag >= minBedrag)" @click="bevestigen()">
                             Bevestigen

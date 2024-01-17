@@ -60,9 +60,9 @@ module.exports.functions = function(app){
             resDec: function(val){
                 const re = /^\d+\.?\d{0,2}/
                 if ((this[val] !== null && this[val] !== undefined && this[val] !== "") && String(this[val]).match(re) != String(this[val])) {
-                    this[val] = String(String(this[val]).match(re));
+                    this[val] = parseFloat(String(this[val]).match(re));
                 }
-                else if(this[val] === null || this[val] === undefined){
+                else if(this[val] === null || this[val] === undefined || this[val] === ''){
                     this[val] = "";
                 }
             },

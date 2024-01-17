@@ -13,8 +13,8 @@ class UserSeeder extends Seeder
      */
     public static function run(): void
     {
-        $password = bcrypt("test1234");
-        $username = "testUser";
+        $password = bcrypt("1234test");
+        $username = "testingUs";
         $email = "testUser@email.com";
 
         User::create([

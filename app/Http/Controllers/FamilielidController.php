@@ -239,6 +239,16 @@ class FamilielidController extends Controller
         //
     }
 
+    protected function deleteFamilie($familieID)
+    {
+        $familie = Familie::where("id", $familieID);
+
+        // Deletes familie if it has no members
+        if ($familie->first()->familieleden->count() == 0) {
+            $familie->delete();
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -259,16 +269,22 @@ class FamilielidController extends Controller
             "land" => "required|string",
         ]);
 
+        $familielid = Familielid::where("id", $request["id"]);
+
+        $familieID = $familielid->first()->familie_id;
+
         $familie = $this->checkFamily($request);
         $soortLid = SoortLid::where("omschrijving", $request["soortLid"])->first();
 
-        Familielid::where("id", $request["id"])->update([
+        $familielid->update([
             "naam" => $request["naam"],
             "email" => $request["email"],
             "geboortedatum" => $request["geboortedatum"],
             "soort_lid_id" => $soortLid->id,
             "familie_id" => $familie->id,
         ]);
+
+        $this->deleteFamilie($familieID);
     }
 
     /**
@@ -290,11 +306,6 @@ class FamilielidController extends Controller
         
         $familielid->delete();
 
-        $familie = Familie::where("id", $familieID);
-
-        // Deletes familie if it has no members
-        if ($familie->first()->familieleden->count() == 0) {
-            $familie->delete();
-        }
+        $this->deleteFamilie($familieID);
     }
 }

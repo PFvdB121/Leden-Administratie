@@ -13,17 +13,17 @@
                     <ion-button expand="block" color="secondary" @click="logout">Uitloggen</ion-button>
                 </div>
                 <ion-list>
-                    <ion-item>
-                        <router-link to="/app/leden">leden</router-link>
+                    <ion-item :href="leden">
+                        leden
                     </ion-item>
-                    <ion-item>
-                        <router-link to="/app/contributies">contributies</router-link>
+                    <ion-item :href="contributies">
+                        contributies
                     </ion-item>
-                    <ion-item>
-                        <router-link to="/app/soorten_leden">soorten leden</router-link>
+                    <ion-item :href="soorten_leden">
+                        soorten leden
                     </ion-item>
-                    <ion-item>
-                        <router-link to="/app/families">families</router-link>
+                    <ion-item :href="families">
+                        families
                     </ion-item>
                 </ion-list>
             </ion-content>
@@ -69,6 +69,20 @@
     import axios from "axios";
 
     export default({
+        beforeMount(){
+            this.leden = location.protocol + '//' + location.host + '/app/leden';
+            this.soorten_leden = location.protocol + '//' + location.host + '/app/soorten_leden';
+            this.contributies = location.protocol + '//' + location.host + '/app/contributies';
+            this.families = location.protocol + '//' + location.host + '/app/families';
+        },
+        data(){
+            return {
+                leden: "",
+                soorten_leden: "",
+                contributies: "",
+                families: "",
+            }
+        },
         props: {
             "user": Object,
         },

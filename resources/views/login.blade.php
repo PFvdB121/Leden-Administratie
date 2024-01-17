@@ -29,7 +29,7 @@
                         @csrf
                         <div>
                             <label for="name">Gebruikersnaam</label>
-                            <input id="name" required class="d-block" type="text" placeholder="Gebruikersnaam" name="name">
+                            <input id="name" autocomplete="off" required class="d-block" type="text" placeholder="Gebruikersnaam" name="name">
                         </div>
                         <div>
                             <label for="password">Wachtwoord</label>
